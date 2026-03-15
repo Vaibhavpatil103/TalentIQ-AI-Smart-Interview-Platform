@@ -74,7 +74,7 @@ function FeedbackPage() {
               <BrainCircuitIcon className="size-5 text-primary" />
               AI Review
             </h2>
-            <AIFeedbackCard aiReview={aiReview || session?.aiReview} />
+            <AIFeedbackCard variant="code-review" aiReview={aiReview || session?.aiReview} />
           </div>
 
           {/* Interviewer Feedback */}

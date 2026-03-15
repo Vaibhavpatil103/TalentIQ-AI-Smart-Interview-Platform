@@ -1,6 +1,6 @@
 import Editor from "@monaco-editor/react";
-import { Loader2Icon, PlayIcon, UsersIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Loader2Icon, PlayIcon } from "lucide-react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import * as Y from "yjs";
 import { MonacoBinding } from "y-monaco";
 
@@ -34,110 +34,125 @@ function CodeEditorPanel({
   onLanguageChange,
   onCodeChange,
   onRunCode,
-  sessionId, // if provided, enables Yjs collaboration
+  sessionId,
 }) {
   const editorRef = useRef(null);
   const yjsDocRef = useRef(null);
   const wsRef = useRef(null);
   const bindingRef = useRef(null);
+  const isYjsUpdate = useRef(false);
   const [isConnected, setIsConnected] = useState(false);
+
+  const cleanupYjs = useCallback(() => {
+    if (bindingRef.current) {
+      bindingRef.current.destroy();
+      bindingRef.current = null;
+    }
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+    if (yjsDocRef.current) {
+      yjsDocRef.current.destroy();
+      yjsDocRef.current = null;
+    }
+    setIsConnected(false);
+  }, []);
+
+  const setupYjsCollaboration = useCallback(
+    (editor) => {
+      cleanupYjs();
+
+      const doc = new Y.Doc();
+      yjsDocRef.current = doc;
+      const yText = doc.getText("code");
+
+      // Connect to Yjs WebSocket server
+      const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsHost =
+        import.meta.env.VITE_API_URL?.replace(/^https?:\/\//, "").replace(
+          /\/api$/,
+          ""
+        ) || "localhost:3000";
+      const wsUrl = `${wsProtocol}//${wsHost}/yjs?room=${sessionId}`;
+
+      const ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
+      ws.binaryType = "arraybuffer";
+
+      ws.onopen = () => {
+        setIsConnected(true);
+        console.log("[Yjs] Connected to collaboration server");
+
+        // If the shared doc is empty and we have local code, seed it
+        if (yText.length === 0 && code) {
+          doc.transact(() => {
+            yText.insert(0, code);
+          });
+        }
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const update = new Uint8Array(event.data);
+          Y.applyUpdate(doc, update);
+        } catch (err) {
+          console.error("[Yjs] Error applying update:", err);
+        }
+      };
+
+      ws.onclose = () => {
+        setIsConnected(false);
+        console.log("[Yjs] Disconnected");
+      };
+
+      ws.onerror = (err) => {
+        console.error("[Yjs] WebSocket error:", err);
+        setIsConnected(false);
+      };
+
+      // Send local updates to the server
+      doc.on("update", (update, origin) => {
+        if (origin !== "remote" && ws.readyState === WebSocket.OPEN) {
+          ws.send(update);
+        }
+      });
+
+      // Bind Yjs text to Monaco editor
+      const model = editor.getModel();
+      if (model) {
+        try {
+          const binding = new MonacoBinding(yText, model, new Set([editor]));
+          bindingRef.current = binding;
+        } catch (err) {
+          console.warn("[Yjs] Could not bind Monaco editor:", err);
+        }
+      }
+
+      // Sync code changes back to parent state
+      yText.observe(() => {
+        isYjsUpdate.current = true;
+        onCodeChange?.(yText.toString());
+        // Reset flag on next tick
+        setTimeout(() => {
+          isYjsUpdate.current = false;
+        }, 0);
+      });
+    },
+    [sessionId, cleanupYjs]
+  );
 
   const handleEditorMount = (editor) => {
     editorRef.current = editor;
-
-    // If sessionId exists, set up Yjs collaboration
     if (sessionId) {
       setupYjsCollaboration(editor);
     }
   };
 
-  const setupYjsCollaboration = (editor) => {
-    // Clean up previous connection
-    cleanupYjs();
-
-    const doc = new Y.Doc();
-    yjsDocRef.current = doc;
-
-    const yText = doc.getText("code");
-
-    // Connect to Yjs WebSocket server
-    const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsHost = import.meta.env.VITE_API_URL?.replace(/^https?:\/\//, "").replace(/\/api$/, "") || "localhost:3000";
-    const wsUrl = `${wsProtocol}//${wsHost}/yjs?room=${sessionId}`;
-
-    const ws = new WebSocket(wsUrl);
-    wsRef.current = ws;
-
-    ws.binaryType = "arraybuffer";
-
-    ws.onopen = () => {
-      setIsConnected(true);
-      console.log("[Yjs] Connected to collaboration server");
-
-      // If the doc is empty, initialize with current code
-      if (yText.length === 0 && code) {
-        doc.transact(() => {
-          yText.insert(0, code);
-        });
-      }
-    };
-
-    ws.onmessage = (event) => {
-      const update = new Uint8Array(event.data);
-      Y.applyUpdate(doc, update);
-    };
-
-    ws.onclose = () => {
-      setIsConnected(false);
-      console.log("[Yjs] Disconnected from collaboration server");
-    };
-
-    ws.onerror = (err) => {
-      console.error("[Yjs] WebSocket error:", err);
-      setIsConnected(false);
-    };
-
-    // Send local updates to the server
-    doc.on("update", (update, origin) => {
-      if (origin !== "remote" && ws.readyState === WebSocket.OPEN) {
-        ws.send(update);
-      }
-    });
-
-    // Bind Yjs text to Monaco editor
-    const model = editor.getModel();
-    if (model && editor) {
-      try {
-        const binding = new MonacoBinding(yText, model, new Set([editor]));
-        bindingRef.current = binding;
-      } catch (err) {
-        console.warn("[Yjs] Could not bind Monaco editor:", err);
-      }
-    }
-
-    // Sync code changes back to parent
-    yText.observe(() => {
-      const newCode = yText.toString();
-      onCodeChange?.(newCode);
-    });
-  };
-
-  const cleanupYjs = () => {
-    bindingRef.current?.destroy();
-    yjsDocRef.current?.destroy();
-    if (wsRef.current) {
-        wsRef.current.close();
-    }
-
-    bindingRef.current = null;
-    wsRef.current = null;
-    yjsDocRef.current = null;
-  };
-
   // Cleanup on unmount
   useEffect(() => {
     return () => cleanupYjs();
-  }, []);
+  }, [cleanupYjs]);
 
   // Re-setup collaboration when sessionId changes
   useEffect(() => {
@@ -145,6 +160,15 @@ function CodeEditorPanel({
       setupYjsCollaboration(editorRef.current);
     }
   }, [sessionId]);
+
+  // Handle external code changes (e.g. language change / problem push)
+  // Only update Yjs doc when the parent pushes new starter code
+  const handleEditorChange = (value) => {
+    if (!sessionId) {
+      onCodeChange?.(value);
+    }
+    // When Yjs is active, the binding handles syncing
+  };
 
   return (
     <div className="h-full bg-base-300 flex flex-col">
@@ -155,7 +179,11 @@ function CodeEditorPanel({
             alt={LANGUAGE_CONFIG[selectedLanguage]?.name || "Language"}
             className="size-6"
           />
-          <select className="select select-sm" value={selectedLanguage} onChange={onLanguageChange}>
+          <select
+            className="select select-sm"
+            value={selectedLanguage}
+            onChange={onLanguageChange}
+          >
             {Object.entries(LANGUAGE_CONFIG).map(([key, lang]) => (
               <option key={key} value={key}>
                 {lang.name}
@@ -178,7 +206,11 @@ function CodeEditorPanel({
           )}
         </div>
 
-        <button className="btn btn-primary btn-sm gap-2" disabled={isRunning} onClick={onRunCode}>
+        <button
+          className="btn btn-primary btn-sm gap-2"
+          disabled={isRunning}
+          onClick={onRunCode}
+        >
           {isRunning ? (
             <>
               <Loader2Icon className="size-4 animate-spin" />
@@ -197,8 +229,8 @@ function CodeEditorPanel({
         <Editor
           height={"100%"}
           language={LANGUAGE_CONFIG[selectedLanguage]?.monacoLang || "javascript"}
-          value={sessionId ? undefined : code} // When using Yjs, don't control value
-          onChange={sessionId ? undefined : onCodeChange} // Yjs handles syncing
+          value={sessionId ? undefined : code}
+          onChange={handleEditorChange}
           onMount={handleEditorMount}
           theme="vs-dark"
           options={{
@@ -207,6 +239,18 @@ function CodeEditorPanel({
             scrollBeyondLastLine: false,
             automaticLayout: true,
             minimap: { enabled: false },
+            tabSize: 2,
+            wordWrap: "on",
+            padding: { top: 16, bottom: 16 },
+            smoothScrolling: true,
+            cursorBlinking: "smooth",
+            cursorSmoothCaretAnimation: "on",
+            renderLineHighlight: "gutter",
+            bracketPairColorization: { enabled: true },
+            suggest: {
+              showKeywords: true,
+              showSnippets: true,
+            },
           }}
         />
       </div>

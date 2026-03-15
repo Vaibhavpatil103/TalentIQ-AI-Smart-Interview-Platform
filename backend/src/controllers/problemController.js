@@ -1,4 +1,6 @@
 import Problem from "../models/Problem.js";
+import XLSX from "xlsx";
+import fs from "fs";
 
 export async function getAllProblems(req, res) {
   try {
@@ -12,9 +14,10 @@ export async function getAllProblems(req, res) {
       filter.tags = { $in: tag.split(",") };
     }
     if (search) {
+      const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       filter.$or = [
-        { title: { $regex: search, $options: "i" } },
-        { category: { $regex: search, $options: "i" } },
+        { title: { $regex: escapedSearch, $options: "i" } },
+        { category: { $regex: escapedSearch, $options: "i" } },
       ];
     }
 
@@ -90,3 +93,128 @@ export async function deleteProblem(req, res) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
+export async function importProblems(req, res) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // Read file as buffer (ESM-safe — XLSX.readFile doesn't work in ESM)
+    const buffer = fs.readFileSync(req.file.path);
+    const workbook = XLSX.read(buffer, { type: "buffer" });
+    const sheetName = workbook.SheetNames[0];
+    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+    const batchId = new Date().toISOString();
+
+    // Detect format: standard (Title column) or Love Babbar DSA sheet
+    const keys = Object.keys(rows[0] || {});
+    const isStandard = keys.includes("Title");
+    const isBabbar = keys.some((k) => k.includes("Love Babbar") || k.includes("Problem"));
+
+    let problems = [];
+
+    if (isStandard) {
+      problems = rows
+        .map((row) => {
+          const title = row.Title?.toString().trim();
+          if (!title) return null;
+
+          const difficulty = row.Difficulty?.toString().trim();
+          if (!["Easy", "Medium", "Hard"].includes(difficulty)) return null;
+
+          return {
+            title,
+            difficulty,
+            category: row.Category?.toString().trim() || "General",
+            description: {
+              text: row.Description?.toString().trim() || "",
+              notes: [],
+            },
+            tags: row.Tags
+              ? row.Tags.toString().split(",").map((t) => t.trim()).filter(Boolean)
+              : [],
+            constraints: row.Constraints
+              ? row.Constraints.toString().split("|").map((c) => c.trim()).filter(Boolean)
+              : [],
+            starterCode: {
+              javascript: row.StarterCode_JS?.toString() || "",
+              python: row.StarterCode_Python?.toString() || "",
+              java: row.StarterCode_Java?.toString() || "",
+              cpp: row.StarterCode_CPP?.toString() || "",
+            },
+            source: "excel",
+            importBatch: batchId,
+            isPublic: true,
+          };
+        })
+        .filter(Boolean);
+    } else if (isBabbar) {
+      // Love Babbar DSA sheet format
+      const titleKey = keys.find(
+        (k) => k.includes("Love Babbar") || k.includes("Problem")
+      ) || keys[0];
+
+      let currentCategory = "General";
+
+      for (const row of rows) {
+        const title = row[titleKey]?.toString().trim();
+        const topic = row.__EMPTY?.toString().trim();
+
+        if (!title || title.includes("http") || title === "Problem: " || title === "<->") continue;
+
+        if (topic && topic !== "Topic:") currentCategory = topic;
+
+        problems.push({
+          title,
+          difficulty: "Medium",
+          category: currentCategory,
+          description: { text: title, notes: [] },
+          tags: [currentCategory],
+          constraints: [],
+          starterCode: { javascript: "", python: "", java: "", cpp: "" },
+          source: "excel",
+          importBatch: batchId,
+          isPublic: true,
+        });
+      }
+    } else {
+      try { fs.unlinkSync(req.file.path); } catch { /* ignore */ }
+      return res.status(400).json({
+        message: "Unrecognized Excel format. Expected 'Title' column or a Love Babbar DSA sheet.",
+      });
+    }
+
+    if (problems.length === 0) {
+      try { fs.unlinkSync(req.file.path); } catch { /* ignore */ }
+      return res.status(400).json({ message: "No valid problems found in the file" });
+    }
+
+    let imported = 0;
+    let skipped = 0;
+
+    try {
+      const result = await Problem.insertMany(problems, { ordered: false });
+      imported = result.length;
+      skipped = problems.length - imported;
+    } catch (err) {
+      if (err.code === 11000 || err.insertedDocs) {
+        imported = err.insertedDocs?.length || err.result?.nInserted || 0;
+        skipped = problems.length - imported;
+      } else {
+        throw err;
+      }
+    }
+
+    // Cleanup temp file
+    try { fs.unlinkSync(req.file.path); } catch { /* ignore */ }
+
+    res.status(200).json({ success: true, imported, skipped });
+  } catch (error) {
+    console.log("Error in importProblems controller:", error.message);
+    try { if (req.file?.path) fs.unlinkSync(req.file.path); } catch { /* ignore */ }
+    res.status(500).json({ message: "Import failed", error: error.message });
+  }
+}
+

@@ -1,23 +1,60 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 
-export const useTabDetection = (sessionId, socket) => {
-  const violations = useRef(0);
+/**
+ * Hook that detects tab switches (visibilitychange) and window blur events.
+ * Emits cheat:detected via the provided socket instance.
+ *
+ * @param {string} sessionId - The current session ID
+ * @param {string} userId - The current user's ID
+ * @param {object} socket - Socket.io client instance
+ * @returns {{ violationCount: number }}
+ */
+export const useTabDetection = (sessionId, userId, socket) => {
+  const [violationCount, setViolationCount] = useState(0);
 
-  useEffect(() => {
-    const onVisibilityChange = () => {
-      if (document.hidden) {
-        violations.current += 1;
-        socket?.emit("tab-switch", {
+  const handleViolation = useCallback(
+    (type) => {
+      setViolationCount((prev) => {
+        const newCount = prev + 1;
+
+        socket?.emit("cheat:detected", {
           sessionId,
-          count: violations.current,
+          userId,
+          type,
           timestamp: new Date().toISOString(),
         });
+
+        return newCount;
+      });
+    },
+    [sessionId, userId, socket]
+  );
+
+  useEffect(() => {
+    if (!sessionId || !userId) return;
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        handleViolation("tab_switch");
+      }
+    };
+
+    const onWindowBlur = () => {
+      // Only fire if the document is not already hidden
+      // (visibilitychange handles that case)
+      if (!document.hidden) {
+        handleViolation("window_blur");
       }
     };
 
     document.addEventListener("visibilitychange", onVisibilityChange);
-    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
-  }, [sessionId, socket]);
+    window.addEventListener("blur", onWindowBlur);
 
-  return { violations: violations.current };
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("blur", onWindowBlur);
+    };
+  }, [sessionId, userId, handleViolation]);
+
+  return { violationCount };
 };

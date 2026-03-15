@@ -46,11 +46,29 @@ export const useJoinSession = () => {
   const result = useMutation({
     mutationKey: ["joinSession"],
     mutationFn: sessionApi.joinSession,
-    onSuccess: () => toast.success("Joined session successfully!"),
+    // No automatic toast — handled manually in SessionPage based on status
     onError: (error) => toast.error(error.response?.data?.message || "Failed to join session"),
   });
 
   return result;
+};
+
+export const useApproveParticipant = () => {
+  return useMutation({
+    mutationKey: ["approveParticipant"],
+    mutationFn: sessionApi.approveParticipant,
+    onSuccess: () => toast.success("Participant approved!"),
+    onError: (error) => toast.error(error.response?.data?.message || "Failed to approve"),
+  });
+};
+
+export const useRejectParticipant = () => {
+  return useMutation({
+    mutationKey: ["rejectParticipant"],
+    mutationFn: sessionApi.rejectParticipant,
+    onSuccess: () => toast("Participant rejected", { icon: "🚫" }),
+    onError: (error) => toast.error(error.response?.data?.message || "Failed to reject"),
+  });
 };
 
 export const useEndSession = () => {

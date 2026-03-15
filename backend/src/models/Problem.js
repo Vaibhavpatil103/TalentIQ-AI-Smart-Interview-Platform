@@ -55,6 +55,8 @@ const problemSchema = new mongoose.Schema(
     createdBy: {
       type: String, // Clerk userId
     },
+    source: { type: String, enum: ["manual", "excel"], default: "manual" },
+    importBatch: { type: String },
   },
   { timestamps: true }
 );

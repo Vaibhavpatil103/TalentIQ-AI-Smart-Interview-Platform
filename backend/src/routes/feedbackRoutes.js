@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-router.post("/", protectRoute, requireRole("interviewer", "admin"), validate(createFeedbackSchema), createFeedback);
+router.post("/", protectRoute, validate(createFeedbackSchema), createFeedback);
 router.get("/session/:sessionId", protectRoute, getFeedbackBySession);
 router.get("/candidate/:candidateId", protectRoute, getFeedbackByCandidate);
 

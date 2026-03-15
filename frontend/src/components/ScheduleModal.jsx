@@ -5,6 +5,7 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
   const [config, setConfig] = useState({
     date: "",
     time: "",
+    candidateName: "",
     candidateEmail: "",
   });
 
@@ -13,7 +14,11 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
   const handleSubmit = () => {
     if (!config.date || !config.time) return;
     const scheduledAt = new Date(`${config.date}T${config.time}`).toISOString();
-    onSchedule({ scheduledAt, candidateEmail: config.candidateEmail });
+    onSchedule({
+      scheduledAt,
+      candidateEmail: config.candidateEmail,
+      candidateName: config.candidateName,
+    });
   };
 
   return (
@@ -56,6 +61,19 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
 
           <div className="form-control">
             <label className="label">
+              <span className="label-text font-medium">Candidate Name (optional)</span>
+            </label>
+            <input
+              type="text"
+              className="input input-bordered"
+              placeholder="John Smith"
+              value={config.candidateName}
+              onChange={(e) => setConfig({ ...config, candidateName: e.target.value })}
+            />
+          </div>
+
+          <div className="form-control">
+            <label className="label">
               <span className="label-text font-medium">Candidate Email (optional)</span>
             </label>
             <input
@@ -67,9 +85,16 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
             />
             <label className="label">
               <span className="label-text-alt text-base-content/50">
-                An invite email will be sent automatically
+                They'll receive the join code + session link by email
               </span>
             </label>
+            {config.candidateEmail && (
+              <div className="alert alert-info py-2 mt-2">
+                <span className="text-xs">
+                  📧 Invite + join code will be sent to {config.candidateEmail}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 

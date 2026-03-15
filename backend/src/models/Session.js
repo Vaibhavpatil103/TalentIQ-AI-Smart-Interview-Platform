@@ -4,12 +4,10 @@ const sessionSchema = new mongoose.Schema(
   {
     problem: {
       type: String,
-      required: true,
     },
     difficulty: {
       type: String,
       enum: ["easy", "medium", "hard"],
-      required: true,
     },
     host: {
       type: mongoose.Schema.Types.ObjectId,
@@ -23,7 +21,7 @@ const sessionSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["scheduled", "active", "completed", "cancelled"],
+      enum: ["scheduled", "active", "completed", "cancelled", "expired"],
       default: "active",
     },
     scheduledAt: {
@@ -41,12 +39,32 @@ const sessionSchema = new mongoose.Schema(
     problemId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Problem",
+      required: false,
     },
     // stream video call ID
     callId: {
       type: String,
       default: "",
     },
+    // Secure join code
+    joinCode: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    joinLink: {
+      type: String,
+    },
+    candidateEmail: {
+      type: String,
+    },
+    // Waiting room: candidates pending host approval
+    pendingParticipants: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        requestedAt: { type: Date, default: Date.now },
+      },
+    ],
     feedback: {
       codeQuality: { type: Number, min: 1, max: 5 },
       problemSolving: { type: Number, min: 1, max: 5 },
@@ -63,6 +81,14 @@ const sessionSchema = new mongoose.Schema(
       {
         count: { type: Number },
         timestamp: { type: Date },
+      },
+    ],
+    violations: [
+      {
+        userId: String,
+        type: { type: String, enum: ["tab_switch", "window_blur"] },
+        timestamp: { type: Date, default: Date.now },
+        count: Number,
       },
     ],
     chatHistory: [

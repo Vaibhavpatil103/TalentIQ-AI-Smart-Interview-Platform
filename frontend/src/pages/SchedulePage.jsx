@@ -1,4 +1,4 @@
-import { CalendarIcon, ClockIcon, Loader2Icon, UserIcon } from "lucide-react";
+import { AlertTriangleIcon, CalendarIcon, ClockIcon, Loader2Icon, UserIcon } from "lucide-react";
 import Navbar from "../components/Navbar";
 import { useScheduledSessions } from "../hooks/useSchedule";
 import { Link } from "react-router";
@@ -7,6 +7,19 @@ import { format } from "date-fns";
 function SchedulePage() {
   const { data, isLoading } = useScheduledSessions();
   const sessions = data?.sessions || [];
+
+  const getJoinState = (session) => {
+    if (session.status === "expired") return "expired";
+    if (!session.scheduledAt) return "joinable";
+
+    const now = new Date();
+    const scheduledTime = new Date(session.scheduledAt);
+    const msUntilStart = scheduledTime - now;
+
+    // Within 2-minute buffer or past start time
+    if (msUntilStart <= 2 * 60 * 1000) return "joinable";
+    return "waiting";
+  };
 
   return (
     <div className="min-h-screen bg-base-200">
@@ -39,11 +52,16 @@ function SchedulePage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {sessions.map((session) => (
-              <div
-                key={session._id}
-                className="card bg-base-100 shadow-md hover:shadow-lg transition-shadow"
-              >
+            {sessions.map((session) => {
+              const joinState = getJoinState(session);
+
+              return (
+                <div
+                  key={session._id}
+                  className={`card bg-base-100 shadow-md hover:shadow-lg transition-shadow ${
+                    joinState === "expired" ? "opacity-60" : ""
+                  }`}
+                >
                 <div className="card-body">
                   <div className="flex items-center justify-between">
                     <div>
@@ -75,17 +93,34 @@ function SchedulePage() {
                       >
                         {session.difficulty}
                       </span>
-                      <Link
-                        to={`/session/${session._id}`}
-                        className="btn btn-primary btn-sm"
-                      >
-                        Join
-                      </Link>
+
+                      {joinState === "expired" ? (
+                        <span className="btn btn-ghost btn-sm gap-1 btn-disabled text-error">
+                          <AlertTriangleIcon className="size-4" />
+                          Expired
+                        </span>
+                      ) : joinState === "waiting" ? (
+                        <button className="btn btn-outline btn-sm btn-disabled gap-1" disabled>
+                          <ClockIcon className="size-4" />
+                          Starts{" "}
+                          {session.scheduledAt
+                            ? format(new Date(session.scheduledAt), "p")
+                            : "later"}
+                        </button>
+                      ) : (
+                        <Link
+                          to={`/session/${session._id}`}
+                          className="btn btn-primary btn-sm"
+                        >
+                          Join
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

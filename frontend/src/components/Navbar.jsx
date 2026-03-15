@@ -2,20 +2,27 @@ import { Link, useLocation } from "react-router";
 import {
   BookOpenIcon,
   CalendarIcon,
+  InboxIcon,
   KanbanIcon,
   LayoutDashboardIcon,
   ShieldIcon,
   SparklesIcon,
   UserIcon,
+  ZapIcon,
+  TrophyIcon,
 } from "lucide-react";
 import { UserButton, useUser } from "@clerk/clerk-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { axiosInstance } from "../lib/axios";
+import { io } from "socket.io-client";
 
 function Navbar() {
   const location = useLocation();
   const { user } = useUser();
   const [userRole, setUserRole] = useState("candidate");
+  const [unreadCount, setUnreadCount] = useState(0);
+  const intervalRef = useRef(null);
+  const socketRef = useRef(null);
 
   useEffect(() => {
     const fetchRole = async () => {
@@ -29,9 +36,73 @@ function Navbar() {
     if (user) fetchRole();
   }, [user]);
 
+  const fetchUnread = async () => {
+    try {
+      const res = await axiosInstance.get("/inbox/unread-count");
+      setUnreadCount(res.data.count || 0);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  // Fetch unread count on mount + poll every 30s
+  useEffect(() => {
+    if (!user) return;
+
+    fetchUnread();
+    intervalRef.current = setInterval(fetchUnread, 30000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [user]);
+
+  // Socket.IO: real-time unread badge updates
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
+    const serverUrl = apiUrl.replace(/\/api\/?$/, "");
+    const socket = io(serverUrl, { withCredentials: true });
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      socket.emit("join:inbox", user.id);
+    });
+
+    socket.on("inbox:unread", () => {
+      fetchUnread();
+    });
+
+    socket.on("inbox:new-message", () => {
+      fetchUnread();
+    });
+
+    return () => {
+      socket.disconnect();
+      socketRef.current = null;
+    };
+  }, [user?.id]);
+
+  // Re-fetch when navigating to /inbox
+  useEffect(() => {
+    if (location.pathname === "/inbox" && user) {
+      const fetchUnread = async () => {
+        try {
+          const res = await axiosInstance.get("/inbox/unread-count");
+          setUnreadCount(res.data.count || 0);
+        } catch {
+          /* ignore */
+        }
+      };
+      // Small delay to allow mark-as-read to process
+      setTimeout(fetchUnread, 500);
+    }
+  }, [location.pathname, user]);
+
   const isActive = (path) => location.pathname === path;
 
-  const navLink = (to, icon, label) => (
+  const navLink = (to, icon, label, badge) => (
     <Link
       to={to}
       className={`px-4 py-2.5 rounded-lg transition-all duration-200 
@@ -41,9 +112,14 @@ function Navbar() {
             : "hover:bg-base-200 text-base-content/70 hover:text-base-content"
         }`}
     >
-      <div className="flex items-center gap-x-2.5">
+      <div className="flex items-center gap-x-2.5 relative">
         {icon}
         <span className="font-medium hidden sm:inline">{label}</span>
+        {badge > 0 && (
+          <span className="badge badge-error badge-xs absolute -top-2 -right-3 text-[10px] font-bold px-1">
+            {badge > 99 ? "99+" : badge}
+          </span>
+        )}
       </div>
     </Link>
   );
@@ -72,6 +148,10 @@ function Navbar() {
           {navLink("/problems", <BookOpenIcon className="size-4" />, "Problems")}
           {navLink("/dashboard", <LayoutDashboardIcon className="size-4" />, "Dashboard")}
           {navLink("/schedule", <CalendarIcon className="size-4" />, "Schedule")}
+          {navLink("/ai-practice", <SparklesIcon className="size-4" />, "AI Practice")}
+          {navLink("/daily-challenge", <ZapIcon className="size-4" />, "Daily")}
+          {navLink("/company-tracks", <TrophyIcon className="size-4" />, "Tracks")}
+          {navLink("/inbox", <InboxIcon className="size-4" />, "Inbox", unreadCount)}
           {navLink("/profile", <UserIcon className="size-4" />, "Profile")}
 
           {/* Recruiter/Admin-only links */}

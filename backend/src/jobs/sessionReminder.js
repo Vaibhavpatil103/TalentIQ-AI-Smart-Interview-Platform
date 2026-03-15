@@ -25,8 +25,8 @@ export const sessionReminder = inngest.createFunction(
         .populate("host", "name email")
         .populate("participant", "name email");
 
-      if (!session || session.status === "cancelled") {
-        console.log("Session cancelled or not found — skipping reminder");
+      if (!session || ["cancelled", "expired", "completed"].includes(session.status)) {
+        console.log(`Session ${session?.status || "not found"} — skipping reminder`);
         return;
       }
 
@@ -38,7 +38,9 @@ export const sessionReminder = inngest.createFunction(
             to: candidate.email,
             candidateName: candidate.name,
             scheduledAt: session.scheduledAt,
-            sessionLink: `${process.env.CLIENT_URL || "http://localhost:5173"}/session/${session._id}`,
+            sessionLink: session.joinCode
+              ? `${process.env.CLIENT_URL || "http://localhost:5173"}/join?code=${session.joinCode}`
+              : `${process.env.CLIENT_URL || "http://localhost:5173"}/session/${session._id}`,
           });
         }
       }

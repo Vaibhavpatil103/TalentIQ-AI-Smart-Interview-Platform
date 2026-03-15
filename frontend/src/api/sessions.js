@@ -20,10 +20,21 @@ export const sessionApi = {
     return response.data;
   },
 
-  joinSession: async (id) => {
-    const response = await axiosInstance.post(`/sessions/${id}/join`);
+  joinSession: async ({ id, joinCode }) => {
+    const response = await axiosInstance.post(`/sessions/${id}/join`, { joinCode });
     return response.data;
   },
+
+  approveParticipant: async ({ sessionId, userId }) => {
+    const response = await axiosInstance.post(`/sessions/${sessionId}/approve`, { userId });
+    return response.data;
+  },
+
+  rejectParticipant: async ({ sessionId, userId }) => {
+    const response = await axiosInstance.post(`/sessions/${sessionId}/reject`, { userId });
+    return response.data;
+  },
+
   endSession: async ({ id, code, language } = {}) => {
     const response = await axiosInstance.post(`/sessions/${id}/end`, { code, language });
     return response.data;

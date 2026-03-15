@@ -10,6 +10,7 @@ import StatsCards from "../components/StatsCards";
 import ActiveSessions from "../components/ActiveSessions";
 import RecentSessions from "../components/RecentSessions";
 import CreateSessionModal from "../components/CreateSessionModal";
+import JoinCodeModal from "../components/JoinCodeModal";
 import { CalendarIcon, ClockIcon } from "lucide-react";
 import { Link } from "react-router";
 
@@ -17,7 +18,12 @@ function DashboardPage() {
   const navigate = useNavigate();
   const { user } = useUser();
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
+
+  // Join code modal state
+  const [showJoinCodeModal, setShowJoinCodeModal] = useState(false);
+  const [createdJoinCode, setCreatedJoinCode] = useState("");
+  const [createdJoinLink, setCreatedJoinLink] = useState("");
+  const [createdSessionId, setCreatedSessionId] = useState(null);
 
   const createSessionMutation = useCreateSession();
 
@@ -26,18 +32,17 @@ function DashboardPage() {
   const { data: scheduledData } = useScheduledSessions();
 
   const handleCreateRoom = (extra = {}) => {
-    if (!roomConfig.problem || !roomConfig.difficulty) return;
-
     createSessionMutation.mutate(
       {
-        problem: roomConfig.problem,
-        difficulty: roomConfig.difficulty.toLowerCase(),
         ...extra,
       },
       {
         onSuccess: (data) => {
           setShowCreateModal(false);
-          navigate(`/session/${data.session._id}`);
+          setCreatedJoinCode(data.joinCode);
+          setCreatedJoinLink(data.joinLink);
+          setCreatedSessionId(data.session._id);
+          setShowJoinCodeModal(true);
         },
       }
     );
@@ -57,7 +62,10 @@ function DashboardPage() {
     <>
       <div className="min-h-screen bg-base-300">
         <Navbar />
-        <WelcomeSection onCreateSession={() => setShowCreateModal(true)} />
+        <WelcomeSection
+          onCreateSession={() => setShowCreateModal(true)}
+          onJoinSession={() => navigate("/join")}
+        />
 
         {/* Grid layout */}
         <div className="container mx-auto px-6 pb-16">
@@ -115,10 +123,20 @@ function DashboardPage() {
       <CreateSessionModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
-        roomConfig={roomConfig}
-        setRoomConfig={setRoomConfig}
         onCreateRoom={handleCreateRoom}
         isCreating={createSessionMutation.isPending}
+      />
+
+      <JoinCodeModal
+        isOpen={showJoinCodeModal}
+        onClose={() => {
+          setShowJoinCodeModal(false);
+          if (createdSessionId) {
+            navigate(`/session/${createdSessionId}`);
+          }
+        }}
+        joinCode={createdJoinCode}
+        joinLink={createdJoinLink}
       />
     </>
   );

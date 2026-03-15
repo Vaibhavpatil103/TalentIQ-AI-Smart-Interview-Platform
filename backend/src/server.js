@@ -6,6 +6,8 @@ import { serve } from "inngest/express";
 import { clerkMiddleware } from "@clerk/express";
 import { WebSocketServer } from "ws";
 import * as Y from "yjs";
+import { Server as SocketIOServer } from "socket.io";
+import Session from "./models/Session.js";
 
 import { ENV } from "./lib/env.js";
 import { connectDB } from "./lib/db.js";
@@ -17,6 +19,10 @@ import sessionRoutes from "./routes/sessionRoute.js";
 import problemRoutes from "./routes/problemRoutes.js";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import executeRoutes from "./routes/executeRoute.js";
+import aiPracticeRoutes from "./routes/aiPracticeRoutes.js";
+import gamificationRoutes from "./routes/gamificationRoutes.js";
+import inboxRoutes from "./routes/inboxRoutes.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -34,6 +40,10 @@ app.use("/api/sessions", sessionRoutes);
 app.use("/api/problems", problemRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/execute", executeRoutes);
+app.use("/api/ai-practice", aiPracticeRoutes);
+app.use("/api/gamification", gamificationRoutes);
+app.use("/api/inbox", inboxRoutes);
 
 app.get("/health", (req, res) => {
   res.status(200).json({ msg: "api is up and running" });
@@ -105,6 +115,71 @@ wss.on("connection", (ws, req) => {
         }
       }, 5 * 60 * 1000);
     }
+  });
+});
+
+// ─── Socket.io Server (Real-time Events) ────────────────────────
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: ENV.CLIENT_URL,
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+// Store io on Express app so controllers can broadcast events
+app.set("io", io);
+
+io.on("connection", (socket) => {
+  console.log(`[Socket.io] Client connected: ${socket.id}`);
+
+  socket.on("join:session", (sessionId) => {
+    socket.join(sessionId);
+    console.log(`[Socket.io] ${socket.id} joined room: ${sessionId}`);
+  });
+
+  // Inbox: user joins their personal room for real-time messages
+  socket.on("join:inbox", (userId) => {
+    socket.join(`inbox:${userId}`);
+    console.log(`[Socket.io] ${socket.id} joined inbox room: inbox:${userId}`);
+  });
+
+  socket.on("cheat:detected", async (payload) => {
+    const { sessionId, userId, type, timestamp } = payload;
+    console.log(`[Socket.io] Cheat detected — session: ${sessionId}, user: ${userId}, type: ${type}`);
+
+    try {
+      // Count existing violations of this type for this user in the session
+      const session = await Session.findById(sessionId);
+      const existingCount = session?.violations?.filter(
+        (v) => v.userId === userId && v.type === type
+      ).length || 0;
+
+      await Session.findByIdAndUpdate(sessionId, {
+        $push: {
+          violations: {
+            userId,
+            type,
+            timestamp: timestamp || new Date(),
+            count: existingCount + 1,
+          },
+        },
+      });
+
+      // Broadcast to all clients in the session room (interviewer gets the alert)
+      io.to(sessionId).emit("violation:alert", {
+        userId,
+        type,
+        timestamp: timestamp || new Date(),
+        totalCount: existingCount + 1,
+      });
+    } catch (err) {
+      console.error("[Socket.io] Error saving violation:", err);
+    }
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`[Socket.io] Client disconnected: ${socket.id}`);
   });
 });
 

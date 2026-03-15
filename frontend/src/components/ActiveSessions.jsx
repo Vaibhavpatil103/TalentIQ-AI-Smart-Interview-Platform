@@ -52,7 +52,8 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-bold text-lg truncate">{session.problem}</h3>
+                        <h3 className="font-bold text-lg truncate">{session.problem || "No problem selected"}</h3>
+                        {session.difficulty && (
                         <span
                           className={`badge badge-sm ${getDifficultyBadgeClass(
                             session.difficulty
@@ -61,6 +62,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                           {session.difficulty.slice(0, 1).toUpperCase() +
                             session.difficulty.slice(1)}
                         </span>
+                        )}
                       </div>
 
                       <div className="flex items-center gap-4 text-sm opacity-80">
@@ -85,7 +87,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                     <button className="btn btn-disabled btn-sm">Full</button>
                   ) : (
                     <Link to={`/session/${session._id}`} className="btn btn-primary btn-sm gap-2">
-                      {isUserInSession(session) ? "Rejoin" : "Join"}
+                      Rejoin
                       <ArrowRightIcon className="size-4" />
                     </Link>
                   )}

@@ -72,7 +72,7 @@ export const updateProblemSchema = createProblemSchema.partial();
 
 export const createFeedbackSchema = z.object({
   sessionId: z.string().min(1, "Session ID is required"),
-  candidateId: z.string().min(1, "Candidate ID is required"),
+  candidateId: z.string().optional(),
   codeQuality: z.number().min(1).max(5),
   problemSolving: z.number().min(1).max(5),
   communication: z.number().min(1).max(5),

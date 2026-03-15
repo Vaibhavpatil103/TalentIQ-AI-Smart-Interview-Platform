@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ShieldIcon,
   UsersIcon,
   Loader2Icon,
   SearchIcon,
+  FileSpreadsheetIcon,
+  UploadIcon,
+  CheckCircle2Icon,
+  XCircleIcon,
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import { axiosInstance } from "../lib/axios";
@@ -13,6 +17,13 @@ function AdminPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+
+  // Excel import state
+  const [importFile, setImportFile] = useState(null);
+  const [importLoading, setImportLoading] = useState(false);
+  const [importResult, setImportResult] = useState(null);
+  const [importError, setImportError] = useState(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetchUsers();
@@ -55,6 +66,38 @@ function AdminPage() {
     return styles[role] || "badge-ghost";
   };
 
+  const handleImport = async () => {
+    if (!importFile) return;
+    setImportLoading(true);
+    setImportResult(null);
+    setImportError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", importFile);
+
+      const res = await axiosInstance.post("/problems/import", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setImportResult(res.data);
+      toast.success(`Imported ${res.data.imported} problems!`);
+
+      // Auto-clear after 5 seconds
+      setTimeout(() => {
+        setImportResult(null);
+        setImportFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      }, 5000);
+    } catch (error) {
+      const msg = error.response?.data?.message || error.response?.data?.error || "Import failed";
+      setImportError(msg);
+      toast.error(msg);
+    } finally {
+      setImportLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-base-200">
       <Navbar />
@@ -93,6 +136,69 @@ function AdminPage() {
             <div className="stat-value text-info">
               {users.filter((u) => u.role === "recruiter").length}
             </div>
+          </div>
+        </div>
+
+        {/* Import Problems from Excel */}
+        <div className="card bg-base-100 shadow-lg mb-8">
+          <div className="card-body">
+            <div className="flex items-center gap-3 mb-2">
+              <FileSpreadsheetIcon className="size-6 text-success" />
+              <div>
+                <h2 className="card-title text-lg">Import Problems from Excel</h2>
+                <p className="text-sm text-base-content/60">
+                  Upload a .xlsx file to bulk import coding problems into the database
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 mt-4">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".xlsx"
+                className="file-input file-input-bordered file-input-sm w-full max-w-xs"
+                onChange={(e) => {
+                  setImportFile(e.target.files[0] || null);
+                  setImportResult(null);
+                  setImportError(null);
+                }}
+              />
+              <button
+                className="btn btn-primary btn-sm gap-2"
+                disabled={!importFile || importLoading}
+                onClick={handleImport}
+              >
+                {importLoading ? (
+                  <>
+                    <Loader2Icon className="size-4 animate-spin" />
+                    Importing...
+                  </>
+                ) : (
+                  <>
+                    <UploadIcon className="size-4" />
+                    Import Problems
+                  </>
+                )}
+              </button>
+            </div>
+
+            {importResult && (
+              <div className="alert alert-success mt-4">
+                <CheckCircle2Icon className="size-5" />
+                <span>
+                  ✅ Imported {importResult.imported} problems, skipped{" "}
+                  {importResult.skipped} duplicates
+                </span>
+              </div>
+            )}
+
+            {importError && (
+              <div className="alert alert-error mt-4">
+                <XCircleIcon className="size-5" />
+                <span>{importError}</span>
+              </div>
+            )}
           </div>
         </div>
 
