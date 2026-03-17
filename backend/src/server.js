@@ -184,13 +184,16 @@ io.on("connection", (socket) => {
 });
 
 // ─── Production static files ─────────────────────────────────────
-if (ENV.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-  app.get("/{*any}", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-  });
-}
+// NOTE: Static file serving is disabled because the frontend is deployed
+// separately on Vercel. If you ever want to serve both from one server,
+// uncomment the block below and run `npm run build` in the frontend folder.
+//
+// if (ENV.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "../frontend/dist")));
+//   app.get("/{*any}", (req, res) => {
+//     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+//   });
+// }
 
 // ─── Global Error Handlers ───────────────────────────────────────
 app.use((err, req, res, next) => {
