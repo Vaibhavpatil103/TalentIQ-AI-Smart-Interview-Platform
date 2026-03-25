@@ -1,17 +1,18 @@
 import { ClockIcon, MessageSquareIcon } from "lucide-react";
+import { motion } from "framer-motion";
 
 function SessionHistoryCard({ session, onClick }) {
   const modeBadge =
     session.mode === "topic" ? (
-      <span className="badge badge-info badge-sm">Topic</span>
+      <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded border border-[#58a6ff40] text-[#58a6ff] bg-[#58a6ff10]">Topic</span>
     ) : (
-      <span className="badge badge-secondary badge-sm">Resume</span>
+      <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded border border-[#a371f740] text-[#a371f7] bg-[#a371f710]">Resume</span>
     );
 
   const difficultyColor = {
-    Easy: "badge-success",
-    Medium: "badge-warning",
-    Hard: "badge-error",
+    Easy: "border-[#2cbe4e40] text-[#2cbe4e] bg-[#2cbe4e10]",
+    Medium: "border-[#d2992240] text-[#d29922] bg-[#d2992210]",
+    Hard: "border-[#f8514940] text-[#f85149] bg-[#f8514910]",
   };
 
   const formatDate = (dateStr) => {
@@ -25,30 +26,35 @@ function SessionHistoryCard({ session, onClick }) {
   const formatDuration = (seconds) => {
     if (!seconds) return "—";
     const mins = Math.round(seconds / 60);
-    return `${mins} min`;
+    return `${mins}m`;
   };
 
   const overallScore = session.feedback?.overallScore ?? "—";
   const scoreColor =
     overallScore >= 7
-      ? "text-success"
+      ? "text-[#2cbe4e]"
       : overallScore >= 4
-      ? "text-warning"
-      : "text-error";
+      ? "text-[#d29922]"
+      : "text-[#f85149]";
 
   return (
-    <div
-      className="card bg-base-100 shadow-md border border-base-300 hover:border-primary/40 hover:shadow-lg transition-all duration-200 cursor-pointer group"
+    <motion.div
+      whileHover={{ y: -2 }}
+      className="card-dark-hover p-4 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4"
       onClick={onClick}
     >
-      <div className="card-body p-5">
-        {/* Header row */}
-        <div className="flex items-center justify-between mb-2">
+      <div className="flex-1">
+        <div className="flex items-center gap-3 mb-1">
+          <h3 className="font-semibold text-[#e6edf3] text-lg">
+            {session.mode === "topic"
+              ? session.topic || "Topic Interview"
+              : "Resume Interview"}
+          </h3>
           <div className="flex items-center gap-2">
             {modeBadge}
             {session.difficulty && (
               <span
-                className={`badge badge-sm ${
+                className={`text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded border ${
                   difficultyColor[session.difficulty] || ""
                 }`}
               >
@@ -56,44 +62,30 @@ function SessionHistoryCard({ session, onClick }) {
               </span>
             )}
           </div>
-          <span className="badge badge-success badge-sm badge-outline">
-            Completed
-          </span>
         </div>
-
-        {/* Title */}
-        <h3 className="font-bold text-base group-hover:text-primary transition-colors">
-          {session.mode === "topic"
-            ? session.topic || "Topic Interview"
-            : "Resume Interview"}
-        </h3>
-
-        {/* Score + Meta */}
-        <div className="flex items-center justify-between mt-3">
-          <div className={`text-3xl font-black ${scoreColor}`}>
-            {overallScore}
-            <span className="text-sm font-normal text-base-content/50">
-              /10
-            </span>
+        
+        <div className="flex items-center gap-4 mt-2">
+          <div className="flex items-center gap-1.5 text-sm text-[#7d8590]">
+            <ClockIcon className="size-4" />
+            <span>{formatDuration(session.totalDuration)}</span>
           </div>
-          <div className="flex flex-col items-end gap-1 text-xs text-base-content/60">
-            <div className="flex items-center gap-1">
-              <ClockIcon className="size-3" />
-              {formatDuration(session.totalDuration)}
-            </div>
-            <div className="flex items-center gap-1">
-              <MessageSquareIcon className="size-3" />
-              {session.questionCount || 0} questions
-            </div>
+          <div className="flex items-center gap-1.5 text-sm text-[#7d8590]">
+            <MessageSquareIcon className="size-4" />
+            <span>{session.questionCount || 0} questions</span>
           </div>
-        </div>
-
-        {/* Date */}
-        <div className="text-xs text-base-content/40 mt-2">
-          {formatDate(session.createdAt)}
+          <div className="text-sm text-[#484f58] ml-2">
+            {formatDate(session.createdAt)}
+          </div>
         </div>
       </div>
-    </div>
+
+      <div className="shrink-0 flex items-center justify-end">
+        <div className={`font-mono text-3xl font-black ${scoreColor}`}>
+          {overallScore}
+          <span className="text-sm font-bold text-[#7d8590] ml-1">/10</span>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 

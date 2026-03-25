@@ -1,3 +1,4 @@
+// AdminPage.jsx
 import { useState, useEffect, useRef } from "react";
 import {
   ShieldIcon,
@@ -12,13 +13,13 @@ import {
 import Navbar from "../components/Navbar";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 function AdminPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
-  // Excel import state
   const [importFile, setImportFile] = useState(null);
   const [importLoading, setImportLoading] = useState(false);
   const [importResult, setImportResult] = useState(null);
@@ -56,14 +57,14 @@ function AdminPage() {
       u.email?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const getRoleBadge = (role) => {
+  const getRoleColor = (role) => {
     const styles = {
-      admin: "badge-error",
-      recruiter: "badge-info",
-      interviewer: "badge-warning",
-      candidate: "badge-success",
+      admin: "border-[#f8514940] text-[#f85149] bg-[#f8514910]",
+      recruiter: "border-[#58a6ff40] text-[#58a6ff] bg-[#58a6ff10]",
+      interviewer: "border-[#d2992240] text-[#d29922] bg-[#d2992210]",
+      candidate: "border-[#2cbe4e40] text-[#2cbe4e] bg-[#2cbe4e10]",
     };
-    return styles[role] || "badge-ghost";
+    return styles[role] || "border-[#30363d] text-[#7d8590] bg-[#1c2128]";
   };
 
   const handleImport = async () => {
@@ -83,7 +84,6 @@ function AdminPage() {
       setImportResult(res.data);
       toast.success(`Imported ${res.data.imported} problems!`);
 
-      // Auto-clear after 5 seconds
       setTimeout(() => {
         setImportResult(null);
         setImportFile(null);
@@ -99,116 +99,130 @@ function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-base-200">
+    <div className="min-h-screen bg-[#0d1117]">
       <Navbar />
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="flex items-center gap-3 mb-8">
-          <ShieldIcon className="size-8 text-primary" />
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-6xl mx-auto px-6 py-12"
+      >
+        <div className="flex items-center gap-4 mb-10">
+          <div className="size-12 rounded-xl bg-[#1c2128] border border-[#30363d] flex items-center justify-center shadow-lg">
+            <ShieldIcon className="size-6 text-[#2cbe4e]" />
+          </div>
           <div>
-            <h1 className="text-3xl font-bold">Admin Panel</h1>
-            <p className="text-base-content/60">Manage users and roles</p>
+            <h1 className="text-2xl font-bold text-[#e6edf3]">Admin Panel</h1>
+            <p className="text-[#7d8590] text-sm mt-1">Manage platform users and data</p>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="stats shadow mb-8 w-full">
-          <div className="stat">
-            <div className="stat-figure text-primary">
-              <UsersIcon className="size-8" />
+        {/* Stats Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full">
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 shadow-sm">
+            <div className="flex items-center gap-3 mb-2">
+              <UsersIcon className="size-5 text-[#2cbe4e]" />
+              <span className="text-[#7d8590] text-xs font-bold uppercase tracking-wider">Total Users</span>
             </div>
-            <div className="stat-title">Total Users</div>
-            <div className="stat-value text-primary">{users.length}</div>
+            <div className="text-3xl font-black text-[#e6edf3]">{users.length}</div>
           </div>
-          <div className="stat">
-            <div className="stat-title">Interviewers</div>
-            <div className="stat-value text-warning">
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 shadow-sm">
+            <div className="text-[#7d8590] text-xs font-bold uppercase tracking-wider mb-2">Interviewers</div>
+            <div className="text-3xl font-black text-[#d29922]">
               {users.filter((u) => u.role === "interviewer").length}
             </div>
           </div>
-          <div className="stat">
-            <div className="stat-title">Candidates</div>
-            <div className="stat-value text-success">
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 shadow-sm">
+            <div className="text-[#7d8590] text-xs font-bold uppercase tracking-wider mb-2">Candidates</div>
+            <div className="text-3xl font-black text-[#2cbe4e]">
               {users.filter((u) => u.role === "candidate").length}
             </div>
           </div>
-          <div className="stat">
-            <div className="stat-title">Recruiters</div>
-            <div className="stat-value text-info">
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 shadow-sm">
+            <div className="text-[#7d8590] text-xs font-bold uppercase tracking-wider mb-2">Recruiters</div>
+            <div className="text-3xl font-black text-[#58a6ff]">
               {users.filter((u) => u.role === "recruiter").length}
             </div>
           </div>
         </div>
 
         {/* Import Problems from Excel */}
-        <div className="card bg-base-100 shadow-lg mb-8">
-          <div className="card-body">
-            <div className="flex items-center gap-3 mb-2">
-              <FileSpreadsheetIcon className="size-6 text-success" />
-              <div>
-                <h2 className="card-title text-lg">Import Problems from Excel</h2>
-                <p className="text-sm text-base-content/60">
-                  Upload a .xlsx file to bulk import coding problems into the database
-                </p>
-              </div>
+        <div className="card-dark p-6 mb-8 border border-[#30363d]">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-[#2cbe4e10] rounded-lg">
+              <FileSpreadsheetIcon className="size-5 text-[#2cbe4e]" />
             </div>
-
-            <div className="flex flex-wrap items-center gap-3 mt-4">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".xlsx"
-                className="file-input file-input-bordered file-input-sm w-full max-w-xs"
-                onChange={(e) => {
-                  setImportFile(e.target.files[0] || null);
-                  setImportResult(null);
-                  setImportError(null);
-                }}
-              />
-              <button
-                className="btn btn-primary btn-sm gap-2"
-                disabled={!importFile || importLoading}
-                onClick={handleImport}
-              >
-                {importLoading ? (
-                  <>
-                    <Loader2Icon className="size-4 animate-spin" />
-                    Importing...
-                  </>
-                ) : (
-                  <>
-                    <UploadIcon className="size-4" />
-                    Import Problems
-                  </>
-                )}
-              </button>
+            <div>
+              <h2 className="text-lg font-bold text-[#e6edf3]">Import Problems</h2>
+              <p className="text-sm text-[#7d8590]">
+                Upload a .xlsx file to bulk import coding problems into the database
+              </p>
             </div>
-
-            {importResult && (
-              <div className="alert alert-success mt-4">
-                <CheckCircle2Icon className="size-5" />
-                <span>
-                  ✅ Imported {importResult.imported} problems, skipped{" "}
-                  {importResult.skipped} duplicates
-                </span>
-              </div>
-            )}
-
-            {importError && (
-              <div className="alert alert-error mt-4">
-                <XCircleIcon className="size-5" />
-                <span>{importError}</span>
-              </div>
-            )}
           </div>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-6">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".xlsx"
+              className="block w-full max-w-sm text-sm text-[#7d8590]
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-lg file:border-0
+                file:text-sm file:font-semibold
+                file:bg-[#2cbe4e] file:text-black
+                hover:file:bg-[#1a7f37] cursor-pointer"
+              onChange={(e) => {
+                setImportFile(e.target.files[0] || null);
+                setImportResult(null);
+                setImportError(null);
+              }}
+            />
+            <button
+              className={`btn-green gap-2 px-6 py-2 ${!importFile || importLoading ? 'opacity-50 cursor-not-allowed bg-[#1c2128] text-[#7d8590] hover:bg-[#1c2128]' : ''}`}
+              disabled={!importFile || importLoading}
+              onClick={handleImport}
+            >
+              {importLoading ? (
+                <>
+                  <Loader2Icon className="size-4 animate-spin" />
+                  Importing...
+                </>
+              ) : (
+                <>
+                  <UploadIcon className="size-4" />
+                  Process File
+                </>
+              )}
+            </button>
+          </div>
+
+          {importResult && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3 bg-[#2cbe4e10] border border-[#2cbe4e40] p-4 rounded-xl mt-6">
+              <CheckCircle2Icon className="size-5 text-[#2cbe4e]" />
+              <span className="text-sm text-[#e6edf3]">
+                <strong className="text-[#2cbe4e]">Success!</strong> Imported {importResult.imported} problems, skipped{" "}
+                {importResult.skipped} duplicates.
+              </span>
+            </motion.div>
+          )}
+
+          {importError && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3 bg-[#f8514910] border border-[#f8514940] p-4 rounded-xl mt-6">
+              <XCircleIcon className="size-5 text-[#f85149]" />
+              <span className="text-sm text-[#e6edf3]">
+                <strong className="text-[#f85149]">Error:</strong> {importError}
+              </span>
+            </motion.div>
+          )}
         </div>
 
         {/* Search */}
         <div className="relative mb-6">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-base-content/40" />
+          <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-[#484f58]" />
           <input
             type="text"
-            placeholder="Search users..."
-            className="input input-bordered w-full pl-10"
+            placeholder="Search users by name or email..."
+            className="input-dark w-full pl-12 py-3"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -216,63 +230,76 @@ function AdminPage() {
 
         {/* Users Table */}
         {loading ? (
-          <div className="flex justify-center py-20">
-            <Loader2Icon className="size-10 animate-spin text-primary" />
+          <div className="bg-[#161b22] border border-[#30363d] rounded-2xl p-6 space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-16 bg-[#1c2128] rounded-xl animate-pulse" />
+            ))}
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="table table-zebra bg-base-100 rounded-xl shadow-lg">
-              <thead>
-                <tr>
-                  <th>User</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Interviews</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user._id}>
-                    <td>
-                      <div className="flex items-center gap-3">
-                        <div className="avatar">
-                          <div className="w-10 rounded-full">
-                            <img
-                              src={user.profileImage || "/default-avatar.png"}
-                              alt={user.name}
-                            />
-                          </div>
-                        </div>
-                        <span className="font-medium">{user.name}</span>
-                      </div>
-                    </td>
-                    <td className="text-base-content/60">{user.email}</td>
-                    <td>
-                      <span className={`badge ${getRoleBadge(user.role)} capitalize`}>
-                        {user.role}
-                      </span>
-                    </td>
-                    <td>{user.interviewsCompleted || 0}</td>
-                    <td>
-                      <select
-                        className="select select-bordered select-sm"
-                        value={user.role}
-                        onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                      >
-                        <option value="candidate">Candidate</option>
-                        <option value="interviewer">Interviewer</option>
-                        <option value="recruiter">Recruiter</option>
-                        <option value="admin">Admin</option>
-                      </select>
-                    </td>
+          <div className="bg-[#161b22] border border-[#30363d] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-[#1c2128]">
+                    <th className="px-6 py-4 text-xs uppercase font-bold text-[#7d8590] tracking-wider border-b border-[#30363d]">User</th>
+                    <th className="px-6 py-4 text-xs uppercase font-bold text-[#7d8590] tracking-wider border-b border-[#30363d]">Email</th>
+                    <th className="px-6 py-4 text-xs uppercase font-bold text-[#7d8590] tracking-wider border-b border-[#30363d]">Role</th>
+                    <th className="px-6 py-4 text-xs uppercase font-bold text-[#7d8590] tracking-wider border-b border-[#30363d]">Interviews</th>
+                    <th className="px-6 py-4 text-xs uppercase font-bold text-[#7d8590] tracking-wider border-b border-[#30363d]">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-[#30363d]">
+                  {filteredUsers.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" className="px-6 py-12 text-center text-[#7d8590]">
+                        No users found matching your search.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredUsers.map((user) => (
+                      <tr key={user._id} className="hover:bg-[#1c2128] transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="size-10 rounded-full border border-[#30363d] overflow-hidden bg-[#0d1117] shrink-0">
+                              <img
+                                src={user.profileImage || "/default-avatar.png"}
+                                alt={user.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <span className="font-semibold text-[#e6edf3]">{user.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-[#7d8590]">{user.email}</td>
+                        <td className="px-6 py-4">
+                          <span className={`text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-full border ${getRoleColor(user.role)}`}>
+                            {user.role}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-[#e6edf3] font-mono text-sm pl-8">
+                          {user.interviewsCompleted || 0}
+                        </td>
+                        <td className="px-6 py-4">
+                          <select
+                            className="input-dark py-1.5 text-sm cursor-pointer appearance-none bg-transparent max-w-[140px]"
+                            value={user.role}
+                            onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                          >
+                            <option value="candidate">Candidate</option>
+                            <option value="interviewer">Interviewer</option>
+                            <option value="recruiter">Recruiter</option>
+                            <option value="admin">Admin</option>
+                          </select>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

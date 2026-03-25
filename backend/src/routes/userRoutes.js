@@ -7,6 +7,7 @@ import {
   getInterviewHistory,
   getAllUsers,
   updateUserRole,
+  setRole,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -14,6 +15,7 @@ const router = express.Router();
 // Profile routes
 router.get("/profile", protectRoute, getProfile);
 router.put("/profile", protectRoute, validate(updateProfileSchema), updateProfile);
+router.post("/set-role", protectRoute, setRole);
 router.get("/history", protectRoute, getInterviewHistory);
 
 // Admin routes

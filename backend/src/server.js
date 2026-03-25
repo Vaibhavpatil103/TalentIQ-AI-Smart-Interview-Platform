@@ -23,6 +23,8 @@ import executeRoutes from "./routes/executeRoute.js";
 import aiPracticeRoutes from "./routes/aiPracticeRoutes.js";
 import gamificationRoutes from "./routes/gamificationRoutes.js";
 import inboxRoutes from "./routes/inboxRoutes.js";
+import jobRoutes from "./routes/jobRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -44,6 +46,8 @@ app.use("/api/execute", executeRoutes);
 app.use("/api/ai-practice", aiPracticeRoutes);
 app.use("/api/gamification", gamificationRoutes);
 app.use("/api/inbox", inboxRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/applications", applicationRoutes);
 
 app.get("/health", (req, res) => {
   res.status(200).json({ msg: "api is up and running" });

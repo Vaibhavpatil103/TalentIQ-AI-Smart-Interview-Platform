@@ -17,6 +17,7 @@ import Navbar from "../components/Navbar";
 import SessionHistoryCard from "../components/SessionHistoryCard";
 import AIFeedbackCard from "../components/AIFeedbackCard";
 import { useAIPractice } from "../hooks/useAIPractice";
+import { motion } from "framer-motion";
 
 function AIPracticeHistoryPage() {
   const { id } = useParams();
@@ -60,7 +61,6 @@ function AIPracticeHistoryPage() {
     });
   };
 
-  // ─── Download report helper ──────
   const handleDownloadReport = (feedback, sessionMeta) => {
     const lines = [
       "TALENTIQ — INTERVIEW REPORT",
@@ -106,26 +106,26 @@ function AIPracticeHistoryPage() {
     URL.revokeObjectURL(url);
   };
 
-  // ═══════════════════════════════════════════════════════════════
-  // VIEW 2: Session Detail
-  // ═══════════════════════════════════════════════════════════════
   if (id && currentSession) {
     const session = currentSession;
     return (
-      <div className="min-h-screen bg-base-200">
+      <div className="min-h-screen bg-[#0d1117]">
         <Navbar />
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          {/* Back Button + Download */}
-          <div className="flex items-center gap-3 mb-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-4xl mx-auto px-6 py-12"
+        >
+          <div className="flex items-center gap-4 mb-8">
             <button
-              className="btn btn-ghost btn-sm gap-2"
+              className="btn-ghost-dark text-xs gap-1 px-3 py-1.5 border border-[#30363d]"
               onClick={() => navigate("/ai-practice/history")}
             >
-              <ArrowLeftIcon className="size-4" />
+              <ArrowLeftIcon className="size-3" />
               Back to History
             </button>
             <button
-              className="btn btn-outline btn-sm gap-2"
+              className="btn-outline-dark text-xs gap-1.5 px-3 py-1.5"
               onClick={() =>
                 handleDownloadReport(session.feedback, {
                   topic: session.topic,
@@ -135,33 +135,34 @@ function AIPracticeHistoryPage() {
                 })
               }
             >
-              <DownloadIcon className="size-4" />
+              <DownloadIcon className="size-3" />
               Download Report
             </button>
           </div>
 
-          {/* Session Meta */}
-          <div className="flex flex-wrap items-center gap-3 mb-6">
-            <h1 className="text-2xl font-black">
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <h1 className="text-3xl font-black text-[#e6edf3]">
               {session.mode === "topic"
                 ? session.topic || "Topic Interview"
                 : "Resume Interview"}
             </h1>
             <span
-              className={`badge ${
-                session.mode === "topic" ? "badge-info" : "badge-secondary"
+              className={`text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full border ${
+                session.mode === "topic" 
+                  ? "border-[#58a6ff40] text-[#58a6ff] bg-[#58a6ff10]" 
+                  : "border-[#a371f740] text-[#a371f7] bg-[#a371f710]"
               }`}
             >
               {session.mode === "topic" ? "Topic" : "Resume"}
             </span>
             {session.difficulty && (
               <span
-                className={`badge ${
+                className={`text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full border ${
                   session.difficulty === "Easy"
-                    ? "badge-success"
+                    ? "border-[#2cbe4e40] text-[#2cbe4e] bg-[#2cbe4e10]"
                     : session.difficulty === "Medium"
-                    ? "badge-warning"
-                    : "badge-error"
+                    ? "border-[#d2992240] text-[#d29922] bg-[#d2992210]"
+                    : "border-[#f8514940] text-[#f85149] bg-[#f8514910]"
                 }`}
               >
                 {session.difficulty}
@@ -169,21 +170,22 @@ function AIPracticeHistoryPage() {
             )}
           </div>
 
-          <div className="flex flex-wrap gap-4 text-sm text-base-content/60 mb-8">
-            <div className="flex items-center gap-1">
-              <ClockIcon className="size-4" />
+          <div className="flex flex-wrap gap-4 text-sm text-[#7d8590] mb-10 bg-[#161b22] px-4 py-3 rounded-xl border border-[#30363d] w-fit">
+            <div className="flex items-center gap-2">
+              <ClockIcon className="size-4 text-[#484f58]" />
               {formatDuration(session.totalDuration)}
             </div>
-            <div className="flex items-center gap-1">
-              <MessageSquareIcon className="size-4" />
+            <div className="w-px h-4 bg-[#30363d]"></div>
+            <div className="flex items-center gap-2">
+              <MessageSquareIcon className="size-4 text-[#484f58]" />
               {session.questionCount || 0} questions
             </div>
+            <div className="w-px h-4 bg-[#30363d]"></div>
             <div>{formatDate(session.createdAt)}</div>
           </div>
 
-          {/* Feedback Card */}
           {session.feedback && (
-            <div className="mb-8">
+            <div className="mb-10">
               <AIFeedbackCard
                 variant="practice"
                 feedback={session.feedback}
@@ -198,130 +200,139 @@ function AIPracticeHistoryPage() {
             </div>
           )}
 
-          {/* Conversation Transcript */}
-          <div className="card bg-base-100 shadow-md border border-base-300">
-            <div className="card-body">
-              <h2 className="font-bold text-lg mb-4 flex items-center gap-2">
-                <MessageSquareIcon className="size-5 text-primary" />
-                Conversation Transcript
-              </h2>
-              <div className="space-y-4">
-                {session.messages?.map((msg, i) => (
+          <div className="card-dark p-6 md:p-8">
+            <h2 className="font-bold text-lg mb-6 flex items-center gap-2 text-[#e6edf3] border-b border-[#30363d] pb-4">
+              <MessageSquareIcon className="size-5 text-[#2cbe4e]" />
+              Conversation Transcript
+            </h2>
+            <div className="space-y-6">
+              {session.messages?.map((msg, i) => (
+                <div
+                  key={i}
+                  className={`flex ${
+                    msg.role === "ai" ? "justify-start" : "justify-end"
+                  }`}
+                >
                   <div
-                    key={i}
-                    className={`flex ${
-                      msg.role === "ai" ? "justify-start" : "justify-end"
+                    className={`flex gap-3 max-w-[85%] md:max-w-[75%] ${
+                      msg.role === "ai" ? "flex-row" : "flex-row-reverse"
                     }`}
                   >
                     <div
-                      className={`flex gap-3 max-w-[80%] ${
-                        msg.role === "ai" ? "flex-row" : "flex-row-reverse"
+                      className={`flex-shrink-0 size-8 rounded-full flex items-center justify-center border ${
+                        msg.role === "ai"
+                          ? "bg-[#1c2128] border-[#30363d]"
+                          : "bg-[#2cbe4e20] border-[#2cbe4e40]"
                       }`}
                     >
+                      {msg.role === "ai" ? (
+                        <SparklesIcon className="size-4 text-[#2cbe4e]" />
+                      ) : (
+                        <span className="text-[10px] font-bold text-[#2cbe4e] uppercase">
+                          You
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <div className={`text-[10px] font-bold mb-1 uppercase tracking-wider ${msg.role === "ai" ? "text-[#7d8590]" : "text-[#7d8590] text-right"}`}>
+                        {msg.role === "ai" ? "Interviewer" : "You"}
+                      </div>
                       <div
-                        className={`flex-shrink-0 size-8 rounded-full flex items-center justify-center ${
+                        className={`rounded-2xl px-5 py-4 text-sm leading-relaxed border ${
                           msg.role === "ai"
-                            ? "bg-gradient-to-br from-primary to-secondary"
-                            : "bg-primary/20"
+                            ? "bg-[#161b22] text-[#e6edf3] border-[#30363d] rounded-tl-sm"
+                            : "bg-[#2cbe4e] text-black border-[#2cbe4e] rounded-tr-sm font-medium"
                         }`}
                       >
-                        {msg.role === "ai" ? (
-                          <SparklesIcon className="size-4 text-white" />
-                        ) : (
-                          <span className="text-xs font-bold text-primary">
-                            You
-                          </span>
-                        )}
+                        {msg.content}
                       </div>
-                      <div>
-                        <div className="text-xs font-semibold mb-1 text-base-content/60">
-                          {msg.role === "ai" ? "Interviewer" : "You"}
+                      {msg.timeTaken > 0 && (
+                        <div className={`text-[10px] text-[#484f58] mt-1.5 font-semibold ${msg.role === "ai" ? "" : "text-right"}`}>
+                          Answered in {msg.timeTaken}s
                         </div>
-                        <div
-                          className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                            msg.role === "ai"
-                              ? "bg-base-300 text-base-content"
-                              : "bg-primary/20 text-base-content"
-                          }`}
-                        >
-                          {msg.content}
-                        </div>
-                        {msg.timeTaken > 0 && (
-                          <div className="text-xs text-base-content/40 mt-1">
-                            (answered in {msg.timeTaken}s)
-                          </div>
-                        )}
-                      </div>
+                      )}
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // VIEW 1: History List
-  // ═══════════════════════════════════════════════════════════════
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  };
+
   return (
-    <div className="min-h-screen bg-base-200">
+    <div className="min-h-screen bg-[#0d1117]">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="size-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-            <HistoryIcon className="size-5 text-white" />
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-5xl mx-auto px-6 py-12"
+      >
+        <div className="flex items-center gap-4 mb-10">
+          <div className="size-12 rounded-xl bg-[#1c2128] border border-[#30363d] flex items-center justify-center shadow-lg">
+            <HistoryIcon className="size-6 text-[#2cbe4e]" />
           </div>
           <div>
-            <h1 className="text-2xl font-black">Practice History</h1>
-            <p className="text-sm text-base-content/60">
+            <h1 className="text-2xl font-bold text-[#e6edf3]">Practice History</h1>
+            <p className="text-sm text-[#7d8590] mt-1">
               Review your past AI practice interview sessions
             </p>
           </div>
         </div>
 
-        {/* Score Trend Chart */}
         {!loading && history.length >= 2 && (
-          <div className="card bg-base-100 shadow-md border border-base-300 mb-6">
-            <div className="card-body py-4">
-              <h2 className="font-bold text-sm text-base-content/70 mb-3">
-                Score Trend
-              </h2>
-              <ResponsiveContainer width="100%" height={160}>
-                <LineChart
-                  data={[...history].reverse().map((s, i) => ({
-                    name: `#${i + 1}`,
-                    score: s.feedback?.overallScore || 0,
-                    topic: s.topic || "Resume",
-                  }))}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-                  <YAxis domain={[0, 10]} tick={{ fontSize: 10 }} />
-                  <Tooltip
-                    formatter={(val) => [`${val}/10`, "Score"]}
-                    labelFormatter={(label, payload) =>
-                      payload?.[0]?.payload?.topic || label
-                    }
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="score"
-                    stroke="#22C55E"
-                    strokeWidth={2}
-                    dot={{ fill: "#22C55E", r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+          <div className="card-dark p-6 mb-8 border border-[#30363d]">
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#7d8590] mb-6 flex items-center gap-2">
+              <SparklesIcon className="size-4 text-[#2cbe4e]" /> Score Trend
+            </h2>
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart
+                data={[...history].reverse().map((s, i) => ({
+                  name: `Int #${i + 1}`,
+                  score: s.feedback?.overallScore || 0,
+                  topic: s.topic || "Resume",
+                }))}
+                margin={{ left: -20, bottom: 5, top: 10, right: 10 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#30363d" vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#7d8590" }} axisLine={false} tickLine={false} dy={10} />
+                <YAxis domain={[0, 10]} tick={{ fontSize: 11, fill: "#7d8590" }} axisLine={false} tickLine={false} tickCount={6} />
+                <Tooltip
+                  formatter={(val) => [`${val}/10`, "Score"]}
+                  labelFormatter={(label, payload) =>
+                    payload?.[0]?.payload?.topic || label
+                  }
+                  contentStyle={{ backgroundColor: "#161b22", borderColor: "#30363d", borderRadius: "8px", color: "#e6edf3", fontSize: "12px" }}
+                  itemStyle={{ color: "#2cbe4e", fontWeight: "bold" }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="score"
+                  stroke="#2cbe4e"
+                  strokeWidth={3}
+                  dot={{ fill: "#161b22", stroke: "#2cbe4e", strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6, fill: "#2cbe4e", stroke: "#0d1117", strokeWidth: 2 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         )}
 
-        {/* Topic Performance Breakdown */}
         {!loading && history.length >= 1 && (() => {
           const topicStats = history.reduce((acc, session) => {
             const key = session.topic || "Resume";
@@ -335,109 +346,102 @@ function AIPracticeHistoryPage() {
             .sort((a, b) => b.avg - a.avg);
 
           return (
-            <div className="card bg-base-100 shadow-md border border-base-300 mb-6">
-              <div className="card-body py-4">
-                <h2 className="font-bold text-sm text-base-content/70 mb-3">
-                  Performance by Topic
-                </h2>
-                <div className="space-y-2">
-                  {topicArray.map((t) => (
-                    <div key={t.topic} className="flex items-center gap-3">
-                      <span className="text-sm w-32 truncate font-medium">{t.topic}</span>
-                      <progress
-                        className={`progress flex-1 ${
-                          t.avg >= 7
-                            ? "progress-success"
-                            : t.avg >= 4
-                            ? "progress-warning"
-                            : "progress-error"
-                        }`}
-                        value={t.avg}
-                        max={10}
+            <div className="card-dark p-6 mb-10 border border-[#30363d]">
+              <h2 className="font-bold text-xs uppercase tracking-wider text-[#7d8590] mb-6 flex items-center gap-2">
+                <SparklesIcon className="size-4 text-[#2cbe4e]" /> Performance by Topic
+              </h2>
+              <div className="space-y-4">
+                {topicArray.map((t) => (
+                  <div key={t.topic} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                    <span className="text-sm w-full sm:w-40 truncate font-semibold text-[#e6edf3]">{t.topic}</span>
+                    <div className="w-full h-2 bg-[#0d1117] rounded-full overflow-hidden flex-1 border border-[#30363d]">
+                      <motion.div
+                        className={`h-full rounded-full ${t.avg >= 7 ? "bg-[#2cbe4e]" : t.avg >= 4 ? "bg-[#d29922]" : "bg-[#f85149]"}`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(t.avg / 10) * 100}%` }}
+                        transition={{ duration: 1 }}
                       />
-                      <span className="text-sm font-mono w-12 text-right">
-                        {t.avg}/10
+                    </div>
+                    <div className="flex items-center gap-3 w-20 justify-between shrink-0">
+                      <span className="text-sm font-mono font-bold text-[#e6edf3]">
+                        {t.avg}<span className="text-[#7d8590] text-xs font-normal">/10</span>
                       </span>
-                      <span className="text-xs text-base-content/40 w-6">
+                      <span className="text-xs text-[#484f58] font-bold">
                         {t.count}x
                       </span>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
             </div>
           );
         })()}
 
         {loading ? (
-          /* Loading skeleton */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => (
-              <div
-                key={i}
-                className="card bg-base-100 shadow-md border border-base-300 animate-pulse"
-              >
-                <div className="card-body">
-                  <div className="h-4 bg-base-300 rounded w-1/3 mb-2" />
-                  <div className="h-5 bg-base-300 rounded w-2/3 mb-4" />
-                  <div className="h-8 bg-base-300 rounded w-1/4" />
-                </div>
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="card-dark p-6 border border-[#30363d] animate-pulse flex items-center justify-between">
+                <div className="w-2/3 h-5 bg-[#30363d] rounded"></div>
+                <div className="w-16 h-8 bg-[#30363d] rounded"></div>
               </div>
             ))}
           </div>
         ) : history.length === 0 ? (
-          /* Empty state */
-          <div className="text-center py-20">
-            <SparklesIcon className="size-16 mx-auto mb-4 text-base-content/20" />
-            <h2 className="text-xl font-bold mb-2">
+          <div className="text-center py-24 bg-[#161b22] border border-[#30363d] rounded-2xl">
+            <div className="size-20 rounded-full bg-[#1c2128] border border-[#30363d] flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <SparklesIcon className="size-10 text-[#484f58]" />
+            </div>
+            <h2 className="text-xl font-bold text-[#e6edf3] mb-2">
               No practice sessions yet
             </h2>
-            <p className="text-base-content/60 mb-6">
-              Start your first AI-powered practice interview!
+            <p className="text-[#7d8590] mb-8 max-w-sm mx-auto">
+              Start your first AI-powered practice interview and receive comprehensive feedback!
             </p>
             <button
-              className="btn btn-primary"
+              className="btn-green px-8"
               onClick={() => navigate("/ai-practice")}
             >
-              Start Practicing
+              Start Practicing Now
             </button>
           </div>
         ) : (
           <>
-            {/* Grid of cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="flex flex-col gap-3"
+            >
               {history.map((session) => (
-                <SessionHistoryCard
-                  key={session._id}
-                  session={session}
-                  onClick={() =>
-                    navigate(`/ai-practice/history/${session._id}`)
-                  }
-                />
+                <motion.div variants={itemVariants} key={session._id}>
+                  <SessionHistoryCard
+                    session={session}
+                    onClick={() => navigate(`/ai-practice/history/${session._id}`)}
+                  />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
-            {/* Pagination */}
             {historyMeta.totalPages > 1 && (
-              <div className="flex justify-center mt-8">
-                <div className="join">
-                  {[...Array(historyMeta.totalPages)].map((_, i) => (
-                    <button
-                      key={i}
-                      className={`join-item btn btn-sm ${
-                        historyMeta.page === i + 1 ? "btn-active" : ""
-                      }`}
-                      onClick={() => loadHistory(i + 1)}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
+              <div className="flex justify-center mt-10 gap-2">
+                {[...Array(historyMeta.totalPages)].map((_, i) => (
+                  <button
+                    key={i}
+                    className={`size-8 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center border ${
+                      historyMeta.page === i + 1 
+                        ? "bg-[#2cbe4e20] text-[#2cbe4e] border-[#2cbe4e40]" 
+                        : "bg-[#161b22] text-[#7d8590] border-[#30363d] hover:text-[#e6edf3] hover:border-[#484f58]"
+                    }`}
+                    onClick={() => loadHistory(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
               </div>
             )}
           </>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

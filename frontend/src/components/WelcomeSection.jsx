@@ -1,50 +1,49 @@
 import { useUser } from "@clerk/clerk-react";
-import { ArrowRightIcon, LogInIcon, SparklesIcon, ZapIcon } from "lucide-react";
+import { motion } from "framer-motion";
 
 function WelcomeSection({ onCreateSession, onJoinSession }) {
   const { user } = useUser();
+  const hour = new Date().getHours();
+  const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
+  const firstName = user?.firstName || "there";
 
   return (
-    <div className="relative overflow-hidden">
-      <div className="relative max-w-7xl mx-auto px-6 py-16">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <SparklesIcon className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-5xl font-black bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                Welcome back, {user?.firstName || "there"}!
-              </h1>
-            </div>
-            <p className="text-xl text-base-content/60 ml-16">
-              Ready to level up your coding skills?
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={onJoinSession}
-              className="group px-8 py-4 border-2 border-primary rounded-2xl transition-all duration-200 hover:bg-primary/10"
-            >
-              <div className="flex items-center gap-3 text-primary font-bold text-lg">
-                <LogInIcon className="w-6 h-6" />
-                <span>Join Meeting</span>
-              </div>
-            </button>
-            <button
-              onClick={onCreateSession}
-              className="group px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-2xl transition-all duration-200 hover:opacity-90"
-            >
-              <div className="flex items-center gap-3 text-white font-bold text-lg">
-                <ZapIcon className="w-6 h-6" />
-                <span>Create Session</span>
-                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <section className="bg-[#0d1117] py-12 px-6 max-w-7xl mx-auto">
+      <motion.h1
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="text-3xl font-bold text-[#e6edf3]"
+      >
+        Good {timeOfDay}, {firstName}
+      </motion.h1>
+      
+      <p className="text-[#7d8590] mt-2 text-base">
+        Ready for your next interview?
+      </p>
+
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut", delay: 0.1 }}
+        className="flex gap-3 mt-8"
+      >
+        <motion.button
+          onClick={onCreateSession}
+          whileTap={{ scale: 0.97 }}
+          className="btn-green"
+        >
+          Start Interview
+        </motion.button>
+        <motion.button
+          onClick={onJoinSession}
+          whileTap={{ scale: 0.97 }}
+          className="btn-outline-dark px-4 py-2.5 rounded-lg font-medium"
+        >
+          Join Session
+        </motion.button>
+      </motion.div>
+    </section>
   );
 }
 

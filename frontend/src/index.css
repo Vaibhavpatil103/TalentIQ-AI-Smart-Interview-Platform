@@ -3,7 +3,157 @@
   themes: all;
 }
 
-/* Add cursor pointer to buttons by default - this is coming from tailwind docs */
+:root {
+  --page-bg: #0d1117;
+  --card: #161b22;
+  --elevated: #1c2128;
+  --border: #30363d;
+  --green: #2cbe4e;
+  --green-hover: #1a7f37;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --dim: #484f58;
+  --warning: #d29922;
+  --error: #f85149;
+}
+
+body {
+  background-color: #0d1117;
+  color: #e6edf3;
+  font-family: 'Inter', sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 3px;
+}
+
+@layer utilities {
+  .card-dark {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+  }
+
+  .card-dark-hover {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .card-dark-hover:hover {
+    border-color: #2cbe4e;
+    box-shadow: 0 0 20px rgba(44, 190, 78, 0.2);
+  }
+
+  .input-dark {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .input-dark:focus {
+    border-color: #2cbe4e;
+    box-shadow: 0 0 0 2px rgba(44, 190, 78, 0.12);
+  }
+
+  .btn-green {
+    background-color: #2cbe4e;
+    color: black;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0.625rem 1rem;
+    transition: background-color 0.2s ease;
+  }
+
+  .btn-green:hover {
+    background-color: #1a7f37;
+  }
+
+  .btn-outline-dark {
+    background-color: transparent;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+    transition: all 0.2s ease;
+  }
+
+  .btn-outline-dark:hover {
+    border-color: #2cbe4e;
+    color: #2cbe4e;
+  }
+
+  .btn-ghost-dark {
+    background-color: transparent;
+    color: #7d8590;
+    transition: color 0.2s ease;
+  }
+
+  .btn-ghost-dark:hover {
+    color: #e6edf3;
+  }
+
+  .badge-easy {
+    background-color: rgba(44, 190, 78, 0.12);
+    color: #2cbe4e;
+    border: 1px solid rgba(44, 190, 78, 0.2);
+    border-radius: 9999px;
+    font-size: 11px;
+    padding: 0.125rem 0.5rem;
+  }
+
+  .badge-medium {
+    background-color: rgba(210, 153, 34, 0.12);
+    color: #d29922;
+    border: 1px solid rgba(210, 153, 34, 0.2);
+    border-radius: 9999px;
+    font-size: 11px;
+    padding: 0.125rem 0.5rem;
+  }
+
+  .badge-hard {
+    background-color: rgba(248, 81, 73, 0.12);
+    color: #f85149;
+    border: 1px solid rgba(248, 81, 73, 0.2);
+    border-radius: 9999px;
+    font-size: 11px;
+    padding: 0.125rem 0.5rem;
+  }
+
+  .skeleton-line {
+    background-color: #1c2128;
+    border-radius: 6px;
+    animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .text-green { color: #2cbe4e; }
+  .text-muted { color: #7d8590; }
+  .text-dim { color: #484f58; }
+
+  .bg-surface { background-color: #161b22; }
+  .bg-elevated { background-color: #1c2128; }
+  .bg-page { background-color: #0d1117; }
+
+  .glow-green {
+    box-shadow: 0 0 20px rgba(44, 190, 78, 0.2);
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 @layer base {
   button:not(:disabled),
   [role="button"]:not(:disabled) {

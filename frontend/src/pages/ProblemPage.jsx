@@ -94,17 +94,21 @@ function ProblemPage() {
 
   if (isLoading) {
     return (
-      <div className="h-screen bg-base-100 flex flex-col">
+      <div className="h-screen bg-[#0d1117] flex flex-col">
         <Navbar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="loading loading-spinner loading-lg text-primary" />
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="animate-pulse space-y-2 w-full max-w-md">
+            <div className="h-4 bg-[#1c2128] rounded-full w-1/3" />
+            <div className="h-3 bg-[#1c2128] rounded-full w-2/3" />
+            <div className="h-3 bg-[#1c2128] rounded-full w-1/2" />
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-screen bg-base-100 flex flex-col">
+    <div className="h-screen bg-[#0d1117] flex flex-col">
       <Navbar />
 
       <div className="flex-1">

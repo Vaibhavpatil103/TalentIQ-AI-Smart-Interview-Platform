@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { CalendarIcon, Loader2Icon, SparklesIcon } from "lucide-react";
+import { CalendarIcon, Loader2Icon, SparklesIcon, CheckCircle2Icon } from "lucide-react";
 import Navbar from "../components/Navbar";
 import XPProgressBar from "../components/XPProgressBar";
 import BadgeGrid from "../components/BadgeGrid";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 const DAILY_QUESTIONS = [
   {
@@ -84,10 +85,12 @@ function DailyChallengePage() {
 
   const diffColor =
     todayQuestion.difficulty === "Easy"
-      ? "badge-success"
+      ? "text-[#2cbe4e] border-[#2cbe4e40] bg-[#2cbe4e10]"
       : todayQuestion.difficulty === "Medium"
-      ? "badge-warning"
-      : "badge-error";
+      ? "text-[#d29922] border-[#d2992240] bg-[#d2992210]"
+      : "text-[#f85149] border-[#f8514940] bg-[#f8514910]";
+
+  const [xpToast, setXpToast] = useState(false);
 
   useEffect(() => {
     fetchProgress();
@@ -124,39 +127,44 @@ function DailyChallengePage() {
     setCompleting(true);
     try {
       const res = await axiosInstance.post("/gamification/daily-complete");
-      toast.success(`+${res.data.xpEarned} XP 🎉`);
+      setXpToast(res.data.xpEarned || 75);
       if (res.data.newBadges?.length > 0) {
-        toast.success("🏅 New badge earned!");
+        toast("🏅 New badge earned!", { style: { background: '#1c2128', color: '#e6edf3', border: '1px solid #30363d' }});
       }
       setCompleted(true);
       fetchProgress();
+      setTimeout(() => setXpToast(false), 4000);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to complete");
+      toast.error(err.response?.data?.message || "Failed to complete", { style: { background: '#1c2128', color: '#e6edf3' }});
     } finally {
       setCompleting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-base-200">
+    <div className="min-h-screen bg-[#0d1117]">
       <Navbar />
-      <div className="max-w-2xl mx-auto px-4 py-10">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-2xl mx-auto px-6 py-12"
+      >
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-10">
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="size-12 rounded-2xl bg-gradient-to-br from-warning to-error flex items-center justify-center shadow-lg">
-              <CalendarIcon className="size-6 text-white" />
+            <div className="size-14 rounded-2xl bg-[#1c2128] border border-[#30363d] shadow-lg flex items-center justify-center">
+              <CalendarIcon className="size-7 text-[#2cbe4e]" />
             </div>
-            <h1 className="text-3xl font-black">Daily Challenge</h1>
+            <h1 className="text-3xl font-black text-[#e6edf3]">Daily Challenge</h1>
           </div>
-          <p className="text-base-content/60">
+          <p className="text-[#7d8590]">
             Complete one question every day to build your streak
           </p>
         </div>
 
         {/* XP Bar */}
         {progress && (
-          <div className="mb-6">
+          <div className="mb-8">
             <XPProgressBar
               xp={progress.progress.xp}
               level={progress.progress.level}
@@ -168,74 +176,89 @@ function DailyChallengePage() {
           </div>
         )}
 
-        {/* Today's Question */}
-        <div className="card bg-base-100 shadow-lg border border-base-300 mb-6">
-          <div className="card-body">
-            <div className="flex items-start justify-between mb-3">
+        {/* XP Toast Notification */}
+        {xpToast && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, y: 20 }} 
+            animate={{ opacity: 1, scale: 1, y: 0 }} 
+            className="card-dark border-[#2cbe4e] bg-[#2cbe4e10] p-4 text-center mb-6 shadow-[0_0_20px_rgba(44,190,78,0.2)]"
+          >
+            <p className="text-xl font-bold text-[#2cbe4e]">+{xpToast} XP Earned! 🎉</p>
+            <p className="text-sm text-[#7d8590] mt-1">Challenge completed successfully.</p>
+          </motion.div>
+        )}
+
+        {/* Today's Question Card */}
+        <div className="card-dark p-8 border-l-4 border-l-[#2cbe4e] mb-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+            <CalendarIcon className="w-32 h-32" />
+          </div>
+          <div className="relative z-10">
+            <div className="flex items-start justify-between mb-4">
               <div>
-                <h2 className="text-xl font-bold">{todayQuestion.title}</h2>
-                <div className="flex gap-2 mt-1">
-                  <span className={`badge badge-sm ${diffColor}`}>
+                <h2 className="text-2xl font-bold text-[#e6edf3] mb-2 drop-shadow-sm">{todayQuestion.title}</h2>
+                <div className="flex gap-2">
+                  <span className={`text-[10px] uppercase px-2.5 py-1 rounded-full font-bold tracking-widest border ${diffColor}`}>
                     {todayQuestion.difficulty}
                   </span>
-                  <span className="badge badge-sm badge-outline">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#7d8590] border border-[#30363d] bg-[#1c2128] px-2.5 py-1 rounded-full">
                     {todayQuestion.topic}
                   </span>
                 </div>
               </div>
-              <span className="text-3xl">📅</span>
+              <span className="text-4xl drop-shadow-md">📅</span>
             </div>
-            <p className="text-sm text-base-content/70 leading-relaxed">
+            
+            <p className="text-[15px] text-[#e6edf3] leading-relaxed p-5 bg-[#0d1117] rounded-xl border border-[#30363d] shadow-inner mb-6">
               {todayQuestion.desc}
             </p>
-          </div>
-        </div>
 
-        {/* Countdown */}
-        <div className="card bg-base-100 border border-base-300 mb-6">
-          <div className="card-body py-3 flex-row items-center justify-between">
-            <span className="text-sm text-base-content/60">
-              ⏳ Resets in
-            </span>
-            <span className="font-mono font-bold text-primary">
-              {countdown}
-            </span>
-          </div>
-        </div>
-
-        {/* Complete Button */}
-        <div className="text-center mb-8">
-          {completed ? (
-            <div className="card bg-success/10 border border-success/30">
-              <div className="card-body py-4 items-center">
-                <p className="text-success font-bold text-lg">
-                  ✅ Completed Today!
-                </p>
-                <p className="text-sm text-base-content/60">
-                  Come back tomorrow for a new challenge
-                </p>
-              </div>
+            {/* Countdown / Status */}
+            <div className="flex items-center justify-between bg-[#161b22] border border-[#30363d] p-4 rounded-xl mb-6">
+              <span className="text-sm font-bold text-[#7d8590] uppercase tracking-wider">
+                ⏳ Resets in
+              </span>
+              <span className="font-mono text-3xl font-black text-[#2cbe4e] tracking-tight drop-shadow-[0_0_8px_rgba(44,190,78,0.4)]">
+                {countdown}
+              </span>
             </div>
-          ) : (
-            <button
-              className="btn btn-primary btn-lg gap-2 px-10 shadow-lg"
-              onClick={handleComplete}
-              disabled={completing || loading}
-            >
-              {completing ? (
-                <Loader2Icon className="size-5 animate-spin" />
+
+            {/* Complete Button */}
+            <div className="text-center">
+              {completed ? (
+                <div className="flex flex-col items-center justify-center p-4 bg-[#2cbe4e05] border border-[#2cbe4e40] rounded-xl text-center shadow-inner">
+                  <CheckCircle2Icon className="size-8 text-[#2cbe4e] mb-2" />
+                  <p className="text-[#2cbe4e] font-bold text-lg mb-1">
+                    Completed Today!
+                  </p>
+                  <p className="text-[13px] text-[#7d8590]">
+                    Come back tomorrow for a new challenge.
+                  </p>
+                </div>
               ) : (
-                <SparklesIcon className="size-5" />
+                <button
+                  className="btn-green w-full py-3.5 text-lg font-bold shadow-[0_4px_14px_rgba(44,190,78,0.3)] hover:shadow-[0_6px_20px_rgba(44,190,78,0.4)] transition-all flex items-center justify-center gap-3"
+                  onClick={handleComplete}
+                  disabled={completing || loading}
+                >
+                  {completing ? (
+                    <Loader2Icon className="size-5 animate-spin" />
+                  ) : (
+                    <SparklesIcon className="size-5" />
+                  )}
+                  Mark as Complete (+75 XP)
+                </button>
               )}
-              Mark as Complete (+75 XP)
-            </button>
-          )}
+            </div>
+          </div>
         </div>
 
         {/* Badges */}
         {progress && (
-          <div className="mb-6">
-            <h3 className="font-bold text-lg mb-3">🏅 Your Badges</h3>
+          <div className="card-dark p-6 mt-8">
+            <h3 className="text-xs font-bold text-[#7d8590] uppercase tracking-wider mb-5 flex items-center gap-2">
+              <span className="text-[#d29922]">🏅</span> Your Badges
+            </h3>
             <BadgeGrid
               earnedBadges={progress.progress.badges}
               allBadges={progress.allBadges}
@@ -243,15 +266,7 @@ function DailyChallengePage() {
           </div>
         )}
 
-        {/* Leaderboard placeholder */}
-        <div className="card bg-base-100 border border-base-300">
-          <div className="card-body py-4 items-center text-center">
-            <p className="text-base-content/50 text-sm">
-              🏆 Community leaderboard coming soon
-            </p>
-          </div>
-        </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

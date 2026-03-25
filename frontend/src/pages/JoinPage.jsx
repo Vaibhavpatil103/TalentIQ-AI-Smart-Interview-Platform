@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import { KeyRoundIcon, Loader2Icon, ArrowRightIcon, AlertCircleIcon } from "lucide-react";
+import { LockIcon, Loader2Icon, ArrowRightIcon, AlertCircleIcon } from "lucide-react";
 import axiosInstance from "../lib/axios";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router";
 
-/**
- * JoinPage — accessible page where candidates enter a join code.
- * Route: /join or /join?code=ABC123 (auto-fills from link).
- */
 function JoinPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -15,7 +13,6 @@ function JoinPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Restore code saved before auth redirect
   useEffect(() => {
     if (!joinCode) {
       const savedCode = localStorage.getItem("talentiq_pending_join_code");
@@ -24,7 +21,7 @@ function JoinPage() {
         localStorage.removeItem("talentiq_pending_join_code");
       }
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,102 +47,71 @@ function JoinPage() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-4"
-      style={{ backgroundColor: "#030712" }}
-    >
-      <div
-        className="w-full max-w-md rounded-2xl p-8 shadow-2xl border"
-        style={{ backgroundColor: "#111827", borderColor: "#1F2937" }}
+    <div className="min-h-screen bg-[#0d1117] flex flex-col px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="card-dark max-w-md w-full mx-auto mt-24 p-8 flex flex-col relative"
       >
-        {/* Icon */}
-        <div className="flex justify-center mb-6">
-          <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center"
-            style={{ backgroundColor: "#052e16" }}
-          >
-            <KeyRoundIcon className="size-8" style={{ color: "#22C55E" }} />
-          </div>
+        <div className="flex justify-center">
+          <LockIcon className="text-[#2cbe4e] size-12 mb-6" />
         </div>
 
-        {/* Header */}
-        <h1
-          className="text-2xl font-bold text-center mb-2"
-          style={{ color: "#F9FAFB" }}
-        >
+        <h1 className="font-bold text-xl text-[#e6edf3] text-center mb-1">
           Join Interview Session
         </h1>
-        <p
-          className="text-sm text-center mb-8"
-          style={{ color: "#9CA3AF" }}
-        >
+        <p className="text-[#7d8590] text-sm text-center mb-6">
           Enter the 6-character code provided by your interviewer
         </p>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <input
-              type="text"
-              maxLength={6}
-              value={joinCode}
-              onChange={(e) => {
-                setJoinCode(e.target.value.toUpperCase());
-                setError("");
-              }}
-              placeholder="Enter session code"
-              className="w-full text-center text-2xl font-mono font-bold tracking-[0.3em] py-4 px-4 rounded-xl outline-none border transition-colors focus:border-green-500"
-              style={{
-                backgroundColor: "#1F2937",
-                borderColor: error ? "#EF4444" : "#374151",
-                color: "#F9FAFB",
-              }}
-              autoFocus
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="flex flex-col">
+          <input
+            type="text"
+            maxLength={6}
+            value={joinCode}
+            onChange={(e) => {
+              setJoinCode(e.target.value.toUpperCase());
+              setError("");
+            }}
+            placeholder="CODE"
+            className="input-dark w-full py-4 text-center text-2xl font-mono tracking-[0.3em] uppercase rounded-xl"
+            autoFocus
+          />
 
-          {/* Error */}
-          {error && (
-            <div
-              className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg"
-              style={{ backgroundColor: "#450a0a", color: "#FCA5A5" }}
-            >
-              <AlertCircleIcon className="size-4 shrink-0" />
-              {error}
-            </div>
-          )}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden mt-3"
+              >
+                <div className="flex items-center justify-center gap-2 text-[#f85149] text-sm">
+                  <AlertCircleIcon className="size-4 shrink-0" />
+                  {error}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <button
             type="submit"
             disabled={isLoading || !joinCode.trim()}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{
-              backgroundColor: "#22C55E",
-              color: "#FFFFFF",
-            }}
+            className="btn-green w-full mt-4 flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {isLoading ? (
-              <>
-                <Loader2Icon className="size-5 animate-spin" />
-                Joining...
-              </>
+              <Loader2Icon className="size-5 animate-spin" />
             ) : (
-              <>
-                Join Session
-                <ArrowRightIcon className="size-5" />
-              </>
+              <>Join Session <ArrowRightIcon className="size-4" /></>
             )}
           </button>
         </form>
 
-        {/* Footer */}
-        <p
-          className="text-xs text-center mt-6"
-          style={{ color: "#6B7280" }}
-        >
-          Codes are case-insensitive and expire when the session ends
-        </p>
-      </div>
+        <Link to="/" className="text-[#7d8590] hover:text-[#e6edf3] text-sm text-center mt-6 transition-colors">
+          Back to Dashboard
+        </Link>
+      </motion.div>
     </div>
   );
 }

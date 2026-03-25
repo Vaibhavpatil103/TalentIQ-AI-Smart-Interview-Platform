@@ -72,6 +72,31 @@ export async function getAllUsers(req, res) {
   }
 }
 
+export async function setRole(req, res) {
+  try {
+    const { role } = req.body;
+
+    // Only allow setting initial roles through this endpoint
+    // Companies → interviewer, Developers → candidate
+    if (!["candidate", "interviewer"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+
+    const user = await User.findOneAndUpdate(
+      { clerkId: req.user.clerkId },
+      { role },
+      { new: true, runValidators: true }
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ user, role: user.role });
+  } catch (error) {
+    console.log("Error in setRole controller:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 export async function updateUserRole(req, res) {
   try {
     const { id } = req.params;

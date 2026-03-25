@@ -1,9 +1,11 @@
 import { Link, useLocation } from "react-router";
 import {
   BookOpenIcon,
+  BriefcaseIcon,
   CalendarIcon,
   InboxIcon,
   KanbanIcon,
+  LayersIcon,
   LayoutDashboardIcon,
   ShieldIcon,
   SparklesIcon,
@@ -15,6 +17,7 @@ import { UserButton, useUser } from "@clerk/clerk-react";
 import { useState, useEffect, useRef } from "react";
 import { axiosInstance } from "../lib/axios";
 import { io } from "socket.io-client";
+import { motion } from "framer-motion";
 
 function Navbar() {
   const location = useLocation();
@@ -102,72 +105,69 @@ function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
-  const navLink = (to, icon, label, badge) => (
-    <Link
-      to={to}
-      className={`px-4 py-2.5 rounded-lg transition-all duration-200 
-        ${
-          isActive(to)
-            ? "bg-primary text-primary-content"
-            : "hover:bg-base-200 text-base-content/70 hover:text-base-content"
+  const navLink = (to, icon, label, badge) => {
+    const active = isActive(to);
+    return (
+      <Link
+        to={to}
+        className={`px-3 py-1 flex items-center gap-2 text-sm transition-colors relative ${
+          active
+            ? "text-[#2cbe4e] font-medium underline decoration-[#2cbe4e] underline-offset-4"
+            : "text-[#7d8590] hover:text-[#e6edf3]"
         }`}
-    >
-      <div className="flex items-center gap-x-2.5 relative">
-        {icon}
-        <span className="font-medium hidden sm:inline">{label}</span>
+      >
+        <span className="text-current [&>svg]:size-4">{icon}</span>
+        <span className="hidden sm:inline">{label}</span>
         {badge > 0 && (
-          <span className="badge badge-error badge-xs absolute -top-2 -right-3 text-[10px] font-bold px-1">
+          <span className="absolute -top-1 -right-2 bg-[#f85149] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full z-10">
             {badge > 99 ? "99+" : badge}
           </span>
         )}
-      </div>
-    </Link>
-  );
+      </Link>
+    );
+  };
 
   return (
-    <nav className="bg-base-100/80 backdrop-blur-md border-b border-primary/20 sticky top-0 z-50 shadow-lg">
-      <div className="max-w-7xl mx-auto p-4 flex items-center justify-between">
+    <motion.nav
+      initial={{ y: -56 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="bg-[#0d1117] border-b border-[#30363d] sticky top-0 z-50 h-14"
+    >
+      <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
         {/* LOGO */}
-        <Link
-          to="/"
-          className="group flex items-center gap-3 hover:scale-105 transition-transform duration-200"
-        >
-          <div className="size-10 rounded-xl bg-gradient-to-r from-primary via-secondary to-accent flex items-center justify-center shadow-lg ">
-            <SparklesIcon className="size-6 text-white" />
-          </div>
-
-          <div className="flex flex-col">
-            <span className="font-black text-xl bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-mono tracking-wider">
-              Talent IQ
-            </span>
-            <span className="text-xs text-base-content/60 font-medium -mt-1">Code Together</span>
-          </div>
+        <Link to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity duration-200">
+          <div className="w-4 h-4 rounded-full bg-[#2cbe4e]" />
+          <span className="font-bold text-white tracking-tight text-xl">Talent IQ</span>
         </Link>
 
+        {/* LINKS */}
         <div className="flex items-center gap-1">
-          {navLink("/problems", <BookOpenIcon className="size-4" />, "Problems")}
-          {navLink("/dashboard", <LayoutDashboardIcon className="size-4" />, "Dashboard")}
-          {navLink("/schedule", <CalendarIcon className="size-4" />, "Schedule")}
-          {navLink("/ai-practice", <SparklesIcon className="size-4" />, "AI Practice")}
-          {navLink("/daily-challenge", <ZapIcon className="size-4" />, "Daily")}
-          {navLink("/company-tracks", <TrophyIcon className="size-4" />, "Tracks")}
-          {navLink("/inbox", <InboxIcon className="size-4" />, "Inbox", unreadCount)}
-          {navLink("/profile", <UserIcon className="size-4" />, "Profile")}
+          {navLink("/problems", <BookOpenIcon />, "Problems")}
+          {navLink("/dashboard", <LayoutDashboardIcon />, "Dashboard")}
+          {navLink("/schedule", <CalendarIcon />, "Schedule")}
+          {navLink("/ai-practice", <SparklesIcon />, "AI Practice")}
+          {navLink("/daily-challenge", <ZapIcon />, "Daily")}
+          {navLink("/company-tracks", <TrophyIcon />, "Tracks")}
+          {navLink("/jobs", <BriefcaseIcon />, "Jobs")}
+          {navLink("/my-applications", <LayersIcon />, "My Apps")}
+          {navLink("/inbox", <InboxIcon />, "Inbox", unreadCount)}
+          {navLink("/profile", <UserIcon />, "Profile")}
 
           {/* Recruiter/Admin-only links */}
           {(userRole === "recruiter" || userRole === "admin") &&
-            navLink("/pipeline", <KanbanIcon className="size-4" />, "Pipeline")}
+            navLink("/pipeline", <KanbanIcon />, "Pipeline")}
 
           {/* Admin-only links */}
           {userRole === "admin" &&
-            navLink("/admin", <ShieldIcon className="size-4" />, "Admin")}
+            navLink("/admin", <ShieldIcon />, "Admin")}
 
-          <div className="ml-4 mt-2">
+          <div className="ml-4 flex items-center">
             <UserButton />
           </div>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
 export default Navbar;

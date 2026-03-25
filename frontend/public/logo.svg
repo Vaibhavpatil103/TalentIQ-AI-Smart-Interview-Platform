@@ -1,0 +1,74 @@
+<svg width="520" height="140" viewBox="0 0 520 140" xmlns="http://www.w3.org/2000/svg">
+  <rect width="520" height="140" fill="transparent"/>
+  <style>text { font-family: 'Helvetica Neue', 'Arial', sans-serif; }</style>
+
+  <!-- Subtle brain silhouette -->
+  <path d="M95 22 C122 22,156 41,156 70 C156 100,138 118,114 120 L76 120 C52 118,34 100,34 70 C34 41,68 22,95 22 Z" fill="#e6edf3" opacity="0.055"/>
+  <line x1="95" y1="22" x2="95" y2="118" stroke="#e6edf3" stroke-width="0.7" opacity="0.07"/>
+
+  <!-- Background connections — light, faint -->
+  <g stroke="#e6edf3" stroke-linecap="round">
+    <line x1="67" y1="46" x2="44" y2="67" stroke-width="0.9" opacity="0.11"/>
+    <line x1="44" y1="67" x2="52" y2="90" stroke-width="0.9" opacity="0.11"/>
+    <line x1="52" y1="90" x2="67" y2="108" stroke-width="0.9" opacity="0.11"/>
+    <line x1="67" y1="108" x2="110" y2="108" stroke-width="0.9" opacity="0.11"/>
+    <line x1="91" y1="85" x2="67" y2="108" stroke-width="0.9" opacity="0.11"/>
+    <line x1="91" y1="85" x2="110" y2="108" stroke-width="0.9" opacity="0.11"/>
+    <line x1="144" y1="67" x2="130" y2="87" stroke-width="0.9" opacity="0.11"/>
+    <line x1="130" y1="87" x2="110" y2="108" stroke-width="0.9" opacity="0.11"/>
+    <line x1="83" y1="60" x2="52" y2="90" stroke-width="0.9" opacity="0.11"/>
+    <line x1="67" y1="46" x2="83" y2="60" stroke-width="0.9" opacity="0.11"/>
+    <line x1="113" y1="58" x2="130" y2="87" stroke-width="0.9" opacity="0.11"/>
+    <line x1="125" y1="44" x2="67" y2="46" stroke-width="0.9" opacity="0.08"/>
+    <line x1="67" y1="108" x2="44" y2="67" stroke-width="0.9" opacity="0.09"/>
+  </g>
+
+  <!-- Cyan highlight connections -->
+  <g stroke="#00D4FF" stroke-linecap="round">
+    <line x1="95" y1="28" x2="67" y2="46" stroke-width="1.6"/>
+    <line x1="95" y1="28" x2="125" y2="44" stroke-width="1.6"/>
+    <line x1="95" y1="28" x2="83" y2="60" stroke-width="1.6"/>
+    <line x1="95" y1="28" x2="113" y2="58" stroke-width="1.4" opacity="0.8"/>
+    <line x1="125" y1="44" x2="113" y2="58" stroke-width="1.6"/>
+    <line x1="125" y1="44" x2="144" y2="67" stroke-width="1.6"/>
+    <line x1="83" y1="60" x2="113" y2="58" stroke-width="1.6"/>
+    <line x1="83" y1="60" x2="91" y2="85" stroke-width="1.6"/>
+    <line x1="113" y1="58" x2="91" y2="85" stroke-width="1.6"/>
+    <line x1="91" y1="85" x2="130" y2="87" stroke-width="1.6"/>
+    <line x1="44" y1="67" x2="83" y2="60" stroke-width="1.4" opacity="0.8"/>
+  </g>
+
+  <!-- Light peripheral nodes -->
+  <circle cx="67" cy="46" r="4.2" fill="#e6edf3"/>
+  <circle cx="44" cy="67" r="4.2" fill="#e6edf3"/>
+  <circle cx="52" cy="90" r="4.2" fill="#e6edf3"/>
+  <circle cx="67" cy="108" r="4.2" fill="#e6edf3"/>
+  <circle cx="110" cy="108" r="4.2" fill="#e6edf3"/>
+  <circle cx="130" cy="87" r="4.2" fill="#e6edf3"/>
+  <circle cx="144" cy="67" r="4.2" fill="#e6edf3"/>
+  <circle cx="125" cy="44" r="4.2" fill="#e6edf3"/>
+
+  <!-- Cyan active nodes with dark rings -->
+  <circle cx="95" cy="28" r="8.5" fill="#0d1117"/>
+  <circle cx="83" cy="60" r="7" fill="#0d1117"/>
+  <circle cx="113" cy="58" r="7" fill="#0d1117"/>
+  <circle cx="91" cy="85" r="7" fill="#0d1117"/>
+  <circle cx="95" cy="28" r="7" fill="#00D4FF"/>
+  <circle cx="83" cy="60" r="5.8" fill="#00D4FF"/>
+  <circle cx="113" cy="58" r="5.8" fill="#00D4FF"/>
+  <circle cx="91" cy="85" r="5.8" fill="#00D4FF"/>
+
+  <!-- Inner dot on apex node -->
+  <circle cx="95" cy="28" r="2.8" fill="#0d1117"/>
+
+  <!-- Divider -->
+  <line x1="175" y1="40" x2="175" y2="108" stroke="#e6edf3" stroke-width="0.8" opacity="0.09"/>
+
+  <!-- Wordmark -->
+  <text y="85" font-size="52" font-weight="700" letter-spacing="-1">
+    <tspan x="192" fill="#e6edf3">Talent</tspan><tspan fill="#00D4FF">IQ</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <text x="194" y="106" font-size="10.5" font-weight="400" fill="#e6edf3" opacity="0.38" letter-spacing="3.2">AI INTERVIEW PLATFORM</text>
+</svg>

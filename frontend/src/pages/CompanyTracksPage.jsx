@@ -5,6 +5,7 @@ import XPProgressBar from "../components/XPProgressBar";
 import CompanyTrackCard from "../components/CompanyTrackCard";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 const TRACK_DEFINITIONS = {
   Google: {
@@ -63,10 +64,10 @@ function CompanyTracksPage() {
     setStartingTrack(company);
     try {
       await axiosInstance.post(`/gamification/tracks/${company}`);
-      toast.success(`${company} track started! 🎯`);
+      toast.success(`${company} track started! 🎯`, { style: { background: '#1c2128', color: '#e6edf3' }});
       fetchData();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to start track");
+      toast.error(err.response?.data?.message || "Failed to start track", { style: { background: '#1c2128', color: '#e6edf3' }});
     } finally {
       setStartingTrack(null);
     }
@@ -74,26 +75,47 @@ function CompanyTracksPage() {
 
   const startedCount = tracks.filter((t) => t.started).length;
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  };
+
   return (
-    <div className="min-h-screen bg-base-200">
+    <div className="min-h-screen bg-[#0d1117]">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 py-10">
+      <div className="max-w-5xl mx-auto px-6 py-12">
         {/* Header */}
-        <div className="text-center mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-10"
+        >
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="size-12 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center shadow-lg">
-              <TrophyIcon className="size-6 text-white" />
+            <div className="size-14 rounded-2xl bg-[#1c2128] border border-[#30363d] shadow-lg flex items-center justify-center">
+              <TrophyIcon className="size-7 text-[#d29922]" />
             </div>
-            <h1 className="text-3xl font-black">Company Tracks</h1>
+            <h1 className="text-3xl font-black text-[#e6edf3]">Company Tracks</h1>
           </div>
-          <p className="text-base-content/60">
-            Practice curated question sequences for top companies
+          <p className="text-[#7d8590]">
+            Practice curated question sequences designed for top tech companies.
           </p>
-        </div>
+        </motion.div>
 
         {/* XP Bar */}
         {progress && (
-          <div className="mb-6">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mb-8"
+          >
             <XPProgressBar
               xp={progress.progress.xp}
               level={progress.progress.level}
@@ -102,38 +124,49 @@ function CompanyTracksPage() {
               xpToNext={progress.xpToNext}
               xpForCurrentLevel={progress.currentLevelData?.xpRequired || 0}
             />
-          </div>
+          </motion.div>
         )}
 
         {/* Summary */}
         {startedCount > 0 && (
-          <div className="alert alert-info mb-6">
-            <span className="text-sm">
-              🎯 You are preparing for <strong>{startedCount}</strong>{" "}
-              {startedCount === 1 ? "company" : "companies"}
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            className="flex items-center gap-3 bg-[#58a6ff10] border border-[#58a6ff40] p-4 rounded-xl mb-8"
+          >
+            <span className="text-xl">🎯</span>
+            <span className="text-sm text-[#e6edf3]">
+              You are currently preparing for <strong className="text-[#58a6ff]">{startedCount}</strong>{" "}
+              {startedCount === 1 ? "company" : "companies"}. Keep up the great work!
             </span>
-          </div>
+          </motion.div>
         )}
 
         {/* Company Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {Object.entries(TRACK_DEFINITIONS).map(([company, def]) => {
             const userTrack = tracks.find((t) => t.company === company);
             return (
-              <CompanyTrackCard
-                key={company}
-                company={company}
-                emoji={def.emoji}
-                color={def.color}
-                topics={def.topics}
-                completedTopics={userTrack?.completedTopics || []}
-                started={!!userTrack?.started}
-                onStart={() => handleStartTrack(company)}
-                isLoading={startingTrack === company}
-              />
+              <motion.div variants={itemVariants} className="h-full" key={company}>
+                <CompanyTrackCard
+                  company={company}
+                  emoji={def.emoji}
+                  color={def.color}
+                  topics={def.topics}
+                  completedTopics={userTrack?.completedTopics || []}
+                  started={!!userTrack?.started}
+                  onStart={() => handleStartTrack(company)}
+                  isLoading={startingTrack === company}
+                />
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -1,383 +1,363 @@
 import {
-  BrainCircuitIcon, Loader2Icon, SparklesIcon,
-  ClockIcon, MessageSquareIcon, TrophyIcon,
+  TrophyIcon,
+  MessageSquareIcon,
+  CodeIcon,
+  LightbulbIcon,
+  TargetIcon,
+  TrendingUpIcon,
+  CheckCircle2Icon,
+  AlertCircleIcon,
+  BuildingIcon,
+  TimerIcon,
+  BookOpenIcon,
+  SparklesIcon,
 } from "lucide-react";
 import {
-  RadarChart, Radar, PolarGrid, PolarAngleAxis,
-  PolarRadiusAxis, ResponsiveContainer, Tooltip,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  ResponsiveContainer,
+  PolarRadiusAxis,
 } from "recharts";
+import { motion } from "framer-motion";
 
-function AIFeedbackCard({ variant = "practice", aiReview, feedback, sessionMeta }) {
+function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
+  if (!feedback) return null;
 
-  // ═══════════════════════════════════════════
-  // CODE-REVIEW VARIANT (unchanged)
-  // ═══════════════════════════════════════════
-  if (variant === "code-review") {
-    if (!aiReview) {
-      return (
-        <div className="card bg-base-100 shadow-lg border border-base-300">
-          <div className="card-body items-center text-center py-8">
-            <Loader2Icon className="size-8 animate-spin text-primary mb-3" />
-            <h3 className="text-lg font-semibold">AI Review in Progress...</h3>
-            <p className="text-base-content/60 text-sm">
-              Our AI is analyzing the submitted code. This usually takes 10-30 seconds.
+  const features =
+    variant === "code-review"
+      ? [
+          {
+            label: "Code Quality",
+            score: feedback.codeQuality,
+            icon: CodeIcon,
+            color: "#2cbe4e",
+            desc: "Readability, maintainability, and best practices",
+          },
+          {
+            label: "Efficiency",
+            score: feedback.efficiency,
+            icon: TimerIcon,
+            color: "#d29922",
+            desc: "Time and space complexity",
+          },
+          {
+            label: "Edge Cases",
+            score: feedback.edgeCases,
+            icon: TargetIcon,
+            color: "#f85149",
+            desc: "Handling boundary conditions",
+          },
+        ]
+      : [
+          {
+            label: "Communication",
+            score: feedback.communication,
+            icon: MessageSquareIcon,
+            color: "#a371f7",
+            desc: "Clarity and conciseness of explanations",
+          },
+          {
+            label: "Technical Depth",
+            score: feedback.technicalDepth,
+            icon: CodeIcon,
+            color: "#58a6ff",
+            desc: "Understanding of underlying concepts",
+          },
+          {
+            label: "Problem Solving",
+            score: feedback.problemSolving,
+            icon: LightbulbIcon,
+            color: "#d29922",
+            desc: "Approach to finding solutions",
+          },
+          {
+            label: "Confidence",
+            score: feedback.confidence,
+            icon: TrophyIcon,
+            color: "#2cbe4e",
+            desc: "Delivery and assurance",
+          },
+        ];
+
+  const chartData = features.map((f) => ({
+    subject: f.label,
+    A: f.score,
+    fullMark: 10,
+  }));
+
+  const ScoreRing = ({ score }) => {
+    const circumference = 2 * Math.PI * 36;
+    const strokeDashoffset = circumference - (score / 10) * circumference;
+
+    return (
+      <div className="relative size-32 mx-auto flex items-center justify-center">
+        <svg className="size-full -rotate-90" viewBox="0 0 80 80">
+          <circle
+            className="text-[#30363d] stroke-current"
+            strokeWidth="6"
+            cx="40"
+            cy="40"
+            r="36"
+            fill="transparent"
+          />
+          <motion.circle
+            className="text-[#2cbe4e] stroke-current drop-shadow-[0_0_8px_rgba(44,190,78,0.5)]"
+            strokeWidth="6"
+            strokeLinecap="round"
+            cx="40"
+            cy="40"
+            r="36"
+            fill="transparent"
+            initial={{ strokeDashoffset: circumference }}
+            animate={{ strokeDashoffset }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            style={{ strokeDasharray: circumference }}
+          />
+        </svg>
+        <div className="absolute flex flex-col items-center justify-center">
+          <span className="text-3xl font-black text-[#e6edf3]">
+            {score}
+            <span className="text-base text-[#7d8590]">/10</span>
+          </span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[#2cbe4e]">
+            Score
+          </span>
+        </div>
+      </div>
+    );
+  };
+
+  const getReadinessLevel = (company, overallScore) => {
+    const thresholds = {
+      "Google": { score: 8.5 },
+      "Amazon": { score: 8.0 },
+      "Startup": { score: 7.0 }
+    };
+
+    const req = thresholds[company].score;
+    if (overallScore >= req) return { text: "Ready", color: "text-[#2cbe4e]", bg: "bg-[#2cbe4e20]", border: "border-[#2cbe4e40]", progress: "bg-[#2cbe4e]", emoji: "🟢" };
+    if (overallScore >= req - 1) return { text: "Almost", color: "text-[#d29922]", bg: "bg-[#d2992220]", border: "border-[#d2992240]", progress: "bg-[#d29922]", emoji: "🟡" };
+    return { text: "Needs Work", color: "text-[#f85149]", bg: "bg-[#f8514920]", border: "border-[#f8514940]", progress: "bg-[#f85149]", emoji: "🔴" };
+  };
+
+  return (
+    <div className="bg-[#1c2128] border border-[#30363d] rounded-2xl overflow-hidden shadow-2xl">
+      {/* HEADER SECTION */}
+      <div className="bg-[#161b22] border-b border-[#30363d] p-6 lg:p-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#2cbe4e] opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        
+        <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
+          <div className="shrink-0">
+            <ScoreRing score={feedback.overallScore} />
+          </div>
+
+          <div className="flex-1 text-center md:text-left space-y-4">
+            <div>
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+                <SparklesIcon className="size-5 text-[#2cbe4e]" />
+                <h2 className="text-2xl font-bold text-[#e6edf3]">Interview Feedback</h2>
+              </div>
+              
+              {sessionMeta && (
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mt-2">
+                  <span className="text-xs bg-[#0d1117] text-[#7d8590] border border-[#30363d] px-2 py-1 rounded-md flex items-center gap-1.5">
+                    <BookOpenIcon className="size-3" /> {sessionMeta.topic || "General"}
+                  </span>
+                  <span className="text-xs bg-[#0d1117] text-[#7d8590] border border-[#30363d] px-2 py-1 rounded-md flex items-center gap-1.5 capitalize">
+                    <TargetIcon className="size-3" /> {sessionMeta.difficulty}
+                  </span>
+                  <span className="text-xs bg-[#0d1117] text-[#7d8590] border border-[#30363d] px-2 py-1 rounded-md flex items-center gap-1.5">
+                    <TimerIcon className="size-3" /> {Math.ceil(sessionMeta.totalDuration / 60)} min
+                  </span>
+                </div>
+              )}
+            </div>
+            
+            <p className="text-[#e6edf3] text-[15px] leading-relaxed max-w-2xl bg-[#0d1117] p-4 rounded-xl border border-[#30363d]">
+              {feedback.summary}
             </p>
           </div>
         </div>
-      );
-    }
-    const { scores, suggestions, completedAt } = aiReview;
-    const getScoreColor = (score) => {
-      if (score >= 4) return "text-success";
-      if (score >= 3) return "text-warning";
-      return "text-error";
-    };
-    const getScoreBar = (score) => {
-      const percentage = (score / 5) * 100;
-      const color = score >= 4 ? "bg-success" : score >= 3 ? "bg-warning" : "bg-error";
-      return (
-        <div className="w-full bg-base-300 rounded-full h-2">
-          <div className={`${color} h-2 rounded-full transition-all duration-500`}
-            style={{ width: `${percentage}%` }} />
-        </div>
-      );
-    };
-    return (
-      <div className="card bg-gradient-to-br from-base-100 to-primary/5 shadow-lg border border-primary/20">
-        <div className="card-body">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <BrainCircuitIcon className="size-5 text-primary" />
-            </div>
-            <div>
-              <h3 className="font-bold text-lg flex items-center gap-2">
-                AI Code Review <SparklesIcon className="size-4 text-primary" />
-              </h3>
-              {completedAt && (
-                <p className="text-xs text-base-content/50">
-                  Reviewed {new Date(completedAt).toLocaleString()}
-                </p>
-              )}
-            </div>
-          </div>
-          {scores && (
-            <div className="space-y-3 mb-5">
-              {Object.entries(scores).map(([key, score]) => (
-                <div key={key} className="space-y-1">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="capitalize font-medium">
-                      {key.replace(/([A-Z])/g, " $1").trim()}
-                    </span>
-                    <span className={`font-bold ${getScoreColor(score)}`}>{score}/5</span>
-                  </div>
-                  {getScoreBar(score)}
-                </div>
-              ))}
-            </div>
-          )}
-          {suggestions && (
-            <div className="bg-base-200 rounded-lg p-4 border border-base-300">
-              <h4 className="font-semibold text-sm mb-2 text-primary">💡 Suggestions</h4>
-              <p className="text-sm text-base-content/80 leading-relaxed">{suggestions}</p>
-            </div>
-          )}
-        </div>
       </div>
-    );
-  }
 
-  // ═══════════════════════════════════════════
-  // PRACTICE VARIANT (extended)
-  // ═══════════════════════════════════════════
-  if (!feedback) {
-    return (
-      <div className="card bg-base-100 shadow-lg border border-base-300">
-        <div className="card-body items-center text-center py-8">
-          <Loader2Icon className="size-8 animate-spin text-primary mb-3" />
-          <h3 className="text-lg font-semibold">Generating Feedback...</h3>
-          <p className="text-base-content/60 text-sm">AI is evaluating your interview performance.</p>
-        </div>
-      </div>
-    );
-  }
-
-  const getColor10 = (score) => {
-    if (score >= 7) return "text-success";
-    if (score >= 4) return "text-warning";
-    return "text-error";
-  };
-  const getBarColor10 = (score) => {
-    if (score >= 7) return "bg-success";
-    if (score >= 4) return "bg-warning";
-    return "bg-error";
-  };
-  const scoreBadgeColor = (score) => {
-    if (score >= 7) return "badge-success";
-    if (score >= 4) return "badge-warning";
-    return "badge-error";
-  };
-  const scoreBar = (label, score) => (
-    <div className="space-y-1">
-      <div className="flex items-center justify-between text-sm">
-        <span className="font-medium">{label}</span>
-        <span className={`font-bold ${getColor10(score)}`}>{score}/10</span>
-      </div>
-      <div className="w-full bg-base-300 rounded-full h-2">
-        <div className={`${getBarColor10(score)} h-2 rounded-full transition-all duration-700`}
-          style={{ width: `${(score / 10) * 100}%` }} />
-      </div>
-    </div>
-  );
-  const formatDuration = (seconds) => {
-    if (!seconds) return "—";
-    return `${Math.round(seconds / 60)} min`;
-  };
-
-  // Radar chart data
-  const radarData = [
-    { skill: "Communication", score: feedback.communication || 0 },
-    { skill: "Technical", score: feedback.technicalDepth || 0 },
-    { skill: "Problem Solving", score: feedback.problemSolving || 0 },
-    { skill: "Confidence", score: feedback.confidence || 0 },
-    { skill: "Clarity", score: feedback.clarity || 0 },
-    { skill: "Depth", score: feedback.depth || 0 },
-    { skill: "Correctness", score: feedback.correctness || 0 },
-    { skill: "Overall", score: feedback.overallScore || 0 },
-  ];
-
-  return (
-    <div className="card bg-gradient-to-br from-base-100 to-primary/5 shadow-xl border border-primary/20">
-      <div className="card-body">
-        {/* ── Header ── */}
-        <div className="flex items-center gap-3 mb-2">
-          <div className="size-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-            <TrophyIcon className="size-5 text-white" />
-          </div>
-          <div>
-            <h3 className="font-bold text-lg flex items-center gap-2">
-              Interview Scorecard <SparklesIcon className="size-4 text-primary" />
+      {/* BODY SECTION */}
+      <div className="p-6 lg:p-8 space-y-8 bg-[#0d1117]">
+        {/* SKILLS RADAR & BARS ROW */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          {/* Radar Chart */}
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 h-[320px] shadow-sm flex flex-col items-center justify-center relative">
+            <h3 className="text-sm font-bold text-[#e6edf3] uppercase tracking-wider absolute top-6 left-6 flex items-center gap-2">
+              <TargetIcon className="size-4 text-[#2cbe4e]" /> Skills Radar
             </h3>
-          </div>
-        </div>
-
-        {/* ── Session Meta Badges ── */}
-        {sessionMeta && (
-          <div className="flex flex-wrap gap-2 mb-5">
-            <span className={`badge badge-sm ${sessionMeta.mode === "topic" ? "badge-info" : "badge-secondary"}`}>
-              {sessionMeta.mode === "topic" ? "Topic" : "Resume"}
-            </span>
-            {sessionMeta.topic && <span className="badge badge-sm badge-outline">{sessionMeta.topic}</span>}
-            {sessionMeta.difficulty && (
-              <span className={`badge badge-sm ${
-                sessionMeta.difficulty === "Easy" ? "badge-success"
-                : sessionMeta.difficulty === "Medium" ? "badge-warning" : "badge-error"
-              }`}>{sessionMeta.difficulty}</span>
-            )}
-            <span className="badge badge-sm badge-ghost gap-1">
-              <ClockIcon className="size-3" />{formatDuration(sessionMeta.totalDuration)}
-            </span>
-            <span className="badge badge-sm badge-ghost gap-1">
-              <MessageSquareIcon className="size-3" />{sessionMeta.questionCount || 0} questions
-            </span>
-          </div>
-        )}
-
-        {/* ── Overall Score Ring ── */}
-        <div className="flex justify-center mb-6">
-          <div className="relative inline-flex items-center justify-center">
-            <svg width="120" height="120" className="-rotate-90">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="currentColor"
-                strokeWidth="6" className="text-base-300" />
-              <circle cx="60" cy="60" r="50" fill="none"
-                stroke={feedback.overallScore >= 7 ? "#22c55e" : feedback.overallScore >= 4 ? "#f59e0b" : "#ef4444"}
-                strokeWidth="6" strokeLinecap="round"
-                strokeDasharray={2 * Math.PI * 50}
-                strokeDashoffset={2 * Math.PI * 50 * (1 - feedback.overallScore / 10)}
-                style={{ transition: "stroke-dashoffset 1s ease" }}
-              />
-            </svg>
-            <div className="absolute flex flex-col items-center">
-              <span className={`text-3xl font-black ${getColor10(feedback.overallScore)}`}>
-                {feedback.overallScore}
-              </span>
-              <span className="text-xs text-base-content/50">/10</span>
+            <div className="w-full h-full mt-4">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
+                  <PolarGrid stroke="#30363d" />
+                  <PolarAngleAxis dataKey="subject" tick={{ fill: "#7d8590", fontSize: 11 }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 10]} tick={{ fill: "#484f58" }} tickCount={6} />
+                  <Radar
+                    name="Score"
+                    dataKey="A"
+                    stroke="#2cbe4e"
+                    fill="#2cbe4e"
+                    fillOpacity={0.2}
+                    isAnimationActive={true}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
             </div>
           </div>
-        </div>
 
-        {/* ── Score Bars (original 4 + new 3) ── */}
-        <div className="space-y-3 mb-6">
-          {scoreBar("Communication", feedback.communication)}
-          {scoreBar("Technical Depth", feedback.technicalDepth)}
-          {scoreBar("Problem Solving", feedback.problemSolving)}
-          {scoreBar("Confidence", feedback.confidence)}
-          {scoreBar("Clarity", feedback.clarity || 0)}
-          {scoreBar("Depth", feedback.depth || 0)}
-          {scoreBar("Correctness", feedback.correctness || 0)}
-        </div>
-
-        {/* ── Skill Radar Chart ── */}
-        <div className="card bg-base-200 border border-base-300 mb-5">
-          <div className="card-body py-4">
-            <h4 className="font-semibold text-sm mb-2 text-primary">
-              🕸 Skill Radar
-            </h4>
-            <ResponsiveContainer width="100%" height={260}>
-              <RadarChart data={radarData}>
-                <PolarGrid stroke="#374151" />
-                <PolarAngleAxis dataKey="skill"
-                  tick={{ fontSize: 10, fill: "#9CA3AF" }} />
-                <PolarRadiusAxis domain={[0, 10]}
-                  tick={{ fontSize: 8, fill: "#6B7280" }} />
-                <Radar dataKey="score" stroke="#22C55E"
-                  fill="#22C55E" fillOpacity={0.25} strokeWidth={2} />
-                <Tooltip formatter={(v) => [`${v}/10`, "Score"]} />
-              </RadarChart>
-            </ResponsiveContainer>
+          {/* Score Bars */}
+          <div className="space-y-5">
+            <h3 className="text-sm font-bold text-[#e6edf3] uppercase tracking-wider mb-2 flex items-center gap-2">
+              <TrendingUpIcon className="size-4 text-[#2cbe4e]" /> Score Breakdown
+            </h3>
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <div key={index} className="bg-[#1c2128] border border-[#30363d] rounded-xl p-4 shadow-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 rounded-md" style={{ backgroundColor: `${feature.color}15`, color: feature.color }}>
+                        <Icon className="size-4" />
+                      </div>
+                      <span className="font-semibold text-[#e6edf3] text-sm">{feature.label}</span>
+                    </div>
+                    <span className="font-bold text-[#e6edf3]">{feature.score}<span className="text-[#7d8590] text-xs font-normal">/10</span></span>
+                  </div>
+                  
+                  <div className="h-2 w-full bg-[#0d1117] rounded-full overflow-hidden mb-2">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: feature.color }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${(feature.score / 10) * 100}%` }}
+                      transition={{ duration: 1, delay: index * 0.1 }}
+                    />
+                  </div>
+                  <p className="text-[#7d8590] text-xs">{feature.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* ── Summary ── */}
-        {feedback.summary && (
-          <div className="bg-base-200 rounded-lg p-4 border border-base-300 mb-5">
-            <h4 className="font-semibold text-sm mb-2 text-primary">📝 Summary</h4>
-            <p className="text-sm text-base-content/80 leading-relaxed">{feedback.summary}</p>
-          </div>
-        )}
-
-        {/* ── Company Readiness ── */}
-        {feedback.companyReadiness && (
-          <div className="card bg-base-200 border border-base-300 mb-5">
-            <div className="card-body py-4">
-              <h4 className="font-semibold text-sm mb-3 text-primary">
-                🏢 Company Readiness
-              </h4>
-              <div className="space-y-2">
-                {Object.entries(feedback.companyReadiness).map(([co, pct]) => (
-                  <div key={co} className="flex items-center gap-3">
-                    <span className="text-sm font-medium w-24">{co}</span>
-                    <progress className={`progress flex-1 ${
-                      pct >= 70 ? "progress-success"
-                      : pct >= 40 ? "progress-warning"
-                      : "progress-error"
-                    }`} value={pct} max={100} />
-                    <span className="text-sm font-mono w-12 text-right">
-                      {pct}%
+        {/* COMPANY READINESS PREDICTION */}
+        {variant !== "code-review" && (
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 shadow-sm">
+            <h3 className="text-sm font-bold text-[#e6edf3] uppercase tracking-wider mb-6 flex items-center gap-2">
+              <BuildingIcon className="size-4 text-[#2cbe4e]" /> Target Company Readiness
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {["Google", "Amazon", "Startup"].map((company) => {
+                const status = getReadinessLevel(company, feedback.overallScore);
+                return (
+                  <div key={company} className="bg-[#0d1117] border border-[#30363d] rounded-xl p-4 flex flex-col items-center text-center gap-2 relative overflow-hidden group hover:border-[#484f58] transition-colors">
+                    <div className="text-2xl mb-1">{status.emoji}</div>
+                    <p className="font-bold text-[#e6edf3]">{company}</p>
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 flex items-center gap-1 rounded-full border ${status.bg} ${status.color} ${status.border}`}>
+                      {status.text}
                     </span>
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
+            <p className="text-center text-xs text-[#484f58] mt-4 uppercase tracking-widest font-semibold">
+              *Based on AI analysis of historical interview data
+            </p>
           </div>
         )}
 
-        {/* ── Strengths & Improvements ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-          {feedback.strengths?.length > 0 && (
-            <div className="bg-success/10 rounded-lg p-4 border border-success/20">
-              <h4 className="font-semibold text-sm mb-2 text-success">💪 Strengths</h4>
-              <ul className="space-y-1">
-                {feedback.strengths.map((s, i) => (
-                  <li key={i} className="text-sm flex items-start gap-2">
-                    <span className="text-success mt-0.5">✓</span>{s}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {feedback.improvements?.length > 0 && (
-            <div className="bg-warning/10 rounded-lg p-4 border border-warning/20">
-              <h4 className="font-semibold text-sm mb-2 text-warning">📈 Areas to Improve</h4>
-              <ul className="space-y-1">
-                {feedback.improvements.map((s, i) => (
-                  <li key={i} className="text-sm flex items-start gap-2">
-                    <span className="text-warning mt-0.5">→</span>{s}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        {/* STRENGTHS & IMPROVEMENTS */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 shadow-sm hover:border-[#2cbe4e40] transition-colors">
+            <h3 className="text-sm font-bold text-[#e6edf3] uppercase tracking-wider mb-5 flex items-center gap-2">
+              <CheckCircle2Icon className="size-4 text-[#2cbe4e]" /> Key Strengths
+            </h3>
+            <ul className="space-y-4">
+              {feedback.strengths?.map((strength, index) => (
+                <motion.li 
+                  initial={{ opacity: 0, x: -10 }} 
+                  animate={{ opacity: 1, x: 0 }} 
+                  transition={{ delay: index * 0.1 }} 
+                  key={index} 
+                  className="flex items-start gap-3"
+                >
+                  <div className="mt-1 flex-shrink-0 size-5 rounded-full bg-[#2cbe4e20] flex items-center justify-center">
+                    <div className="size-1.5 bg-[#2cbe4e] rounded-full" />
+                  </div>
+                  <span className="text-[#e6edf3] text-sm leading-relaxed">{strength}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 shadow-sm hover:border-[#f8514940] transition-colors">
+            <h3 className="text-sm font-bold text-[#e6edf3] uppercase tracking-wider mb-5 flex items-center gap-2">
+              <AlertCircleIcon className="size-4 text-[#f85149]" /> Areas for Improvement
+            </h3>
+            <ul className="space-y-4">
+              {feedback.improvements?.map((improvement, index) => (
+                <motion.li 
+                  initial={{ opacity: 0, x: 10 }} 
+                  animate={{ opacity: 1, x: 0 }} 
+                  transition={{ delay: index * 0.1 }} 
+                  key={index} 
+                  className="flex items-start gap-3"
+                >
+                  <div className="mt-1 flex-shrink-0 size-5 rounded-full bg-[#f8514920] flex items-center justify-center">
+                    <div className="size-1.5 bg-[#f85149] rounded-full" />
+                  </div>
+                  <span className="text-[#e6edf3] text-sm leading-relaxed">{improvement}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        {/* ── Extended Question Breakdown ── */}
-        {feedback.questionBreakdown?.length > 0 && (
-          <div>
-            <h4 className="font-semibold text-sm mb-3 text-primary">
-              📋 Question Breakdown
-            </h4>
+        {/* DETAILED QUESTION BREAKDOWN */}
+        {feedback.questionBreakdown && feedback.questionBreakdown.length > 0 && (
+          <div className="mt-10">
+            <h3 className="text-lg font-bold text-[#e6edf3] mb-6 flex items-center gap-2">
+              <CodeIcon className="size-5 text-[#2cbe4e]" /> Detailed Breakdown
+            </h3>
             <div className="space-y-4">
-              {feedback.questionBreakdown.map((q, i) => (
-                <div key={i} className="card bg-base-200 border border-base-300">
-                  <div className="card-body py-4">
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <p className="text-sm font-semibold flex-1">
-                        Q{i + 1}: {q.question}
-                      </p>
-                      <span className={`badge badge-lg flex-shrink-0 ${scoreBadgeColor(q.score)}`}>
-                        {q.score}/10
-                      </span>
-                    </div>
-
-                    {/* Per-question sub-scores */}
-                    <div className="flex gap-2 mb-3">
-                      {[
-                        { label: "Clarity", val: q.clarityScore },
-                        { label: "Depth", val: q.depthScore },
-                        { label: "Correctness", val: q.correctnessScore },
-                      ].map((m) => (
-                        <div key={m.label}
-                          className="flex-1 text-center bg-base-300 rounded-lg p-2">
-                          <p className="text-xs text-base-content/50">
-                            {m.label}
-                          </p>
-                          <p className={`font-bold text-sm ${getColor10(m.val || 0)}`}>
-                            {m.val || 0}/10
-                          </p>
+              {feedback.questionBreakdown.map((q, idx) => (
+                <div key={idx} className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 shadow-sm relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 w-1 h-full" style={{ backgroundColor: q.score >= 8 ? '#2cbe4e' : q.score >= 5 ? '#d29922' : '#f85149' }} />
+                  
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex-1 space-y-3">
+                      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#7d8590]">
+                        <span>Question {idx + 1}</span>
+                      </div>
+                      <p className="text-[#e6edf3] font-medium leading-relaxed">{q.question}</p>
+                      <div className="bg-[#0d1117] border border-[#30363d] rounded-xl p-4 mt-4">
+                        <p className="text-[#7d8590] text-xs uppercase tracking-wider font-semibold mb-2">Feedback Summary</p>
+                        <p className="text-sm text-[#e6edf3] leading-relaxed">{q.comment}</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        <div className="bg-[#2cbe4e05] border border-[#2cbe4e20] rounded-xl p-4">
+                          <p className="text-[#2cbe4e] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1"><CheckCircle2Icon className="size-3" /> Ideal Approach</p>
+                          <p className="text-[#e6edf3] text-[13px] leading-relaxed">{q.idealAnswer || "Provide a structured answer starting with core concepts."}</p>
                         </div>
-                      ))}
+                        <div className="bg-[#f8514905] border border-[#f8514920] rounded-xl p-4">
+                          <p className="text-[#f85149] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1"><AlertCircleIcon className="size-3" /> Missing Elements</p>
+                          <p className="text-[#e6edf3] text-[13px] leading-relaxed">{q.gapExplanation || "Lacked specific examples or deep technical details."}</p>
+                        </div>
+                      </div>
                     </div>
-
-                    {/* Ideal Answer */}
-                    {q.idealAnswer && (
-                      <div className="bg-success/10 border border-success/30 rounded-lg p-3 mb-2">
-                        <p className="text-xs font-semibold text-success mb-1">
-                          ✅ Ideal Answer
-                        </p>
-                        <p className="text-xs text-base-content/70 leading-relaxed">
-                          {q.idealAnswer}
-                        </p>
+                    
+                    <div className="shrink-0 flex items-start justify-end md:w-24">
+                      <div className="text-center bg-[#0d1117] border border-[#30363d] rounded-xl p-3 w-full">
+                        <span className="block text-2xl font-black text-[#e6edf3]">{q.score}</span>
+                        <span className="block text-[10px] uppercase tracking-widest text-[#7d8590] font-bold mt-1">Score</span>
                       </div>
-                    )}
-
-                    {/* Gap Explanation */}
-                    {q.gapExplanation && (
-                      <div className="bg-warning/10 border border-warning/30 rounded-lg p-3 mb-2">
-                        <p className="text-xs font-semibold text-warning mb-1">
-                          ⚠ Gap
-                        </p>
-                        <p className="text-xs text-base-content/70">
-                          {q.gapExplanation}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Weakness Tags */}
-                    {q.weaknessTags?.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {q.weaknessTags.map((tag) => (
-                          <span key={tag} className="badge badge-error badge-xs">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Comment */}
-                    {q.comment && (
-                      <p className="text-xs text-base-content/50 mt-2 italic">
-                        {q.comment}
-                      </p>
-                    )}
+                    </div>
                   </div>
                 </div>
               ))}
