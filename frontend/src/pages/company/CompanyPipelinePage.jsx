@@ -7,15 +7,16 @@ import {
   CalendarIcon,
 } from "lucide-react";
 import CompanyNavbar from "../../components/CompanyNavbar";
+import { PageHeader, HeaderButton, T } from "../../components/ui/CompanyUI";
 
 // ── Stages ─────────────────────────────────────────────────────
 const STAGES = [
-  { key: "applied",      label: "Applied",       topColor: "#57606a",  bgColor: "transparent" },
-  { key: "screened",     label: "Screened",      topColor: "#0969da",  bgColor: "transparent" },
-  { key: "technical",    label: "Technical",     topColor: "#8250df",  bgColor: "transparent" },
-  { key: "system-design",label: "System Design", topColor: "#bf8700",  bgColor: "transparent" },
-  { key: "offer",        label: "Offer",         topColor: "#1a7f37",  bgColor: "transparent" },
-  { key: "hired",        label: "Hired",         topColor: "#0969da",  bgColor: "#f6fbff" },
+  { key: "applied",      label: "Applied",       topColor: "#64748b",  bgColor: "transparent" },
+  { key: "screened",     label: "Screened",      topColor: T.primary,  bgColor: "transparent" },
+  { key: "technical",    label: "Technical",     topColor: "#7c3aed",  bgColor: "transparent" },
+  { key: "system-design",label: "System Design", topColor: "#ca8a04",  bgColor: "transparent" },
+  { key: "offer",        label: "Offer",         topColor: "#16a34a",  bgColor: "transparent" },
+  { key: "hired",        label: "Hired",         topColor: T.primary,  bgColor: "#f0f7ff" },
 ];
 
 // ── Mock data ───────────────────────────────────────────────────
@@ -31,12 +32,12 @@ const MOCK_CANDIDATES = [
 
 // ── Stage badge colours ─────────────────────────────────────────
 const STAGE_BADGE = {
-  applied:       "bg-[#f6f8fa] text-[#57606a] border-[#d0d7de]",
-  screened:      "bg-[#ddf4ff] text-[#0969da] border-[#54aeff]",
-  technical:     "bg-[#fbefff] text-[#8250df] border-[#d2a8ff]",
-  "system-design":"bg-[#fff8c5] text-[#9a6700] border-[#e3b341]",
-  offer:         "bg-[#dafbe1] text-[#1a7f37] border-[#56d364]",
-  hired:         "bg-[#ddf4ff] text-[#0969da] border-[#54aeff]",
+  applied:       `bg-[#f1f5f9] text-[#64748b] border-[#e2e8f0]`,
+  screened:      `bg-[#e8f0fe] text-[#0a66c2] border-[#8bb9fe]`,
+  technical:     `bg-[#f3e8ff] text-[#7c3aed] border-[#c4b5fd]`,
+  "system-design":"bg-[#fef9c3] text-[#ca8a04] border-[#facc15]",
+  offer:         `bg-[#dcfce7] text-[#16a34a] border-[#86efac]`,
+  hired:         `bg-[#e8f0fe] text-[#0a66c2] border-[#8bb9fe]`,
 };
 
 // ── Candidate Card ──────────────────────────────────────────────
@@ -46,39 +47,34 @@ function CandidateCard({ candidate }) {
       layout
       whileHover={{ y: -1 }}
       transition={{ duration: 0.1 }}
-      className="bg-white border border-[#d0d7de] rounded-xl p-3 cursor-grab
-        hover:border-[#0969da] hover:shadow-sm transition-all select-none"
+      className="rounded-xl p-3 cursor-grab select-none transition-all duration-200"
+      style={{
+        backgroundColor: T.bgCard,
+        border: `1px solid ${T.border}`,
+        boxShadow: T.shadowSm,
+      }}
     >
-      {/* Top row */}
       <div className="flex items-start justify-between">
-        <div className="w-9 h-9 rounded-full bg-[#f6f8fa] border border-[#d0d7de]
-          flex items-center justify-center flex-shrink-0">
-          <UserCircleIcon className="size-6 text-[#57606a]" />
+        <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+          style={{ backgroundColor: T.bgPage, border: `1px solid ${T.border}` }}>
+          <UserCircleIcon className="size-6" style={{ color: T.textMuted }} />
         </div>
-        <span className="text-xs font-semibold" style={{ color: "#d29922" }}>
+        <span className="text-xs font-semibold" style={{ color: "#ca8a04" }}>
           ★ {candidate.score.toFixed(1)}
         </span>
       </div>
-
-      {/* Name + Email */}
-      <p className="font-semibold text-sm text-[#1c2128] mt-2 leading-tight">
+      <p className="font-semibold text-sm mt-2 leading-tight" style={{ color: T.textPrimary }}>
         {candidate.name}
       </p>
-      <p className="text-xs text-[#57606a] truncate mt-0.5">
+      <p className="text-xs truncate mt-0.5" style={{ color: T.textMuted }}>
         {candidate.email}
       </p>
-
-      {/* Bottom row */}
-      <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#f6f8fa]">
-        <span className="text-[10px] text-[#8c959f] flex items-center gap-1">
+      <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: `1px solid ${T.borderLight}` }}>
+        <span className="text-[10px] flex items-center gap-1" style={{ color: T.textDim }}>
           <CalendarIcon className="size-3 inline" />
           {candidate.lastInterviewDate}
         </span>
-        <span
-          className={`text-[10px] px-2 py-0.5 rounded-full border font-medium ${
-            STAGE_BADGE[candidate.stage] || STAGE_BADGE.applied
-          }`}
-        >
+        <span className={`text-[10px] px-2 py-0.5 rounded-full border font-medium ${STAGE_BADGE[candidate.stage] || STAGE_BADGE.applied}`}>
           {candidate.stage}
         </span>
       </div>
@@ -90,37 +86,35 @@ function CandidateCard({ candidate }) {
 function Column({ stage, candidates, onDrop, onDragOver }) {
   return (
     <div
-      className="w-64 flex-shrink-0 flex flex-col min-h-[500px] rounded-xl
-        bg-white border border-[#d0d7de]"
-      style={{ borderTop: `2px solid ${stage.topColor}`, backgroundColor: stage.bgColor || "#ffffff" }}
+      className="w-64 flex-shrink-0 flex flex-col min-h-[500px] rounded-2xl"
+      style={{
+        backgroundColor: stage.bgColor || T.bgCard,
+        border: `1px solid ${T.border}`,
+        borderTop: `2px solid ${stage.topColor}`,
+        boxShadow: T.shadowSm,
+      }}
       onDragOver={onDragOver}
       onDrop={(e) => onDrop(e, stage.key)}
     >
-      {/* Column header */}
-      <div className="px-4 py-3 border-b border-[#f6f8fa] flex items-center justify-between flex-shrink-0">
-        <span className="text-xs font-semibold uppercase tracking-wider text-[#57606a]">
+      <div className="px-4 py-3 flex items-center justify-between flex-shrink-0"
+        style={{ borderBottom: `1px solid ${T.borderLight}` }}>
+        <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: T.textMuted }}>
           {stage.label}
         </span>
-        <span className="bg-[#f6f8fa] text-[#57606a] text-xs px-2 py-0.5 rounded-full
-          border border-[#d0d7de] font-medium min-w-[20px] text-center">
+        <span className="text-xs px-2 py-0.5 rounded-full font-medium min-w-[20px] text-center"
+          style={{ backgroundColor: T.bgPage, color: T.textMuted, border: `1px solid ${T.border}` }}>
           {candidates.length}
         </span>
       </div>
-
-      {/* Cards area */}
       <div className="p-3 flex flex-col gap-2 flex-1">
         {candidates.length === 0 ? (
-          <div className="flex-1 flex items-center justify-center border-2
-            border-dashed border-[#d0d7de] rounded-lg m-1 p-4">
-            <p className="text-xs text-[#8c959f] text-center">Drop candidates here</p>
+          <div className="flex-1 flex items-center justify-center rounded-lg m-1 p-4"
+            style={{ border: `2px dashed ${T.border}` }}>
+            <p className="text-xs text-center" style={{ color: T.textDim }}>Drop candidates here</p>
           </div>
         ) : (
           candidates.map((c) => (
-            <div
-              key={c.id}
-              draggable
-              onDragStart={(e) => e.dataTransfer.setData("candidateId", c.id)}
-            >
+            <div key={c.id} draggable onDragStart={(e) => e.dataTransfer.setData("candidateId", c.id)}>
               <CandidateCard candidate={c} />
             </div>
           ))
@@ -144,36 +138,25 @@ function CompanyPipelinePage() {
   const handleDragOver = (e) => e.preventDefault();
 
   return (
-    <div className="min-h-screen bg-[#f6f8fa]">
+    <div className="min-h-screen" style={{ backgroundColor: T.bgPage }}>
       <CompanyNavbar />
 
-      {/* Header */}
-      <div className="bg-white border-b border-[#d0d7de] py-6 px-6">
-        <div className="max-w-full flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-[#1c2128] flex items-center gap-2">
-              <KanbanIcon className="size-5 text-[#0969da]" />
-              Candidate Pipeline
-            </h1>
-            <p className="text-sm text-[#57606a] mt-0.5">
-              Drag candidates between stages to track their progress
-            </p>
-          </div>
-          <button className="flex items-center gap-2 bg-[#0969da] hover:bg-[#0550ae]
-            text-white rounded-lg px-4 py-2 text-sm font-semibold transition-colors">
-            <PlusIcon className="size-4" />
-            Add Candidate
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Recruitment Pipeline"
+        title="Candidate Pipeline"
+        subtitle="Drag candidates between stages to track their progress"
+      >
+        <HeaderButton icon={PlusIcon}>
+          Add Candidate
+        </HeaderButton>
+      </PageHeader>
 
-      {/* Board */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
         className="flex gap-4 p-6 overflow-x-auto"
-        style={{ minHeight: "calc(100vh - 140px)" }}
+        style={{ minHeight: "calc(100vh - 160px)" }}
       >
         {STAGES.map((stage) => (
           <Column

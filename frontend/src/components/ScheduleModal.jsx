@@ -41,7 +41,7 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
           >
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-bold text-[#e6edf3] flex items-center gap-2">
-                <CalendarIcon className="size-5 text-[#2cbe4e]" />
+                <CalendarIcon className="size-5 text-[#ffffff]" />
                 Schedule Interview
               </h3>
               <button onClick={onClose} className="text-[#7d8590] hover:text-[#e6edf3] transition-colors">
@@ -114,7 +114,7 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
                       exit={{ opacity: 0, height: 0 }}
                       className="mt-2 overflow-hidden"
                     >
-                      <div className="bg-[#2cbe4e10] border border-[#2cbe4e30] text-[#2cbe4e] text-xs rounded-lg p-3">
+                      <div className="bg-[#ffffff10] border border-[#ffffff30] text-[#ffffff] text-xs rounded-lg p-3">
                         📧 Invite + join code will be sent to {config.candidateEmail}
                       </div>
                     </motion.div>

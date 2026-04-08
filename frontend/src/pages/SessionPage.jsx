@@ -30,7 +30,7 @@ import ViolationsBanner from "../components/ViolationsBanner";
 import ProblemSelectorPanel from "../components/ProblemSelectorPanel";
 import ProblemDescription from "../components/ProblemDescription";
 import { useTabDetection } from "../hooks/useTabDetection";
-import { io } from "socket.io-client";
+import { getSocket } from "../lib/socket";
 import toast from "react-hot-toast";
 
 import useStreamClient from "../hooks/useStreamClient";
@@ -136,10 +136,7 @@ function SessionPage() {
   useEffect(() => {
     if (!id) return;
 
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
-    // Strip /api suffix — Socket.io connects to the server root
-    const serverUrl = apiUrl.replace(/\/api\/?$/, "");
-    const socket = io(serverUrl, { withCredentials: true });
+    const socket = getSocket();
     socketRef.current = socket;
 
     socket.on("connect", () => {
@@ -148,10 +145,15 @@ function SessionPage() {
     });
 
     return () => {
-      socket.disconnect();
-      socketRef.current = null;
+      // Don't disconnect the shared socket, just clean up listeners
+      socket.off("connect");
+      socket.off("session:error");
+      socket.off("session:sync");
+      socket.off("session:code-update");
+      socket.off("session:output-update");
+      socket.off("session:ended");
     };
-  }, [id]);
+  }, [id, user?.id]);
 
   // ─── Interviewer: listen for violation alerts ───────────────────
   useEffect(() => {

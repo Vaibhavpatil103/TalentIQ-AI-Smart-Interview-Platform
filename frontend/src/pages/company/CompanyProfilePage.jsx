@@ -15,11 +15,8 @@ import CompanyNavbar from "../../components/CompanyNavbar";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
 
-const inputCls = `bg-white border border-[#d0d7de] text-[#1c2128] rounded-lg px-3 py-2.5
-  text-sm w-full outline-none focus:border-[#0969da] focus:ring-2
-  focus:ring-[#0969da20] transition-colors`;
-
-const labelCls = "block text-xs font-semibold text-[#57606a] uppercase tracking-wider mb-1.5";
+const inputCls = "input-light w-full transition-all duration-200";
+const labelCls = "block text-xs font-semibold text-[var(--light-text-secondary)] uppercase tracking-wider mb-1.5";
 
 const INDUSTRIES = [
   "Technology","Finance","Healthcare","Education",
@@ -80,7 +77,7 @@ function CompanyProfilePage() {
   const initials = ((user?.firstName || "")[0] + (user?.lastName || "")[0]).toUpperCase() || "?";
 
   return (
-    <div className="min-h-screen bg-[#f6f8fa]">
+    <div className="min-h-screen bg-[#f8fafc]">
       <CompanyNavbar />
 
       <motion.div
@@ -90,18 +87,18 @@ function CompanyProfilePage() {
         className="max-w-4xl mx-auto px-6 py-8"
       >
         {/* ── CARD 1: Recruiter Info ─────────────────────────── */}
-        <div className="bg-white border border-[#d0d7de] rounded-xl p-6 mb-6 flex items-start gap-5">
+        <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 mb-6 flex items-start gap-5">
           {/* Avatar */}
           <div className="flex-shrink-0">
             {user?.imageUrl ? (
               <img
                 src={user.imageUrl}
                 alt="avatar"
-                className="w-16 h-16 rounded-full ring-2 ring-[#0969da] ring-offset-2 ring-offset-[#f6f8fa] object-cover"
+                className="w-16 h-16 rounded-full ring-2 ring-[#0a66c2] ring-offset-2 ring-offset-[#f6f8fa] object-cover"
               />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-[#0969da] text-white text-xl font-bold
-                flex items-center justify-center ring-2 ring-[#0969da] ring-offset-2 ring-offset-[#f6f8fa]">
+              <div className="w-16 h-16 rounded-full bg-[#0a66c2] text-white text-xl font-bold
+                flex items-center justify-center ring-2 ring-[#0a66c2] ring-offset-2 ring-offset-[#f6f8fa]">
                 {initials}
               </div>
             )}
@@ -109,14 +106,14 @@ function CompanyProfilePage() {
 
           {/* Info */}
           <div>
-            <p className="text-xl font-bold text-[#1c2128]">
+            <p className="text-xl font-bold text-[#0f172a]">
               {user?.firstName} {user?.lastName}
             </p>
-            <p className="text-sm text-[#57606a] mt-0.5">
+            <p className="text-sm text-[#64748b] mt-0.5">
               {user?.primaryEmailAddress?.emailAddress}
             </p>
-            <span className="inline-flex items-center gap-1 bg-[#ddf4ff] text-[#0969da]
-              border border-[#54aeff] text-xs px-3 py-1 rounded-full font-semibold mt-2">
+            <span className="inline-flex items-center gap-1 bg-[#e8f0fe] text-[#0a66c2]
+              border border-[#8bb9fe] text-xs px-3 py-1 rounded-full font-semibold mt-2">
               <ShieldCheckIcon className="size-3" />
               Recruiter
             </span>
@@ -124,10 +121,10 @@ function CompanyProfilePage() {
         </div>
 
         {/* ── CARD 2: Company Details ────────────────────────── */}
-        <div className="bg-white border border-[#d0d7de] rounded-xl p-6 mb-6">
+        <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 mb-6">
           <div className="flex items-center gap-2 mb-1 pb-4 border-b border-[#f6f8fa]">
-            <BuildingIcon className="size-4 text-[#0969da]" />
-            <h2 className="text-base font-semibold text-[#1c2128]">Company Information</h2>
+            <BuildingIcon className="size-4 text-[#0a66c2]" />
+            <h2 className="text-base font-semibold text-[#0f172a]">Company Information</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
@@ -157,7 +154,7 @@ function CompanyProfilePage() {
             <div>
               <label className={labelCls}>Location</label>
               <div className="relative">
-                <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-[#8c959f]" />
+                <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-[#94a3b8]" />
                 <input className={`${inputCls} pl-9`} value={form.location} onChange={set("location")} placeholder="San Francisco, CA" />
               </div>
             </div>
@@ -166,7 +163,7 @@ function CompanyProfilePage() {
             <div>
               <label className={labelCls}>Website</label>
               <div className="relative">
-                <GlobeIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-[#8c959f]" />
+                <GlobeIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-[#94a3b8]" />
                 <input className={`${inputCls} pl-9`} value={form.website} onChange={set("website")} placeholder="https://acme.com" />
               </div>
             </div>
@@ -191,17 +188,17 @@ function CompanyProfilePage() {
         </div>
 
         {/* ── CARD 3: Tech Stack ────────────────────────────── */}
-        <div className="bg-white border border-[#d0d7de] rounded-xl p-6 mb-6">
+        <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
-            <Code2Icon className="size-4 text-[#0969da]" />
-            <h2 className="text-base font-semibold text-[#1c2128]">Tech Stack & Requirements</h2>
+            <Code2Icon className="size-4 text-[#0a66c2]" />
+            <h2 className="text-base font-semibold text-[#0f172a]">Tech Stack & Requirements</h2>
           </div>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-3">
             {form.techStack.map((tag) => (
-              <span key={tag} className="flex items-center gap-1.5 bg-[#ddf4ff] text-[#0969da]
-                border border-[#54aeff] text-xs px-3 py-1 rounded-full font-medium">
+              <span key={tag} className="flex items-center gap-1.5 bg-[#e8f0fe] text-[#0a66c2]
+                border border-[#8bb9fe] text-xs px-3 py-1 rounded-full font-medium">
                 {tag}
                 <button onClick={() => removeTag(tag)} className="hover:text-[#cf222e] transition-colors">
                   <XIcon className="size-3" />
@@ -209,7 +206,7 @@ function CompanyProfilePage() {
               </span>
             ))}
             {form.techStack.length === 0 && (
-              <span className="text-xs text-[#8c959f]">No technologies added yet</span>
+              <span className="text-xs text-[#94a3b8]">No technologies added yet</span>
             )}
           </div>
 
@@ -224,7 +221,7 @@ function CompanyProfilePage() {
             />
             <button
               onClick={addTag}
-              className="bg-[#0969da] hover:bg-[#0550ae] text-white rounded-lg px-3 py-2
+              className="bg-[#0a66c2] hover:bg-[#004182] text-white rounded-lg px-3 py-2
                 text-sm font-medium transition-colors flex-shrink-0"
             >
               Add
@@ -236,7 +233,7 @@ function CompanyProfilePage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center justify-center gap-2 bg-[#0969da] hover:bg-[#0550ae]
+          className="flex items-center justify-center gap-2 bg-[#0a66c2] hover:bg-[#004182]
             disabled:opacity-50 text-white rounded-lg px-6 py-2.5 text-sm font-semibold
             transition-colors w-full"
         >

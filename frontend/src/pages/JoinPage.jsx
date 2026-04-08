@@ -55,7 +55,7 @@ function JoinPage() {
         className="card-dark max-w-md w-full mx-auto mt-24 p-8 flex flex-col relative"
       >
         <div className="flex justify-center">
-          <LockIcon className="text-[#2cbe4e] size-12 mb-6" />
+          <LockIcon className="text-[#000000] size-12 mb-6" />
         </div>
 
         <h1 className="font-bold text-xl text-[#e6edf3] text-center mb-1">

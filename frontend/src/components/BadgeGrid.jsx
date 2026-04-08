@@ -6,16 +6,16 @@ function BadgeGrid({ earnedBadges, allBadges }) {
         return (
           <div key={badge.id} className="tooltip tooltip-bottom" data-tip={badge.desc}>
             <div
-              className={`card-dark-hover p-4 text-center cursor-default h-full transition-all duration-300 ${
+              className={`bg-[var(--light-card)] border border-[var(--light-border)] rounded-xl p-4 text-center cursor-default h-full transition-all duration-300 hover:border-[var(--light-accent)] hover:shadow-[var(--shadow-md)] ${
                 earned
-                  ? "border-[#2cbe4e40] bg-[#2cbe4e05]"
+                  ? "border-[var(--light-accent)] bg-[var(--light-accent-soft)] shadow-[var(--shadow-sm)]"
                   : "opacity-40 grayscale hover:grayscale-0 hover:opacity-80"
               }`}
             >
               <div className="text-2xl drop-shadow-md mb-2 flex items-center justify-center h-8">
                 {earned ? badge.emoji : "🔒"}
               </div>
-              <p className="text-xs font-semibold text-[#e6edf3] leading-tight">
+              <p className="text-xs font-semibold text-[var(--light-text)] leading-tight">
                 {badge.label}
               </p>
             </div>

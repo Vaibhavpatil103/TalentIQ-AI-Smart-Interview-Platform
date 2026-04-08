@@ -70,18 +70,18 @@ function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0d1117]">
+      <div className="min-h-screen bg-[#f8fafc]">
         <Navbar />
         <div className="max-w-4xl mx-auto px-6 py-12">
           <div className="card-dark p-8 mb-6 flex items-start gap-8">
-            <div className="size-24 rounded-full bg-[#1c2128] animate-pulse shrink-0" />
+            <div className="size-24 rounded-full bg-[#f1f5f9] animate-pulse shrink-0" />
             <div className="flex-1 space-y-4">
-              <div className="h-8 bg-[#1c2128] rounded-lg animate-pulse w-1/3" />
-              <div className="h-4 bg-[#1c2128] rounded-lg animate-pulse w-1/4" />
+              <div className="h-8 bg-[#f1f5f9] rounded-lg animate-pulse w-1/3" />
+              <div className="h-4 bg-[#f1f5f9] rounded-lg animate-pulse w-1/4" />
               <div className="grid grid-cols-3 gap-4 mt-6">
-                 <div className="h-24 bg-[#1c2128] rounded-xl animate-pulse" />
-                 <div className="h-24 bg-[#1c2128] rounded-xl animate-pulse" />
-                 <div className="h-24 bg-[#1c2128] rounded-xl animate-pulse" />
+                 <div className="h-24 bg-[#f1f5f9] rounded-xl animate-pulse" />
+                 <div className="h-24 bg-[#f1f5f9] rounded-xl animate-pulse" />
+                 <div className="h-24 bg-[#f1f5f9] rounded-xl animate-pulse" />
               </div>
             </div>
           </div>
@@ -94,13 +94,13 @@ function ProfilePage() {
   const mockXP = 2450;
   const mockLevel = 4;
   const mockStats = [
-    { label: "Interviews", value: profile?.interviewsCompleted || 12, icon: TargetIcon, color: "text-[#58a6ff]" },
-    { label: "Avg Score", value: "8.4", icon: TrendingUpIcon, color: "text-[#2cbe4e]" },
-    { label: "Badges", value: 5, icon: AwardIcon, color: "text-[#d29922]" },
+    { label: "Interviews", value: profile?.interviewsCompleted || 12, icon: TargetIcon, color: "text-[#0a66c2]" },
+    { label: "Avg Score", value: "8.4", icon: TrendingUpIcon, color: "text-[#0a66c2]" },
+    { label: "Badges", value: 5, icon: AwardIcon, color: "text-[#ca8a04]" },
   ];
 
   return (
-    <div className="min-h-screen bg-[#0d1117]">
+    <div className="min-h-screen bg-[#f8fafc]">
       <Navbar />
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -108,31 +108,31 @@ function ProfilePage() {
         className="max-w-4xl mx-auto px-6 py-12"
       >
         {/* Profile Header */}
-        <div className="card-dark p-8 mb-6 flex flex-col md:flex-row items-center md:items-start gap-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#2cbe4e] opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="bg-[var(--light-card)] border border-[var(--light-border)] rounded-xl shadow-[var(--shadow-sm)] p-8 mb-6 flex flex-col md:flex-row items-center md:items-start gap-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#0a66c2] opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           
           <div className="shrink-0">
-            <div className="size-24 rounded-full ring-2 ring-[#2cbe4e] ring-offset-2 ring-offset-[#0d1117] p-1">
+            <div className="size-24 rounded-full ring-2 ring-[#0a66c2] ring-offset-2 ring-offset-[#f8fafc] p-1">
               <img src={user?.imageUrl || (profile?.profileImage || "/default-avatar.png")} alt={profile?.name} className="size-full rounded-full object-cover" />
             </div>
           </div>
           
           <div className="flex-1 text-center md:text-left z-10">
             <div className="flex flex-col md:flex-row md:items-center gap-4 mb-2">
-              <h1 className="text-3xl font-bold text-[#e6edf3]">{profile?.name}</h1>
-              <span className="text-[10px] uppercase tracking-widest font-bold px-3 py-1 rounded-full border border-[#2cbe4e40] text-[#2cbe4e] bg-[#2cbe4e10]">
+              <h1 className="text-3xl font-bold text-[#0f172a]">{profile?.name}</h1>
+              <span className="text-[10px] uppercase tracking-widest font-bold px-3 py-1 rounded-full border border-[#0a66c240] text-[#0a66c2] bg-[#0a66c210]">
                 {profile?.role || "candidate"}
               </span>
             </div>
-            <p className="text-[#7d8590] mb-6">{profile?.email}</p>
+            <p className="text-[#64748b] mb-6">{profile?.email}</p>
             
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-4">
               {mockStats.map((stat, i) => (
-                <div key={i} className="bg-[#1c2128] border border-[#30363d] rounded-xl p-4 flex flex-col items-center justify-center">
+                <div key={i} className="bg-[#f1f5f9] border border-[#e2e8f0] rounded-xl p-4 flex flex-col items-center justify-center">
                   <stat.icon className={`size-5 mb-2 ${stat.color}`} />
-                  <span className="text-xl font-black text-[#e6edf3]">{stat.value}</span>
-                  <span className="text-[10px] text-[#7d8590] uppercase tracking-wider font-semibold mt-1">{stat.label}</span>
+                  <span className="text-xl font-black text-[#0f172a]">{stat.value}</span>
+                  <span className="text-[10px] text-[#64748b] uppercase tracking-wider font-semibold mt-1">{stat.label}</span>
                 </div>
               ))}
             </div>
@@ -152,9 +152,9 @@ function ProfilePage() {
             />
           </div>
           <div className="md:col-span-2">
-            <div className="card-dark p-6 h-full">
-              <h2 className="text-sm font-bold text-[#e6edf3] uppercase tracking-wider mb-4 flex items-center gap-2">
-                <AwardIcon className="size-4 text-[#d29922]" /> Badges
+            <div className="bg-[var(--light-card)] border border-[var(--light-border)] rounded-xl shadow-[var(--shadow-sm)] p-6 h-full">
+              <h2 className="text-sm font-bold text-[#0f172a] uppercase tracking-wider mb-4 flex items-center gap-2">
+                <AwardIcon className="size-4 text-[#ca8a04]" /> Badges
               </h2>
               <BadgeGrid 
                 earnedBadges={["first_interview", "streak_3", "perfect_array", "mock_expert"]} 
@@ -171,20 +171,20 @@ function ProfilePage() {
         </div>
 
         {/* Edit Form */}
-        <div className="card-dark p-8">
-          <h2 className="text-lg font-bold text-[#e6edf3] mb-6 flex items-center gap-2 border-b border-[#30363d] pb-4">
-            <UserIcon className="size-5 text-[#2cbe4e]" /> Profile Details
+        <div className="bg-[var(--light-card)] border border-[var(--light-border)] rounded-xl shadow-[var(--shadow-sm)] p-8">
+          <h2 className="text-lg font-bold text-[#0f172a] mb-6 flex items-center gap-2 border-b border-[#e2e8f0] pb-4">
+            <UserIcon className="size-5 text-[#0a66c2]" /> Profile Details
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-6">
               <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-[#e6edf3] mb-2">
-                  <BriefcaseIcon className="size-4 text-[#7d8590]" /> Current Company
+                <label className="flex items-center gap-2 text-sm font-semibold text-[#0f172a] mb-2">
+                  <BriefcaseIcon className="size-4 text-[#64748b]" /> Current Company
                 </label>
                 <input
                   type="text"
-                  className="input-dark w-full"
+                  className="bg-[var(--light-bg)] border border-[var(--light-border)] text-[var(--light-text)] rounded-lg px-3 py-2.5 text-sm outline-none placeholder-[var(--light-text-tertiary)] focus:border-[var(--light-accent)] focus:ring-1 focus:ring-[var(--light-accent-ring)] transition-colors w-full"
                   placeholder="e.g. Google, Startup Inc."
                   value={form.company}
                   onChange={(e) => setForm({ ...form, company: e.target.value })}
@@ -192,12 +192,12 @@ function ProfilePage() {
               </div>
 
               <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-[#e6edf3] mb-2">
-                  <GithubIcon className="size-4 text-[#7d8590]" /> GitHub URL
+                <label className="flex items-center gap-2 text-sm font-semibold text-[#0f172a] mb-2">
+                  <GithubIcon className="size-4 text-[#64748b]" /> GitHub URL
                 </label>
                 <input
                   type="url"
-                  className="input-dark w-full"
+                  className="bg-[var(--light-bg)] border border-[var(--light-border)] text-[var(--light-text)] rounded-lg px-3 py-2.5 text-sm outline-none placeholder-[var(--light-text-tertiary)] focus:border-[var(--light-accent)] focus:ring-1 focus:ring-[var(--light-accent-ring)] transition-colors w-full"
                   placeholder="https://github.com/username"
                   value={form.githubUrl}
                   onChange={(e) => setForm({ ...form, githubUrl: e.target.value })}
@@ -205,12 +205,12 @@ function ProfilePage() {
               </div>
 
               <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-[#e6edf3] mb-2">
-                  <FileTextIcon className="size-4 text-[#7d8590]" /> Resume Link
+                <label className="flex items-center gap-2 text-sm font-semibold text-[#0f172a] mb-2">
+                  <FileTextIcon className="size-4 text-[#64748b]" /> Resume Link
                 </label>
                 <input
                   type="url"
-                  className="input-dark w-full"
+                  className="bg-[var(--light-bg)] border border-[var(--light-border)] text-[var(--light-text)] rounded-lg px-3 py-2.5 text-sm outline-none placeholder-[var(--light-text-tertiary)] focus:border-[var(--light-accent)] focus:ring-1 focus:ring-[var(--light-accent-ring)] transition-colors w-full"
                   placeholder="Drive/Dropbox link to PDF"
                   value={form.resumeUrl}
                   onChange={(e) => setForm({ ...form, resumeUrl: e.target.value })}
@@ -219,20 +219,20 @@ function ProfilePage() {
             </div>
 
             <div className="space-y-4">
-              <label className="flex items-center gap-2 text-sm font-semibold text-[#e6edf3] mb-2">
-                <CodeIcon className="size-4 text-[#7d8590]" /> Tech Stack & Skills
+              <label className="flex items-center gap-2 text-sm font-semibold text-[#0f172a] mb-2">
+                <CodeIcon className="size-4 text-[#64748b]" /> Tech Stack & Skills
               </label>
               
-              <div className="flex flex-wrap gap-2 mb-4 bg-[#0d1117] p-4 rounded-xl border border-[#30363d] min-h-[120px]">
+              <div className="flex flex-wrap gap-2 mb-4 bg-[#f8fafc] p-4 rounded-xl border border-[#e2e8f0] min-h-[120px]">
                 {form.techStack.length === 0 ? (
-                  <p className="text-[#484f58] text-sm flex items-center justify-center w-full h-full italic">No skills added yet</p>
+                  <p className="text-[#94a3b8] text-sm flex items-center justify-center w-full h-full italic">No skills added yet</p>
                 ) : (
                   form.techStack.map((skill) => (
-                    <span key={skill} className="flex items-center gap-1.5 px-3 py-1 bg-[#1c2128] border border-[#30363d] text-[#e6edf3] text-xs font-semibold rounded-full group hover:border-[#f8514940] transition-colors">
+                    <span key={skill} className="flex items-center gap-1.5 px-3 py-1 bg-[#f1f5f9] border border-[#e2e8f0] text-[#0f172a] text-xs font-semibold rounded-full group hover:border-[#f8514940] transition-colors">
                       {skill}
                       <button
                         onClick={() => removeSkill(skill)}
-                        className="text-[#7d8590] group-hover:text-[#f85149] transition-colors focus:outline-none"
+                        className="text-[#64748b] group-hover:text-[#f85149] transition-colors focus:outline-none"
                       >
                         ×
                       </button>
@@ -244,22 +244,22 @@ function ProfilePage() {
               <div className="flex gap-2">
                 <input
                   type="text"
-                  className="input-dark flex-1"
+                  className="bg-[var(--light-bg)] border border-[var(--light-border)] text-[var(--light-text)] rounded-lg px-3 py-2.5 text-sm outline-none placeholder-[var(--light-text-tertiary)] focus:border-[var(--light-accent)] focus:ring-1 focus:ring-[var(--light-accent-ring)] transition-colors flex-1"
                   placeholder="e.g. React, Node.js, Python"
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSkill())}
                 />
-                <button className="btn-outline-dark" onClick={addSkill} type="button">
+                <button className="border border-[var(--light-border)] text-[var(--light-text)] hover:border-[var(--light-accent)] hover:text-[var(--light-accent)] rounded-lg px-4 py-2.5 text-sm font-medium transition-colors" onClick={addSkill} type="button">
                   Add 
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end mt-10 pt-6 border-t border-[#30363d]">
+          <div className="flex justify-end mt-10 pt-6 border-t border-[#e2e8f0]">
             <button
-              className="btn-green gap-2 px-8 shadow-lg shadow-[#2cbe4e]/20"
+              className="bg-[var(--light-accent)] hover:bg-[var(--light-accent-hover)] text-white font-semibold rounded-lg gap-2 px-8 py-2.5 shadow-lg shadow-blue-500/10 flex items-center transition-colors"
               onClick={handleSave}
               disabled={saving}
             >

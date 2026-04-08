@@ -55,7 +55,7 @@ function JoinCodeModal({ isOpen, onClose, joinCode, joinLink }) {
             {/* Join Code Display */}
             <div className="bg-[#0d1117] border border-[#30363d] rounded-xl p-6 text-center w-full mb-6">
               <p className="text-xs uppercase tracking-widest text-[#7d8590] mb-2 font-semibold">Join Code</p>
-              <p className="font-mono text-3xl font-black text-[#2cbe4e] tracking-[0.4em]">
+              <p className="font-mono text-3xl font-black text-[#ffffff] tracking-[0.4em]">
                 {joinCode}
               </p>
             </div>
@@ -73,7 +73,7 @@ function JoinCodeModal({ isOpen, onClose, joinCode, joinLink }) {
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0, opacity: 0 }}
-                      className="flex items-center gap-2 text-[#2cbe4e]"
+                      className="flex items-center gap-2 text-[#ffffff]"
                     >
                       <CheckIcon className="size-4" /> Copied!
                     </motion.div>
@@ -102,7 +102,7 @@ function JoinCodeModal({ isOpen, onClose, joinCode, joinLink }) {
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0, opacity: 0 }}
-                      className="flex items-center gap-2 text-[#2cbe4e]"
+                      className="flex items-center gap-2 text-[#ffffff]"
                     >
                       <CheckIcon className="size-4" /> Copied!
                     </motion.div>

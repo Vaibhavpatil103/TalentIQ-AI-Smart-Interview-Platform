@@ -104,7 +104,7 @@ function AIPracticePage() {
     setSelectedTopics((prev) => {
       if (prev.includes(t)) return prev.filter((x) => x !== t);
       if (prev.length >= 5) {
-        toast.error("Max 5 topics allowed", { style: { background: '#1c2128', color: '#e6edf3' } });
+        toast.error("Max 5 topics allowed", { style: { background: '#ffffff', color: '#0f172a' } });
         return prev;
       }
       return [...prev, t];
@@ -188,11 +188,11 @@ function AIPracticePage() {
         return;
       }
       if (selectedMode === "resume" && !resumeFile) {
-        toast.error("Please upload your resume", { style: { background: '#1c2128', color: '#e6edf3' } });
+        toast.error("Please upload your resume", { style: { background: '#ffffff', color: '#0f172a' } });
         return;
       }
       if (!selectedMode) {
-        toast.error("Please select a mode", { style: { background: '#1c2128', color: '#e6edf3' } });
+        toast.error("Please select a mode", { style: { background: '#ffffff', color: '#0f172a' } });
         return;
       }
 
@@ -224,7 +224,7 @@ function AIPracticePage() {
 
       setScreen("interview");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to start session", { style: { background: '#1c2128', color: '#e6edf3' } });
+      toast.error(error.response?.data?.message || "Failed to start session", { style: { background: '#ffffff', color: '#0f172a' } });
     }
   };
 
@@ -237,7 +237,7 @@ function AIPracticePage() {
       }
       return result;
     } catch (error) {
-      toast.error("Failed to send answer", { style: { background: '#1c2128', color: '#e6edf3' } });
+      toast.error("Failed to send answer", { style: { background: '#ffffff', color: '#0f172a' } });
     }
   };
 
@@ -249,24 +249,24 @@ function AIPracticePage() {
       );
       const result = await endSession({ totalDuration });
       if (result?.xpResult?.xpEarned) {
-        toast.success(`+${result.xpResult.xpEarned} XP earned! 🎉`, { duration: 4000, style: { background: '#1c2128', color: '#e6edf3' } });
+        toast.success(`+${result.xpResult.xpEarned} XP earned! 🎉`, { duration: 4000, style: { background: '#ffffff', color: '#0f172a' } });
       }
       if (result?.xpResult?.leveledUp) {
         toast.success(
           `🚀 Level Up! You are now ${result.xpResult.newLevelTitle}!`,
-          { duration: 6000, style: { background: '#1c2128', color: '#e6edf3' } }
+          { duration: 6000, style: { background: '#ffffff', color: '#0f172a' } }
         );
       }
       if (result?.xpResult?.newBadges?.length > 0) {
         const badge = BADGE_DEFINITIONS_MAP[result.xpResult.newBadges[0]];
         toast.success(
           `${badge?.emoji || "🏅"} New badge: ${badge?.label || result.xpResult.newBadges[0]}`,
-          { duration: 5000, style: { background: '#1c2128', color: '#e6edf3' } }
+          { duration: 5000, style: { background: '#ffffff', color: '#0f172a' } }
         );
       }
       setScreen("feedback");
     } catch (error) {
-      toast.error("Failed to get feedback", { style: { background: '#1c2128', color: '#e6edf3' } });
+      toast.error("Failed to get feedback", { style: { background: '#ffffff', color: '#0f172a' } });
       setScreen("interview");
     }
   };
@@ -288,16 +288,16 @@ function AIPracticePage() {
   };
 
   const getDifficultyColor = (diff) => {
-    if (diff === "Easy") return "bg-[#2cbe4e20] text-[#2cbe4e] border-[#2cbe4e]";
-    if (diff === "Medium") return "bg-[#d2992220] text-[#d29922] border-[#d29922]";
-    if (diff === "Hard") return "bg-[#f8514920] text-[#f85149] border-[#f85149]";
+    if (diff === "Easy") return "bg-[var(--color-success-bg)] text-[var(--color-success)] border-[var(--color-success)]";
+    if (diff === "Medium") return "bg-[var(--color-warning-bg)] text-[var(--color-warning)] border-[var(--color-warning)]";
+    if (diff === "Hard") return "bg-[var(--color-danger-bg)] text-[var(--color-danger)] border-[var(--color-danger)]";
     return "";
   };
 
   // ── STATE 1: SETUP ──
   if (screen === "setup") {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-[#0d1117] text-[#e6edf3]">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-[var(--dark-bg)] text-[var(--dark-text)]">
         <Navbar />
         <motion.div 
           initial={{ opacity: 0, y: 15 }} 
@@ -308,12 +308,12 @@ function AIPracticePage() {
           {/* Header */}
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-3 mb-4">
-              <div className="size-12 rounded-2xl bg-gradient-to-br from-[#2cbe4e] to-[#1a7f37] flex items-center justify-center shadow-lg">
+              <div className="size-12 rounded-2xl bg-gradient-to-br from-[var(--dark-accent)] to-[var(--dark-accent-hover)] flex items-center justify-center shadow-lg">
                 <SparklesIcon className="size-6 text-white" />
               </div>
               <h1 className="text-3xl font-black">AI Practice Interview</h1>
             </div>
-            <p className="text-[#7d8590] max-w-lg mx-auto">
+            <p className="text-[var(--dark-text-secondary)] max-w-lg mx-auto">
               Sharpen your skills with AI-powered mock interviews. Get real-time
               questions and detailed feedback on your performance.
             </p>
@@ -321,19 +321,19 @@ function AIPracticePage() {
 
           {/* 7-Day Streak Strip */}
           <div className="flex items-center justify-center gap-2 mb-4">
-            <span className="text-xs text-[#7d8590] mr-1">🔥 Streak:</span>
+            <span className="text-xs text-[var(--dark-text-secondary)] mr-1">🔥 Streak:</span>
             {DAY_LABELS.map((day) => (
               <div key={day} className="flex flex-col items-center gap-1">
                 <div className={`size-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors ${
                   streakDays[day]
-                    ? "bg-[#2cbe4e] border-[#2cbe4e] text-[#0d1117]"
+                    ? "bg-[var(--dark-accent)] border-[var(--dark-accent)] text-white"
                     : day === today
-                      ? "border-[#2cbe4e] text-[#2cbe4e]"
-                      : "border-[#30363d] text-[#484f58]"
+                      ? "border-[var(--dark-accent)] text-[var(--dark-accent)]"
+                      : "border-[var(--dark-border)] text-[var(--dark-text-tertiary)]"
                 }`}>
                   {day[0]}
                 </div>
-                <span className="text-[9px] text-[#484f58]">{day}</span>
+                <span className="text-[9px] text-[var(--dark-text-tertiary)]">{day}</span>
               </div>
             ))}
           </div>
@@ -371,12 +371,12 @@ function AIPracticePage() {
 
           {/* AI Recommendation Banner */}
           {weakestTopic && (
-            <div className="bg-[#2cbe4e10] border border-[#2cbe4e30] rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-2 text-[#2cbe4e] text-sm">
+            <div className="bg-[var(--dark-accent-bg)] border border-[var(--dark-accent-border)] rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-2 text-[var(--dark-accent)] text-sm">
                 <SparklesIcon className="size-4 shrink-0" />
                 <span>
                   <strong>AI suggests:</strong> Practice {weakestTopic[0]} · Medium
-                  <span className="text-[#2cbe4e] ml-1">(weakest topic — score: {weakestTopic[1]}/10)</span>
+                  <span className="text-[var(--dark-text-secondary)] ml-1">(weakest topic — score: {weakestTopic[1]}/10)</span>
                 </span>
               </div>
               <button
@@ -397,19 +397,19 @@ function AIPracticePage() {
             {/* ── Topic Mode Card ── */}
             <div
               className={`card-dark-hover p-6 cursor-pointer border-2 transition-all duration-200 ${
-                selectedMode === "topic" ? "border-[#2cbe4e] shadow-[0_0_0_1px_#2cbe4e]" : "border-transparent"
+                selectedMode === "topic" ? "border-[var(--dark-accent)] shadow-[0_0_0_1px_var(--dark-accent)]" : "border-transparent"
               }`}
               onClick={() => setSelectedMode("topic")}
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className={`size-10 rounded-xl flex items-center justify-center transition-colors ${
-                  selectedMode === "topic" ? "bg-[#2cbe4e] text-black" : "bg-[#1c2128] text-[#7d8590]"
+                  selectedMode === "topic" ? "bg-[var(--dark-accent)] text-white" : "bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)]"
                 }`}>
                   <BookOpenIcon className="size-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-[#e6edf3]">Practice by Topic</h3>
-                  <p className="text-xs text-[#7d8590]">
+                  <h3 className="font-bold text-lg text-[var(--dark-text)]">Practice by Topic</h3>
+                  <p className="text-xs text-[var(--dark-text-secondary)]">
                     Choose a topic and difficulty. AI will interview you.
                   </p>
                 </div>
@@ -420,23 +420,34 @@ function AIPracticePage() {
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="mt-4 space-y-5 overflow-hidden">
                     {/* Topic Pills */}
                     <div>
-                      <label className="text-sm font-semibold text-[#e6edf3] mb-2 block">
+                      <label className="text-sm font-semibold text-[var(--dark-text)] mb-2 block">
                         Select Topic (up to 3)
                       </label>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-2" role="listbox" aria-label="Select Topics">
                         {TOPICS.map((t) => {
                           const isSelected = selectedTopics.includes(t);
                           return (
                             <button
                               key={t}
-                              className={`rounded-full px-3 py-1 text-sm border transition-colors ${
+                              role="option"
+                              aria-selected={isSelected}
+                              className={`rounded-full px-3 py-1 text-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--dark-accent)] focus:ring-offset-[var(--dark-bg)] ${
                                 isSelected
-                                  ? "bg-[#2cbe4e20] text-[#2cbe4e] border-[#2cbe4e]"
-                                  : "bg-[#1c2128] text-[#7d8590] border-[#30363d] hover:bg-[#2cbe4e15] hover:text-[#2cbe4e] hover:border-[#2cbe4e40]"
+                                  ? "bg-[var(--dark-accent-bg)] text-[var(--dark-accent)] border-[var(--dark-accent)]"
+                                  : "bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)] border-[var(--dark-border)] hover:bg-[var(--dark-accent-bg)] hover:text-[var(--dark-accent)] hover:border-[var(--dark-accent-border)]"
                               }`}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleTopicToggle(t);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                                  e.preventDefault();
+                                  e.currentTarget.nextElementSibling?.focus();
+                                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                                  e.preventDefault();
+                                  e.currentTarget.previousElementSibling?.focus();
+                                }
                               }}
                             >
                               {t}
@@ -447,7 +458,7 @@ function AIPracticePage() {
 
                       <AnimatePresence>
                         {showTopicWarning && (
-                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[#f85149] text-xs mt-2 flex items-center gap-1">
+                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[var(--color-danger)] text-xs mt-2 flex items-center gap-1">
                             <AlertTriangleIcon className="size-3" />
                             Select at least 1 topic to continue
                           </motion.div>
@@ -457,17 +468,28 @@ function AIPracticePage() {
 
                     {/* Difficulty Pills */}
                     <div>
-                      <label className="text-sm font-semibold text-[#e6edf3] mb-2 block">Difficulty</label>
-                      <div className="flex gap-2">
+                      <label className="text-sm font-semibold text-[var(--dark-text)] mb-2 block">Difficulty</label>
+                      <div className="flex gap-2" role="listbox" aria-label="Select Difficulty">
                         {DIFFICULTIES.map((d) => {
                           const isSelected = selectedDifficulty === d;
                           return (
                             <button
                               key={d}
-                              className={`rounded-full px-3 py-1 text-sm border transition-colors ${
-                                isSelected ? getDifficultyColor(d) : "bg-[#1c2128] text-[#7d8590] border-[#30363d] hover:bg-[#30363d] hover:text-[#e6edf3]"
+                              role="option"
+                              aria-selected={isSelected}
+                              className={`rounded-full px-3 py-1 text-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--dark-accent)] focus:ring-offset-[var(--dark-bg)] ${
+                                isSelected ? getDifficultyColor(d) : "bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)] border-[var(--dark-border)] hover:bg-[var(--dark-border)] hover:text-[var(--dark-text)]"
                               }`}
                               onClick={(e) => { e.stopPropagation(); setSelectedDifficulty(d); }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                                  e.preventDefault();
+                                  e.currentTarget.nextElementSibling?.focus();
+                                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                                  e.preventDefault();
+                                  e.currentTarget.previousElementSibling?.focus();
+                                }
+                              }}
                             >
                               {d}
                             </button>
@@ -479,16 +501,27 @@ function AIPracticePage() {
                     {/* Interview Type */}
                     <div>
                       <label className="text-sm font-semibold mb-2 block">Interview Type</label>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-2" role="listbox" aria-label="Select Interview Type">
                         {INTERVIEW_TYPES.map((type) => (
                           <button
                             key={type}
-                            className={`rounded-full px-3 py-1 text-sm border transition-colors ${
+                            role="option"
+                            aria-selected={interviewType === type}
+                            className={`rounded-full px-3 py-1 text-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--dark-accent)] focus:ring-offset-[var(--dark-bg)] ${
                               interviewType === type 
-                                ? "bg-[#2cbe4e20] text-[#2cbe4e] border-[#2cbe4e]" 
-                                : "bg-[#1c2128] text-[#7d8590] border-[#30363d] hover:bg-[#30363d] hover:text-[#e6edf3]"
+                                ? "bg-[var(--dark-accent-bg)] text-[var(--dark-accent)] border-[var(--dark-accent)]" 
+                                : "bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)] border-[var(--dark-border)] hover:bg-[var(--dark-border)] hover:text-[var(--dark-text)]"
                             }`}
                             onClick={(e) => { e.stopPropagation(); setInterviewType(type); }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                e.currentTarget.nextElementSibling?.focus();
+                              } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                e.currentTarget.previousElementSibling?.focus();
+                              }
+                            }}
                           >
                             {type}
                           </button>
@@ -499,16 +532,27 @@ function AIPracticePage() {
                     {/* Number of Questions */}
                     <div>
                       <label className="text-sm font-semibold mb-2 block">Questions Limit</label>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2" role="listbox" aria-label="Select Questions Limit">
                         {QUESTION_LIMITS.map((q) => (
                           <button
                             key={q}
-                            className={`rounded-full px-3 py-1 text-sm border transition-colors ${
+                            role="option"
+                            aria-selected={questionLimit === q}
+                            className={`rounded-full px-3 py-1 text-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--dark-accent)] focus:ring-offset-[var(--dark-bg)] ${
                               questionLimit === q
-                                ? "bg-[#2cbe4e20] text-[#2cbe4e] border-[#2cbe4e]"
-                                : "bg-[#1c2128] text-[#7d8590] border-[#30363d] hover:bg-[#30363d] hover:text-[#e6edf3]"
+                                ? "bg-[var(--dark-accent)] text-white border-[var(--dark-accent)]"
+                                : "bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)] border-[var(--dark-border)] hover:bg-[var(--dark-border)] hover:text-[var(--dark-text)]"
                             }`}
                             onClick={(e) => { e.stopPropagation(); setQuestionLimit(q); }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                e.currentTarget.nextElementSibling?.focus();
+                              } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                e.currentTarget.previousElementSibling?.focus();
+                              }
+                            }}
                           >
                             {q}
                           </button>
@@ -519,16 +563,27 @@ function AIPracticePage() {
                     {/* Duration */}
                     <div>
                       <label className="text-sm font-semibold mb-2 block">Duration</label>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2" role="listbox" aria-label="Select Duration">
                         {DURATIONS.map((d) => (
                           <button
                             key={d}
-                            className={`rounded-full px-3 py-1 text-sm border transition-colors ${
+                            role="option"
+                            aria-selected={duration === d}
+                            className={`rounded-full px-3 py-1 text-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--dark-accent)] focus:ring-offset-[var(--dark-bg)] ${
                               duration === d
-                                ? "bg-[#2cbe4e20] text-[#2cbe4e] border-[#2cbe4e]"
-                                : "bg-[#1c2128] text-[#7d8590] border-[#30363d] hover:bg-[#30363d] hover:text-[#e6edf3]"
+                                ? "bg-[var(--dark-accent-bg)] text-[var(--dark-accent)] border-[var(--dark-accent)]"
+                                : "bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)] border-[var(--dark-border)] hover:bg-[var(--dark-border)] hover:text-[var(--dark-text)]"
                             }`}
                             onClick={(e) => { e.stopPropagation(); setDuration(d); }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                e.currentTarget.nextElementSibling?.focus();
+                              } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                e.currentTarget.previousElementSibling?.focus();
+                              }
+                            }}
                           >
                             {d} min
                           </button>
@@ -539,16 +594,27 @@ function AIPracticePage() {
                     {/* Interviewer Persona */}
                     <div>
                       <label className="text-sm font-semibold mb-2 block">Interviewer Persona</label>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2" role="listbox" aria-label="Select Persona">
                         {PERSONAS.map((p) => (
                           <button
                             key={p.value}
-                            className={`rounded-full px-3 py-1 text-sm border transition-colors flex-1 ${
+                            role="option"
+                            aria-selected={persona === p.value}
+                            className={`rounded-full px-3 py-1 text-sm border transition-colors flex-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--dark-accent)] focus:ring-offset-[var(--dark-bg)] ${
                               persona === p.value
-                                ? "bg-[#2cbe4e20] text-[#2cbe4e] border-[#2cbe4e]"
-                                : "bg-[#1c2128] text-[#7d8590] border-[#30363d] hover:bg-[#30363d] hover:text-[#e6edf3]"
+                                ? "bg-[var(--dark-accent-bg)] text-[var(--dark-accent)] border-[var(--dark-accent)]"
+                                : "bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)] border-[var(--dark-border)] hover:bg-[var(--dark-border)] hover:text-[var(--dark-text)]"
                             }`}
                             onClick={(e) => { e.stopPropagation(); setPersona(p.value); }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                e.currentTarget.nextElementSibling?.focus();
+                              } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                e.currentTarget.previousElementSibling?.focus();
+                              }
+                            }}
                           >
                             {p.emoji} {p.value}
                           </button>
@@ -557,10 +623,10 @@ function AIPracticePage() {
                     </div>
 
                     {/* Voice Mode Toggle */}
-                    <div className="flex items-center justify-between p-4 bg-[#161b22] rounded-xl border border-[#30363d]">
+                    <div className="flex items-center justify-between p-4 bg-[var(--dark-card)] rounded-xl border border-[var(--dark-border)]">
                       <div>
-                        <p className="text-sm font-semibold text-[#e6edf3]">🎤 Voice Mode</p>
-                        <p className="text-xs text-[#7d8590]">Speak answers using microphone</p>
+                        <p className="text-sm font-semibold text-[var(--dark-text)]">🎤 Voice Mode</p>
+                        <p className="text-xs text-[var(--dark-text-secondary)]">Speak answers using microphone</p>
                       </div>
                       <input
                         type="checkbox"
@@ -578,19 +644,19 @@ function AIPracticePage() {
             {/* ── Resume Mode Card ── */}
             <div
               className={`card-dark-hover p-6 cursor-pointer border-2 transition-all duration-200 flex flex-col ${
-                selectedMode === "resume" ? "border-[#2cbe4e] shadow-[0_0_0_1px_#2cbe4e]" : "border-transparent"
+                selectedMode === "resume" ? "border-[var(--dark-accent)] shadow-[0_0_0_1px_var(--dark-accent)]" : "border-transparent"
               }`}
               onClick={() => setSelectedMode("resume")}
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className={`size-10 rounded-xl flex items-center justify-center transition-colors ${
-                  selectedMode === "resume" ? "bg-[#2cbe4e] text-black" : "bg-[#1c2128] text-[#7d8590]"
+                  selectedMode === "resume" ? "bg-[var(--dark-accent)] text-white" : "bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)]"
                 }`}>
                   <FileTextIcon className="size-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-[#e6edf3]">Practice from Resume</h3>
-                  <p className="text-xs text-[#7d8590]">
+                  <h3 className="font-bold text-lg text-[var(--dark-text)]">Practice from Resume</h3>
+                  <p className="text-xs text-[var(--dark-text-secondary)]">
                     Upload your resume. AI asks experience-based questions.
                   </p>
                 </div>
@@ -600,7 +666,7 @@ function AIPracticePage() {
                 {selectedMode === "resume" && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="mt-4 overflow-hidden w-full">
                     <div
-                      className="border-2 border-dashed border-[#30363d] rounded-xl p-6 text-center hover:border-[#2cbe4e] transition-colors cursor-pointer bg-[#161b22]"
+                      className="border-2 border-dashed border-[var(--dark-border)] rounded-xl p-6 text-center hover:border-[var(--dark-accent)] transition-colors cursor-pointer bg-[var(--dark-card)]"
                       onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
                       onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
                       onDrop={(e) => {
@@ -610,7 +676,7 @@ function AIPracticePage() {
                           setResumeFile(file);
                           setDetectedSkills(extractSkillsFromFilename(file.name));
                         } else {
-                          toast.error("Only PDF files are accepted", { style: { background: '#1c2128', color: '#e6edf3' } });
+                          toast.error("Only PDF files are accepted", { style: { background: '#ffffff', color: '#0f172a' } });
                         }
                       }}
                     >
@@ -627,33 +693,33 @@ function AIPracticePage() {
                       />
                       {resumeFile ? (
                         <>
-                          <div className="flex items-center justify-center gap-2 text-[#2cbe4e]">
+                          <div className="flex items-center justify-center gap-2 text-[var(--dark-accent)]">
                             <FileTextIcon className="size-5 shrink-0" />
                             <span className="font-medium truncate">{resumeFile.name}</span>
                           </div>
                           {detectedSkills.length > 0 && (
                             <div className="mt-4 text-left">
-                              <p className="text-xs font-semibold text-[#7d8590] mb-2 uppercase tracking-wide">
+                              <p className="text-xs font-semibold text-[var(--dark-text-secondary)] mb-2 uppercase tracking-wide">
                                 Detected Skills:
                               </p>
                               <div className="flex flex-wrap gap-1.5">
                                 {detectedSkills.map((skill) => (
-                                  <span key={skill} className="bg-[#2cbe4e15] border border-[#2cbe4e40] text-[#2cbe4e] text-xs px-2 py-0.5 rounded-full">
+                                  <span key={skill} className="bg-[var(--dark-accent-bg)] border border-[var(--dark-accent-border)] text-[var(--dark-accent)] text-xs px-2 py-0.5 rounded-full">
                                     {skill}
                                   </span>
                                 ))}
                               </div>
                             </div>
                           )}
-                          <p className="text-xs text-[#7d8590] mt-3">
+                          <p className="text-xs text-[var(--dark-text-secondary)] mt-3">
                             AI will analyze your full resume content
                           </p>
                         </>
                       ) : (
                         <>
-                          <UploadIcon className="size-8 mx-auto mb-3 text-[#484f58]" />
-                          <p className="text-sm text-[#e6edf3]">Drag & drop or click to upload</p>
-                          <p className="text-xs text-[#7d8590] mt-1">PDF only • Max 5MB</p>
+                          <UploadIcon className="size-8 mx-auto mb-3 text-[var(--dark-text-tertiary)]" />
+                          <p className="text-sm text-[var(--dark-text)]">Drag & drop or click to upload</p>
+                          <p className="text-xs text-[var(--dark-text-secondary)] mt-1">PDF only • Max 5MB</p>
                         </>
                       )}
                     </div>
@@ -667,17 +733,17 @@ function AIPracticePage() {
             {(selectedMode === "topic" && selectedTopics.length > 0) || (selectedMode === "resume" && resumeFile) ? (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}>
                 {selectedMode === "topic" && (
-                  <div className="card-dark border-l-2 border-[#2cbe4e] p-4 mb-6">
-                    <p className="text-xs font-semibold text-[#7d8590] uppercase tracking-wider mb-2">
+                  <div className="card-dark border-l-2 border-[var(--dark-accent)] p-4 mb-6">
+                    <p className="text-xs font-semibold text-[var(--dark-text-secondary)] uppercase tracking-wider mb-2">
                       Session Preview
                     </p>
-                    <div className="flex flex-wrap gap-4 text-sm text-[#e6edf3]">
-                      <span className="flex items-center gap-1.5"><BookOpenIcon className="size-4 text-[#2cbe4e]" /> {selectedTopics.join(", ")}</span>
-                      <span className="flex items-center gap-1.5"><SparklesIcon className="size-4 text-[#2cbe4e]" /> {selectedDifficulty}</span>
-                      <span className="flex items-center gap-1.5"><AlertTriangleIcon className="size-4 text-[#2cbe4e]" /> {questionLimit} qs</span>
+                    <div className="flex flex-wrap gap-4 text-sm text-[var(--dark-text)]">
+                      <span className="flex items-center gap-1.5"><BookOpenIcon className="size-4 text-[var(--dark-accent)]" /> {selectedTopics.join(", ")}</span>
+                      <span className="flex items-center gap-1.5"><SparklesIcon className="size-4 text-[var(--dark-accent)]" /> {selectedDifficulty}</span>
+                      <span className="flex items-center gap-1.5"><AlertTriangleIcon className="size-4 text-[var(--dark-accent)]" /> {questionLimit} qs</span>
                       <span className="flex items-center gap-1.5">⏱ ~{duration} min</span>
-                      <span className="flex items-center gap-1.5 capitalize text-[#7d8590]">{interviewType}</span>
-                      {voiceModeEnabled && <span className="text-[#2cbe4e] flex items-center gap-1">🎤 Voice</span>}
+                      <span className="flex items-center gap-1.5 capitalize text-[var(--dark-text-secondary)]">{interviewType}</span>
+                      {voiceModeEnabled && <span className="text-[var(--dark-accent)] flex items-center gap-1">🎤 Voice</span>}
                     </div>
                   </div>
                 )}
@@ -707,7 +773,7 @@ function AIPracticePage() {
   // ── STATE 2: INTERVIEW ──
   if (screen === "interview") {
     return (
-      <div className="min-h-screen bg-[#0d1117] flex flex-col">
+      <div className="min-h-screen bg-[var(--dark-bg)] flex flex-col">
         <Navbar />
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 max-w-5xl mx-auto w-full px-4 py-6">
           <AIChatInterface
@@ -730,17 +796,17 @@ function AIPracticePage() {
   // ── STATE 3: LOADING FEEDBACK ──
   if (screen === "loading_feedback") {
     return (
-      <div className="min-h-screen bg-[#0d1117] text-[#e6edf3]">
+      <div className="min-h-screen bg-[var(--dark-bg)] text-[var(--dark-text)]">
         <Navbar />
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center min-h-[70vh] gap-6">
           <div className="relative">
-            <div className="size-20 rounded-full bg-[#1c2128] border border-[#30363d] flex items-center justify-center shadow-2xl">
-              <SparklesIcon className="size-10 text-[#2cbe4e] animate-pulse" />
+            <div className="size-20 rounded-full bg-[var(--dark-elevated)] border border-[var(--dark-border)] flex items-center justify-center shadow-2xl">
+              <SparklesIcon className="size-10 text-[var(--dark-accent)] animate-pulse" />
             </div>
           </div>
           <div className="text-center space-y-2">
-            <h2 className="text-xl font-bold text-[#e6edf3]">Generating your scorecard...</h2>
-            <p className="text-[#7d8590] text-sm">AI is evaluating your performance across {questionCount} questions.</p>
+            <h2 className="text-xl font-bold text-[var(--dark-text)]">Generating your scorecard...</h2>
+            <p className="text-[var(--dark-text-secondary)] text-sm">AI is evaluating your performance across {questionCount} questions.</p>
           </div>
         </motion.div>
       </div>
@@ -750,7 +816,7 @@ function AIPracticePage() {
   // ── STATE 4: FEEDBACK ──
   if (screen === "feedback") {
     return (
-      <div className="min-h-screen bg-[#0d1117] text-[#e6edf3]">
+      <div className="min-h-screen bg-[var(--dark-bg)] text-[var(--dark-text)]">
         <Navbar />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto px-4 py-10">
           <div className="card-dark max-w-3xl mx-auto border-none p-0 overflow-hidden shadow-2xl">

@@ -15,14 +15,14 @@ function CompanyTrackCard({
     : 0;
 
   const colorMap = {
-    green: "text-[#2cbe4e] bg-[#2cbe4e10] border-[#2cbe4e40] progress-success",
+    green: "text-[#ffffff] bg-[#ffffff10] border-[#ffffff40] progress-success",
     orange: "text-[#d29922] bg-[#d2992210] border-[#d2992240] progress-warning",
     blue: "text-[#58a6ff] bg-[#58a6ff10] border-[#58a6ff40] progress-info",
     purple: "text-[#a371f7] bg-[#a371f710] border-[#a371f740] progress-secondary",
     red: "text-[#f85149] bg-[#f8514910] border-[#f8514940] progress-error",
   };
   
-  const theme = colorMap[color] || "text-[#2cbe4e] bg-[#2cbe4e10] border-[#2cbe4e40] progress-success";
+  const theme = colorMap[color] || "text-[#ffffff] bg-[#ffffff10] border-[#ffffff40] progress-success";
   const bgClass = theme.split(" ")[1];
   const textClass = theme.split(" ")[0];
   const borderClass = theme.split(" ")[2];
@@ -43,7 +43,7 @@ function CompanyTrackCard({
           </div>
         </div>
         {started && progressPct === 100 && (
-          <CheckCircle2Icon className="size-6 text-[#2cbe4e]" />
+          <CheckCircle2Icon className="size-6 text-[#ffffff]" />
         )}
       </div>
 
@@ -52,7 +52,7 @@ function CompanyTrackCard({
           <span className="text-xs font-bold text-[#7d8590] uppercase tracking-wider">
             Progress
           </span>
-          <span className={`text-xs font-bold ${started ? textClass : "text-[#484f58]"}`}>
+          <span className={`text-xs font-bold ${started ? textClass : "text-[var(--dark-text-tertiary)]"}`}>
             {progressPct}%
           </span>
         </div>
@@ -73,7 +73,7 @@ function CompanyTrackCard({
               key={topic}
               className={`text-[11px] font-semibold px-2.5 py-1 rounded-md border ${
                 isCompleted
-                  ? "text-[#2cbe4e] border-[#2cbe4e40] bg-[#2cbe4e10]"
+                  ? "text-[#ffffff] border-[#ffffff40] bg-[#ffffff10]"
                   : "border-[#30363d] bg-[#1c2128] text-[#7d8590]"
               }`}
             >
@@ -91,7 +91,7 @@ function CompanyTrackCard({
           </button>
         ) : (
           <button
-            className="btn-green w-full gap-2 py-2.5 shadow-lg shadow-[#2cbe4e]/10"
+            className="btn-green w-full gap-2 py-2.5 shadow-lg shadow-[#ffffff]/10"
             onClick={onStart}
             disabled={isLoading}
           >

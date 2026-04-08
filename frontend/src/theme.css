@@ -1,0 +1,102 @@
+/* ═══════════════════════════════════════════════════════════════
+   TalentIQ — Unified Design System
+   Single source of truth for ALL colors, spacing, and shadows.
+   
+   Usage:
+     Dark pages: bg-[var(--dark-bg)] text-[var(--dark-text)]
+     Light pages: bg-[var(--light-bg)] text-[var(--light-text)]
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     DARK THEME — Dashboard, Schedule, Problems, AI Practice,
+                  Problem Editor, My Applications, Job Detail
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  /* Surfaces */
+  --dark-bg:        #f8fafc;
+  --dark-card:      #ffffff;
+  --dark-elevated:  #f1f5f9;
+
+  /* Borders */
+  --dark-border:    #e2e8f0;
+  --dark-border-subtle: #f1f5f9;
+
+  /* Text */
+  --dark-text:      #0f172a;
+  --dark-text-secondary: #475569;
+  --dark-text-tertiary:  #64748b; 
+
+  /* Accent — Blue (was Green) */
+  --dark-accent:       #0a66c2;
+  --dark-accent-hover: #004182;
+  --dark-accent-bg:    #e8f0fe;
+  --dark-accent-border:#bdd3fb;
+  --dark-accent-glow:  rgba(10, 102, 194, 0.2);
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     LIGHT THEME — Job Board, Inbox, Profile
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  /* Surfaces */
+  --light-bg:       #f8fafc;
+  --light-card:     #ffffff;
+  --light-elevated: #f1f5f9;
+
+  /* Borders */
+  --light-border:     #e2e8f0;
+  --light-border-subtle: #f1f5f9;
+
+  /* Text */
+  --light-text:      #0f172a;
+  --light-text-secondary: #64748b;
+  --light-text-tertiary:  #94a3b8;
+
+  /* Accent — Blue */
+  --light-accent:       #0a66c2;
+  --light-accent-hover: #004182;
+  --light-accent-bg:    rgba(10, 102, 194, 0.08);
+  --light-accent-border: #8bb9fe;
+  --light-accent-ring: rgba(10, 102, 194, 0.12);
+  --light-accent-soft: #e8f0fe;
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SHARED SEMANTIC COLORS
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --color-success:        #2cbe4e;
+  --color-success-bg:     rgba(44, 190, 78, 0.12);
+  --color-success-border: rgba(44, 190, 78, 0.2);
+
+  --color-warning:        #d29922;
+  --color-warning-bg:     rgba(210, 153, 34, 0.12);
+  --color-warning-border: rgba(210, 153, 34, 0.2);
+
+  --color-danger:         #f85149;
+  --color-danger-bg:      rgba(248, 81, 73, 0.12);
+  --color-danger-border:  rgba(248, 81, 73, 0.2);
+
+  --color-info:           #388bfd;
+  --color-info-bg:        rgba(56, 139, 253, 0.12);
+  --color-info-border:    rgba(56, 139, 253, 0.2);
+
+  --color-purple:         #8250df;
+  --color-purple-bg:      rgba(130, 80, 223, 0.12);
+  --color-purple-border:  rgba(130, 80, 223, 0.2);
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SHADOWS
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg:  0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-xl:  0 20px 50px rgba(0, 0, 0, 0.10);
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     RADII
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-full: 9999px;
+}

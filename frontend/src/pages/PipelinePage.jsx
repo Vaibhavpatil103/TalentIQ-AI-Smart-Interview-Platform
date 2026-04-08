@@ -23,7 +23,7 @@ function PipelinePage() {
       >
         <div className="flex items-center gap-4 mb-10 shrink-0">
           <div className="size-12 rounded-xl bg-[#1c2128] border border-[#30363d] flex items-center justify-center shadow-lg">
-            <KanbanIcon className="size-6 text-[#2cbe4e]" />
+            <KanbanIcon className="size-6 text-[#000000]" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-[#e6edf3]">Candidate Pipeline</h1>

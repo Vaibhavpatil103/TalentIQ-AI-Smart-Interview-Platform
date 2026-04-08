@@ -160,10 +160,10 @@ function AIChatInterface({
       {/* HEADER */}
       <div className="bg-[#161b22] border-b border-[#30363d] p-4 flex items-center justify-between shrink-0 z-10">
         <div className="flex items-center gap-3">
-          <div className="size-10 rounded-full bg-gradient-to-br from-[#2cbe4e] to-[#1a7f37] flex items-center justify-center shadow-lg relative">
+          <div className="size-10 rounded-full bg-gradient-to-br from-[#ffffff] to-[#1a7f37] flex items-center justify-center shadow-lg relative">
             <BotIcon className="size-5 text-white" />
             <div className="absolute -bottom-0.5 -right-0.5 size-3.5 bg-[#161b22] rounded-full flex items-center justify-center">
-              <div className="size-2 bg-[#2cbe4e] rounded-full animate-pulse" />
+              <div className="size-2 bg-[#ffffff] rounded-full animate-pulse" />
             </div>
           </div>
           <div>
@@ -186,7 +186,7 @@ function AIChatInterface({
                 <circle cx="24" cy="24" r="20" stroke="#30363d" strokeWidth="3" fill="transparent" />
                 <motion.circle
                   cx="24" cy="24" r="20"
-                  stroke={isTimeLow ? "#f85149" : "#2cbe4e"}
+                  stroke={isTimeLow ? "#f85149" : "#ffffff"}
                   strokeWidth="3"
                   fill="transparent"
                   strokeLinecap="round"
@@ -216,7 +216,7 @@ function AIChatInterface({
       {/* PROGRESS BAR (Questions) */}
       <div className="h-1 bg-[#0d1117] w-full shrink-0">
         <motion.div
-          className="h-full bg-gradient-to-r from-[#2cbe4e] to-[#1a7f37]"
+          className="h-full bg-gradient-to-r from-[#ffffff] to-[#1a7f37]"
           initial={{ width: 0 }}
           animate={{ width: `${(questionCount / questionLimit) * 100}%` }}
           transition={{ duration: 0.5 }}
@@ -229,7 +229,7 @@ function AIChatInterface({
           <div className="flex h-full items-center justify-center text-center">
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-md">
               <div className="size-16 bg-[#1c2128] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[#30363d] shadow-xl">
-                <SparklesIcon className="size-8 text-[#2cbe4e]" />
+                <SparklesIcon className="size-8 text-[#ffffff]" />
               </div>
               <p className="text-[#e6edf3] font-semibold text-lg mb-2">Ready when you are!</p>
               <p className="text-[#7d8590] text-sm leading-relaxed">
@@ -250,13 +250,13 @@ function AIChatInterface({
               <div
                 className={`max-w-[85%] md:max-w-[75%] rounded-2xl p-4 shadow-sm ${
                   msg.role === "user"
-                    ? "bg-[#2cbe4e15] text-[#e6edf3] border border-[#2cbe4e40] rounded-br-sm"
+                    ? "bg-[#ffffff15] text-[#e6edf3] border border-[#ffffff40] rounded-br-sm"
                     : "bg-[#161b22] text-[#e6edf3] border border-[#30363d] rounded-bl-sm"
                 }`}
               >
                 {msg.role === "ai" && (
                   <div className="flex items-center gap-2 mb-2 pb-2 border-b border-[#30363d]/50">
-                    <SparklesIcon className="size-3.5 text-[#2cbe4e]" />
+                    <SparklesIcon className="size-3.5 text-[#ffffff]" />
                     <span className="text-xs font-bold text-[#7d8590] uppercase tracking-wider">AI Interviewer</span>
                   </div>
                 )}
@@ -271,7 +271,7 @@ function AIChatInterface({
         {isLoading && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
             <div className="bg-[#1c2128] text-[#e6edf3] border border-[#30363d] rounded-2xl rounded-bl-sm p-4 shadow-sm flex items-center gap-3">
-              <Loader2Icon className="size-4 animate-spin text-[#2cbe4e]" />
+              <Loader2Icon className="size-4 animate-spin text-[#ffffff]" />
               <span className="text-sm font-medium">Thinking of next question...</span>
             </div>
           </motion.div>
@@ -318,7 +318,7 @@ function AIChatInterface({
               className={`absolute right-14 top-2.5 p-2 rounded-lg transition-all ${
                 isListening
                   ? "bg-[#f8514920] text-[#f85149] hover:bg-[#f85149] hover:text-black shadow-[0_0_12px_rgba(248,81,73,0.3)] animate-pulse"
-                  : "bg-[#2cbe4e20] text-[#2cbe4e] hover:bg-[#2cbe4e] hover:text-black"
+                  : "bg-[#ffffff20] text-[#ffffff] hover:bg-[#ffffff] hover:text-black"
                }`}
                onClick={isListening ? stopListening : startListening}
                disabled={isLoading || isComplete || !SpeechRecognition}
@@ -332,8 +332,8 @@ function AIChatInterface({
             type="submit"
             className={`absolute right-3 top-2.5 p-2 rounded-lg transition-all ${
               input.trim() && !isLoading && !isListening
-                ? "bg-[#2cbe4e] text-black hover:bg-[#1a7f37] hover:scale-105"
-                : "bg-transparent text-[#484f58] cursor-not-allowed"
+                ? "bg-[#ffffff] text-black hover:bg-[#1a7f37] hover:scale-105"
+                : "bg-transparent text-[var(--dark-text-tertiary)] cursor-not-allowed"
             }`}
              disabled={!input.trim() || isLoading || isComplete || isListening}
           >
@@ -341,7 +341,7 @@ function AIChatInterface({
           </button>
         </form>
         <div className="text-center mt-3">
-          <p className="text-[11px] text-[#484f58]">
+          <p className="text-[11px] text-[var(--dark-text-tertiary)]">
             Format code with markdown: <code className="bg-[#0d1117] px-1 py-0.5 rounded text-[#7d8590]">```javascript code ```</code>
           </p>
         </div>

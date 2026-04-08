@@ -68,13 +68,13 @@ function StatsCards({ activeSessionsCount, recentSessionsCount, aiPracticeCount 
           transition={{ duration: 0.15 }}
           className="card-dark p-6 relative overflow-hidden"
         >
-          <div className="absolute top-6 right-6 text-[#30363d]">
+          <div className="absolute top-6 right-6 text-[var(--dark-border)]">
             {card.icon}
           </div>
-          <div className="text-4xl font-black text-[#2cbe4e]">
+          <div className="text-4xl font-black text-[var(--dark-text)]">
             <AnimatedNumber value={card.value} />
           </div>
-          <div className="text-sm text-[#7d8590] mt-1">
+          <div className="text-sm text-[var(--dark-text-secondary)] mt-1">
             {card.label}
           </div>
         </motion.div>

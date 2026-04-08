@@ -18,23 +18,31 @@ import CompanyNavbar from "../../components/CompanyNavbar";
 import { axiosInstance } from "../../lib/axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import {
+  PageHeader,
+  HeaderButton,
+  MiniStat,
+  ModalShell,
+  FilterPills,
+  EmptyState,
+  T,
+  inputCls,
+  labelCls,
+  btnPrimary,
+  btnSecondary,
+} from "../../components/ui/CompanyUI";
 
-// ─── Shared styles ─────────────────────────────────────────────
-const inputCls = `bg-white border border-[#d0d7de] text-[#1c2128] rounded-lg px-3 py-2.5
-  text-sm w-full outline-none focus:border-[#0969da] focus:ring-2
-  focus:ring-[#0969da20] transition-colors`;
-const labelCls = "block text-xs font-semibold text-[#57606a] uppercase tracking-wider mb-1.5";
-
+// ─── Status styles ────────────────────────────────────────────
 const STATUS_BADGE = {
-  published: "bg-[#dafbe1] text-[#1a7f37] border-[#56d364]",
-  draft:     "bg-[#f6f8fa] text-[#57606a] border-[#d0d7de]",
-  closed:    "bg-[#ffebe9] text-[#cf222e] border-[#ff8182]",
+  published: "bg-[#dcfce7] text-[#16a34a] border-[#86efac]",
+  draft:     "bg-[#f1f5f9] text-[#64748b] border-[#e2e8f0]",
+  closed:    "bg-[#fee2e2] text-[#dc2626] border-[#fca5a5]",
 };
 
 const STATUS_LEFT_BORDER = {
-  published: "3px solid #1a7f37",
-  draft:     "3px solid #d0d7de",
-  closed:    "3px solid #cf222e",
+  published: "3px solid #16a34a",
+  draft:     "3px solid #e2e8f0",
+  closed:    "3px solid #dc2626",
 };
 
 const EMPTY_FORM = {
@@ -43,13 +51,6 @@ const EMPTY_FORM = {
   jobType: "full-time", experienceLevel: "mid",
   salaryMin: "", salaryMax: "", currency: "USD", deadline: "",
 };
-
-const SectionLabel = ({ children }) => (
-  <p className="text-xs font-semibold uppercase tracking-wider text-[#57606a] mb-4 flex items-center gap-2">
-    <span className="w-1.5 h-1.5 rounded-full bg-[#0969da] inline-block" />
-    {children}
-  </p>
-);
 
 // ─── Hooks (all unchanged) ────────────────────────────────────
 function useMyJobs() {
@@ -136,9 +137,10 @@ function JobFormFields({ form, setForm, tagInput, setTagInput }) {
         <label className={labelCls}>Required Skills</label>
         <div className="flex flex-wrap gap-2 mb-2">
           {form.skills.map((s) => (
-            <span key={s} className="flex items-center gap-1.5 bg-[#ddf4ff] text-[#0969da] border border-[#54aeff] text-xs px-3 py-1 rounded-full font-medium">
+            <span key={s} className="flex items-center gap-1.5 text-xs px-3 py-1 rounded-full font-medium"
+              style={{ backgroundColor: T.primaryLight, color: T.primary, border: `1px solid ${T.primaryBorder}` }}>
               {s}
-              <button onClick={() => removeSkill(s)} className="hover:text-[#cf222e]"><XIcon className="size-3" /></button>
+              <button onClick={() => removeSkill(s)} className="hover:text-red-600"><XIcon className="size-3" /></button>
             </span>
           ))}
         </div>
@@ -146,7 +148,7 @@ function JobFormFields({ form, setForm, tagInput, setTagInput }) {
           <input className={`${inputCls} flex-1`} placeholder="e.g. React, TypeScript" value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addSkill(); } }} />
-          <button onClick={addSkill} className="bg-[#0969da] hover:bg-[#0550ae] text-white rounded-lg px-3 py-2 text-sm font-medium transition-colors flex-shrink-0">Add</button>
+          <button onClick={addSkill} className={btnPrimary}>Add</button>
         </div>
       </div>
       <div className="flex gap-3">
@@ -191,26 +193,6 @@ function JobFormFields({ form, setForm, tagInput, setTagInput }) {
   );
 }
 
-// ─── ModalShell ───────────────────────────────────────────────
-function ModalShell({ title, onClose, children, footer }) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <motion.div initial={{ scale: 0.96, y: 12, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }}
-        exit={{ scale: 0.96, y: 12, opacity: 0 }} transition={{ duration: 0.2, ease: "easeOut" }}
-        className="bg-white border border-[#d0d7de] rounded-2xl w-full max-w-2xl mx-4 shadow-xl z-10 flex flex-col max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#d0d7de] flex-shrink-0">
-          <h3 className="font-bold text-[#1c2128] text-lg">{title}</h3>
-          <button onClick={onClose} className="text-[#57606a] hover:text-[#1c2128]"><XIcon className="size-5" /></button>
-        </div>
-        <div className="p-6 space-y-5 overflow-y-auto flex-1">{children}</div>
-        <div className="px-6 py-4 border-t border-[#d0d7de] flex gap-3 justify-end flex-shrink-0">{footer}</div>
-      </motion.div>
-    </div>
-  );
-}
-
 // ─── Create Job Modal ─────────────────────────────────────────
 function CreateJobModal({ onClose }) {
   const [form, setForm] = useState(EMPTY_FORM);
@@ -232,12 +214,10 @@ function CreateJobModal({ onClose }) {
   return (
     <ModalShell title="Post New Job" onClose={onClose} footer={
       <>
-        <button onClick={() => submit("draft")} disabled={isPending}
-          className="px-4 py-2 rounded-lg border border-[#d0d7de] text-sm text-[#57606a] hover:bg-[#f6f8fa] transition-colors disabled:opacity-50">
+        <button onClick={() => submit("draft")} disabled={isPending} className={btnSecondary}>
           {isPending ? <Loader2Icon className="size-4 animate-spin inline mr-1" /> : null}Create as Draft
         </button>
-        <button onClick={() => submit("published")} disabled={isPending}
-          className="flex items-center gap-2 bg-[#0969da] hover:bg-[#0550ae] text-white rounded-lg px-5 py-2 text-sm font-semibold transition-colors disabled:opacity-50">
+        <button onClick={() => submit("published")} disabled={isPending} className={btnPrimary}>
           {isPending ? <Loader2Icon className="size-4 animate-spin" /> : null}Publish Now
         </button>
       </>
@@ -291,17 +271,13 @@ function EditJobModal({ job, onClose }) {
   return (
     <ModalShell title="Edit Job" onClose={onClose} footer={
       <>
-        <button onClick={onClose} className="px-4 py-2 rounded-lg border border-[#d0d7de] text-sm text-[#57606a] hover:bg-[#f6f8fa] transition-colors">
-          Cancel
-        </button>
-        <button onClick={handleSave} disabled={isPending}
-          className="flex items-center gap-2 bg-[#0969da] hover:bg-[#0550ae] text-white rounded-lg px-5 py-2 text-sm font-semibold transition-colors disabled:opacity-50">
+        <button onClick={onClose} className={btnSecondary}>Cancel</button>
+        <button onClick={handleSave} disabled={isPending} className={btnPrimary}>
           {isPending ? <Loader2Icon className="size-4 animate-spin" /> : null}Save Changes
         </button>
       </>
     }>
       <JobFormFields form={form} setForm={setForm} tagInput={tagInput} setTagInput={setTagInput} />
-      {/* Status field — only in edit mode */}
       <div>
         <label className={labelCls}>Status</label>
         <select className={inputCls} value={form.status}
@@ -312,22 +288,6 @@ function EditJobModal({ job, onClose }) {
         </select>
       </div>
     </ModalShell>
-  );
-}
-
-// ─── Mini stat card for header ───────────────────────────────
-function MiniStat({ icon: Icon, iconBg, topColor, label, value }) {
-  return (
-    <div className="bg-white border border-[#d0d7de] rounded-xl p-4 flex-1"
-      style={{ borderTop: `3px solid ${topColor}` }}>
-      <div className="flex items-center gap-2 mb-2">
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: iconBg }}>
-          <Icon className="size-4" style={{ color: topColor }} />
-        </div>
-      </div>
-      <p className="text-2xl font-bold text-[#1c2128]">{value}</p>
-      <p className="text-xs text-[#57606a] mt-1">{label}</p>
-    </div>
   );
 }
 
@@ -353,45 +313,27 @@ function CompanyJobsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f6f8fa]">
+    <div className="min-h-screen" style={{ backgroundColor: T.bgPage }}>
       <CompanyNavbar />
 
       {/* ── HERO HEADER ─────────────────────────────────────── */}
-      <div className="relative overflow-hidden py-8 px-6"
-        style={{ background: "linear-gradient(135deg, #0969da 0%, #0550ae 100%)" }}>
-        <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
-        <div className="absolute right-16 -bottom-16 w-40 h-40 rounded-full pointer-events-none"
-          style={{ backgroundColor: "rgba(255,255,255,0.04)" }} />
-        <div className="max-w-7xl mx-auto flex items-center justify-between relative z-10 gap-6">
-          <div>
-            <p className="text-white/70 text-xs uppercase tracking-widest mb-2 font-medium">
-              Job Management
-            </p>
-            <h1 className="text-2xl font-bold text-white">Job Postings</h1>
-            <p className="text-white/70 text-sm mt-1">
-              {stats.published} published · {stats.draft} drafts · {stats.total} total
-            </p>
-          </div>
-          <motion.button onClick={() => setShowCreate(true)} whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-2 bg-white text-[#0969da] font-semibold
-              rounded-lg px-4 py-2 text-sm hover:bg-[#f6f8fa] transition-colors flex-shrink-0">
-            <PlusIcon className="size-4" />
-            Post New Job
-          </motion.button>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Job Management"
+        title="Job Postings"
+        subtitle={`${stats.published} published · ${stats.draft} drafts · ${stats.total} total`}
+      >
+        <HeaderButton onClick={() => setShowCreate(true)} icon={PlusIcon}>
+          Post New Job
+        </HeaderButton>
+      </PageHeader>
 
       {/* ── MINI STAT CARDS ──────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-6 py-5">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <MiniStat icon={BriefcaseIcon} iconBg="#ddf4ff" topColor="#0969da"
-            label="Total Jobs" value={stats.total} />
-          <MiniStat icon={CheckCircleIcon} iconBg="#dafbe1" topColor="#1a7f37"
-            label="Published" value={stats.published} />
-          <MiniStat icon={EditIcon} iconBg="#fff8c5" topColor="#bf8700"
-            label="Drafts" value={stats.draft} />
-          <MiniStat icon={XIcon} iconBg="#f6f8fa" topColor="#57606a"
-            label="Closed" value={stats.closed} />
+          <MiniStat icon={BriefcaseIcon} accentColor={T.primary} label="Total Jobs" value={stats.total} />
+          <MiniStat icon={CheckCircleIcon} accentColor="#16a34a" label="Published" value={stats.published} />
+          <MiniStat icon={EditIcon} accentColor="#ca8a04" label="Drafts" value={stats.draft} />
+          <MiniStat icon={XIcon} accentColor="#64748b" label="Closed" value={stats.closed} />
         </div>
       </div>
 
@@ -399,56 +341,52 @@ function CompanyJobsPage() {
         transition={{ duration: 0.3 }} className="max-w-7xl mx-auto px-6 pb-16">
 
         {/* Filter pills */}
-        <div className="flex gap-2 mb-6">
-          {FILTERS.map((f) => (
-            <button key={f} onClick={() => setFilterTab(f)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium capitalize border
-                transition-colors ${filterTab === f
-                  ? "bg-[#0969da] text-white border-[#0969da]"
-                  : "bg-white text-[#57606a] border-[#d0d7de] hover:bg-[#f6f8fa]"}`}>
-              {f}
-            </button>
-          ))}
+        <div className="mb-6">
+          <FilterPills filters={FILTERS} active={filterTab} onChange={setFilterTab} />
         </div>
 
         {/* Jobs list */}
         {isLoading ? (
           <div className="space-y-3">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="bg-white rounded-xl border border-[#d0d7de] h-32 animate-pulse" />
+              <div key={i} className="rounded-2xl h-32 animate-pulse" style={{ backgroundColor: T.bgCard, border: `1px solid ${T.border}` }} />
             ))}
           </div>
         ) : filtered.length === 0 ? (
-          <div className="bg-white border-2 border-dashed border-[#d0d7de] rounded-xl p-16 text-center">
-            <BriefcaseIcon className="size-12 text-[#d0d7de] mx-auto mb-4" />
-            <p className="font-semibold text-[#1c2128]">No jobs posted yet</p>
-            <p className="text-sm text-[#57606a] mt-2">Create your first job posting to start finding candidates</p>
-            <button onClick={() => setShowCreate(true)}
-              className="mt-6 bg-[#0969da] hover:bg-[#0550ae] text-white rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors">
-              Post a Job
-            </button>
-          </div>
+          <EmptyState
+            icon={BriefcaseIcon}
+            title="No jobs posted yet"
+            subtitle="Create your first job posting to start finding candidates"
+            action="Post a Job"
+            onAction={() => setShowCreate(true)}
+          />
         ) : (
           filtered.map((job) => (
             <motion.div key={job._id} whileHover={{ y: -1 }} transition={{ duration: 0.1 }}
-              className="bg-white border border-[#d0d7de] rounded-xl p-5 mb-4 hover:shadow-sm transition-all"
-              style={{ borderLeft: STATUS_LEFT_BORDER[job.status] || STATUS_LEFT_BORDER.draft }}>
+              className="rounded-2xl p-5 mb-4 transition-all duration-200"
+              style={{
+                backgroundColor: T.bgCard,
+                border: `1px solid ${T.border}`,
+                borderLeft: STATUS_LEFT_BORDER[job.status] || STATUS_LEFT_BORDER.draft,
+                boxShadow: T.shadowSm,
+              }}>
 
               {/* Top row */}
               <div className="flex justify-between items-start">
                 <div>
                   <Link to={`/company/jobs/${job._id}`}
-                    className="font-semibold text-[#1c2128] text-base hover:text-[#0969da] transition-colors">
+                    className="font-semibold text-base transition-colors hover:underline"
+                    style={{ color: T.textPrimary }}>
                     {job.title}
                   </Link>
-                  <div className="flex items-center gap-3 mt-1 text-sm text-[#57606a] flex-wrap">
+                  <div className="flex items-center gap-3 mt-1 text-sm flex-wrap" style={{ color: T.textMuted }}>
                     <span className="flex items-center gap-1"><BuildingIcon className="size-3" />{job.company}</span>
                     <span className="flex items-center gap-1"><MapPinIcon className="size-3" />{job.location}</span>
-                    <span className="bg-[#f6f8fa] text-[#57606a] border border-[#d0d7de] text-xs px-2 py-0.5 rounded-full">
+                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: T.bgPage, color: T.textMuted, border: `1px solid ${T.border}` }}>
                       {job.jobType}
                     </span>
                     {job.experienceLevel && (
-                      <span className="bg-[#fbefff] text-[#8250df] border border-[#d8b4fe] text-xs px-2 py-0.5 rounded-full">
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: "#f3e8ff", color: "#7c3aed", border: "1px solid #c4b5fd" }}>
                         {job.experienceLevel}
                       </span>
                     )}
@@ -461,17 +399,17 @@ function CompanyJobsPage() {
               </div>
 
               {/* Skills + Salary */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-3 pt-3 border-t border-[#f6f8fa]">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-3 pt-3" style={{ borderTop: `1px solid ${T.borderLight}` }}>
                 <div className="flex flex-wrap gap-1.5">
                   {job.skills?.slice(0, 4).map((s) => (
-                    <span key={s} className="bg-[#f6f8fa] text-[#57606a] text-xs px-2 py-0.5 rounded-md border border-[#d0d7de]">{s}</span>
+                    <span key={s} className="text-xs px-2 py-0.5 rounded-md" style={{ backgroundColor: T.bgPage, color: T.textMuted, border: `1px solid ${T.border}` }}>{s}</span>
                   ))}
                   {(job.skills?.length || 0) > 4 && (
-                    <span className="text-xs text-[#57606a]">+{job.skills.length - 4} more</span>
+                    <span className="text-xs" style={{ color: T.textMuted }}>+{job.skills.length - 4} more</span>
                   )}
                 </div>
                 {job.salaryMin && job.salaryMax && (
-                  <span className="text-sm text-[#57606a] flex items-center gap-1">
+                  <span className="text-sm flex items-center gap-1" style={{ color: T.textMuted }}>
                     <DollarSignIcon className="size-3" />
                     {job.salaryMin.toLocaleString()}–{job.salaryMax.toLocaleString()} {job.currency}
                   </span>
@@ -479,8 +417,8 @@ function CompanyJobsPage() {
               </div>
 
               {/* Bottom row */}
-              <div className="flex justify-between items-center mt-3 pt-3 border-t border-[#f6f8fa]">
-                <div className="flex items-center gap-4 text-sm text-[#57606a]">
+              <div className="flex justify-between items-center mt-3 pt-3" style={{ borderTop: `1px solid ${T.borderLight}` }}>
+                <div className="flex items-center gap-4 text-sm" style={{ color: T.textMuted }}>
                   <span className="flex items-center gap-1"><UsersIcon className="size-3" />{job.applicantCount || 0} applicants</span>
                   {job.deadline && (
                     <span className="flex items-center gap-1">
@@ -491,29 +429,30 @@ function CompanyJobsPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Link to={`/company/candidates?job=${job._id}`}
-                    className="text-[#0969da] text-sm font-medium hover:underline">
+                    className="text-sm font-medium hover:underline" style={{ color: T.primary }}>
                     View Applicants
                   </Link>
                   {job.status === "draft" && (
                     <button onClick={() => publishJob(job._id)}
-                      className="bg-[#0969da] hover:bg-[#0550ae] text-white text-xs px-3 py-1.5 rounded-lg transition-colors font-medium">
+                      className="text-white text-xs px-3 py-1.5 rounded-lg transition-all duration-200 font-medium"
+                      style={{ backgroundColor: T.primary }}>
                       Publish
                     </button>
                   )}
                   {job.status === "published" && (
                     <button onClick={() => closeJob(job._id)}
-                      className="border border-[#d0d7de] hover:border-[#0969da] text-[#57606a] text-xs px-3 py-1.5 rounded-lg transition-colors">
+                      className="text-xs px-3 py-1.5 rounded-lg transition-all duration-200"
+                      style={{ border: `1px solid ${T.border}`, color: T.textMuted }}>
                       Close
                     </button>
                   )}
-                  {/* ── NEW: Edit button ── */}
                   <button onClick={() => setEditingJob(job)}
-                    className="border border-[#d0d7de] hover:border-[#0969da] text-[#57606a]
-                      hover:text-[#0969da] text-xs px-3 py-1.5 rounded-lg transition-colors">
+                    className="text-xs px-3 py-1.5 rounded-lg transition-all duration-200"
+                    style={{ border: `1px solid ${T.border}`, color: T.textMuted }}>
                     Edit
                   </button>
                   <button onClick={() => { if (confirm("Delete this job?")) deleteJob(job._id); }}
-                    className="text-[#cf222e] text-xs hover:underline ml-1">
+                    className="text-xs hover:underline ml-1" style={{ color: "#dc2626" }}>
                     Delete
                   </button>
                 </div>

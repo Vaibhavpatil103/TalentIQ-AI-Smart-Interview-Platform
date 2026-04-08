@@ -19,14 +19,14 @@ import {
 
 // ─── Shared styles ────────────────────────────────────────────
 const STATUS_BADGE = {
-  applied:             "bg-[#f6f8fa] text-[#57606a] border-[#d0d7de]",
-  screening:           "bg-[#fff8c5] text-[#9a6700] border-[#e3b341]",
-  shortlisted:         "bg-[#ddf4ff] text-[#0969da] border-[#54aeff]",
-  interview_scheduled: "bg-[#fbefff] text-[#8250df] border-[#d2a8ff]",
-  interviewed:         "bg-[#dafbe1] text-[#1a7f37] border-[#56d364]",
-  offer_sent:          "bg-[#fff8c5] text-[#9a6700] border-[#e3b341]",
-  hired:               "bg-[#dafbe1] text-[#1a7f37] border-[#56d364]",
-  rejected:            "bg-[#ffebe9] text-[#cf222e] border-[#ff8182]",
+  applied:             "bg-[#f8fafc] text-[#64748b] border-[#e2e8f0]",
+  screening:           "bg-[#fef9c3] text-[#ca8a04] border-[#e3b341]",
+  shortlisted:         "bg-[#e8f0fe] text-[#0a66c2] border-[#8bb9fe]",
+  interview_scheduled: "bg-[#f3e8ff] text-[#7c3aed] border-[#c4b5fd]",
+  interviewed:         "bg-[#dcfce7] text-[#16a34a] border-[#86efac]",
+  offer_sent:          "bg-[#fef9c3] text-[#ca8a04] border-[#e3b341]",
+  hired:               "bg-[#dcfce7] text-[#16a34a] border-[#86efac]",
+  rejected:            "bg-[#fee2e2] text-[#dc2626] border-[#ff8182]",
 };
 
 // ─── Hooks ────────────────────────────────────────────────────
@@ -68,8 +68,8 @@ function MatchScoreRing({ score, size = 56 }) {
   const radius = (size - 8) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
-  const color = score >= 70 ? "#1a7f37" : score >= 40 ? "#bf8700" : "#cf222e";
-  const bg = score >= 70 ? "#dafbe1" : score >= 40 ? "#fff8c5" : "#ffebe9";
+  const color = score >= 70 ? "#16a34a" : score >= 40 ? "#bf8700" : "#dc2626";
+  const bg = score >= 70 ? "#dcfce7" : score >= 40 ? "#fef9c3" : "#fee2e2";
 
   return (
     <div
@@ -103,14 +103,14 @@ function MatchScoreRing({ score, size = 56 }) {
 // ─── Mini stat card ───────────────────────────────────────────
 function MiniStat({ icon: Icon, iconBg, topColor, label, value }) {
   return (
-    <div className="bg-white border border-[#d0d7de] rounded-xl p-4 flex-1" style={{ borderTop: `3px solid ${topColor}` }}>
+    <div className="bg-white border border-[#e2e8f0] rounded-xl p-4 flex-1" style={{ borderTop: `3px solid ${topColor}` }}>
       <div className="flex items-center gap-2 mb-2">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: iconBg }}>
           <Icon className="size-4" style={{ color: topColor }} />
         </div>
       </div>
-      <p className="text-2xl font-bold text-[#1c2128]">{value}</p>
-      <p className="text-xs text-[#57606a] mt-1">{label}</p>
+      <p className="text-2xl font-bold text-[#0f172a]">{value}</p>
+      <p className="text-xs text-[#64748b] mt-1">{label}</p>
     </div>
   );
 }
@@ -174,13 +174,13 @@ function CompanyAIMatchingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f6f8fa]">
+    <div className="min-h-screen bg-[#f8fafc]">
       <CompanyNavbar />
 
       {/* ── HERO HEADER ─────────────────────────────────────── */}
       <div
         className="relative overflow-hidden py-8 px-6"
-        style={{ background: "linear-gradient(135deg, #0969da 0%, #0550ae 100%)" }}
+        style={{ background: "linear-gradient(135deg, #0a66c2 0%, #004182 100%)" }}
       >
         <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute right-16 -bottom-16 w-40 h-40 rounded-full pointer-events-none" style={{ backgroundColor: "rgba(255,255,255,0.04)" }} />
@@ -203,9 +203,9 @@ function CompanyAIMatchingPage() {
               value={selectedJobId}
               onChange={(e) => setSelectedJobId(e.target.value)}
             >
-              <option value="" className="text-[#1c2128]">Select a job...</option>
+              <option value="" className="text-[#0f172a]">Select a job...</option>
               {jobs.map((j) => (
-                <option key={j._id} value={j._id} className="text-[#1c2128]">{j.title}</option>
+                <option key={j._id} value={j._id} className="text-[#0f172a]">{j.title}</option>
               ))}
             </select>
           </div>
@@ -215,10 +215,10 @@ function CompanyAIMatchingPage() {
       {/* ── STATS ────────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-6 py-5">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <MiniStat icon={UsersIcon} iconBg="#ddf4ff" topColor="#0969da" label="Total Candidates" value={applications.length} />
-          <MiniStat icon={SparklesIcon} iconBg="#fbefff" topColor="#8250df" label="Analyzed" value={analyzed} />
-          <MiniStat icon={CheckCircleIcon} iconBg="#dafbe1" topColor="#1a7f37" label="High Match (70%+)" value={highMatch} />
-          <MiniStat icon={AlertCircleIcon} iconBg="#ffebe9" topColor="#cf222e" label="Needs Review (<40%)" value={lowMatch} />
+          <MiniStat icon={UsersIcon} iconBg="#ddf4ff" topColor="#0a66c2" label="Total Candidates" value={applications.length} />
+          <MiniStat icon={SparklesIcon} iconBg="#f3e8ff" topColor="#7c3aed" label="Analyzed" value={analyzed} />
+          <MiniStat icon={CheckCircleIcon} iconBg="#dcfce7" topColor="#16a34a" label="High Match (70%+)" value={highMatch} />
+          <MiniStat icon={AlertCircleIcon} iconBg="#fee2e2" topColor="#dc2626" label="Needs Review (<40%)" value={lowMatch} />
         </div>
       </div>
 
@@ -230,20 +230,20 @@ function CompanyAIMatchingPage() {
         className="max-w-7xl mx-auto px-6 pb-16"
       >
         {!selectedJobId ? (
-          <div className="bg-white border-2 border-dashed border-[#d0d7de] rounded-xl p-16 text-center mt-2">
-            <SparklesIcon className="size-12 text-[#d0d7de] mx-auto mb-4" />
-            <p className="font-semibold text-[#1c2128]">Select a job to start AI matching</p>
-            <p className="text-sm text-[#57606a] mt-2">Choose a job posting above to rank candidates by AI match score</p>
+          <div className="bg-white border-2 border-dashed border-[#e2e8f0] rounded-xl p-16 text-center mt-2">
+            <SparklesIcon className="size-12 text-[#e2e8f0] mx-auto mb-4" />
+            <p className="font-semibold text-[#0f172a]">Select a job to start AI matching</p>
+            <p className="text-sm text-[#64748b] mt-2">Choose a job posting above to rank candidates by AI match score</p>
           </div>
         ) : (
           <>
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-4 mt-2 flex-wrap gap-4">
               <div>
-                <p className="text-sm text-[#57606a]">
-                  {applications.length} candidates for <span className="font-semibold text-[#1c2128]">{selectedJob?.title}</span>
+                <p className="text-sm text-[#64748b]">
+                  {applications.length} candidates for <span className="font-semibold text-[#0f172a]">{selectedJob?.title}</span>
                 </p>
-                <p className="text-xs text-[#8c959f] mt-0.5">
+                <p className="text-xs text-[#94a3b8] mt-0.5">
                   {analyzed} analyzed · {applications.length - analyzed} pending
                 </p>
               </div>
@@ -255,8 +255,8 @@ function CompanyAIMatchingPage() {
                       onClick={() => setScoreFilter(f.key)}
                       className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
                         scoreFilter === f.key
-                          ? "bg-[#0969da] text-white border-[#0969da]"
-                          : "bg-white text-[#57606a] border-[#d0d7de] hover:bg-[#f6f8fa]"
+                          ? "bg-[#0a66c2] text-white border-[#0a66c2]"
+                          : "bg-white text-[#64748b] border-[#e2e8f0] hover:bg-[#f8fafc]"
                       }`}
                     >
                       {f.label}
@@ -266,7 +266,7 @@ function CompanyAIMatchingPage() {
                 <button
                   onClick={handleBulkRun}
                   disabled={bulkRunning || applications.length - analyzed === 0}
-                  className="flex items-center gap-2 bg-[#8250df] hover:bg-[#6e40c9] text-white rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:opacity-50"
+                  className="flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6e40c9] text-white rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:opacity-50"
                 >
                   {bulkRunning ? <Loader2Icon className="size-4 animate-spin" /> : <ZapIcon className="size-4" />}
                   Run AI on All
@@ -278,14 +278,14 @@ function CompanyAIMatchingPage() {
             {isLoading ? (
               <div className="space-y-3">
                 {[...Array(4)].map((_, i) => (
-                  <div key={i} className="bg-white rounded-xl border border-[#d0d7de] h-28 animate-pulse" />
+                  <div key={i} className="bg-white rounded-xl border border-[#e2e8f0] h-28 animate-pulse" />
                 ))}
               </div>
             ) : sorted.length === 0 ? (
-              <div className="bg-white border-2 border-dashed border-[#d0d7de] rounded-xl p-16 text-center">
-                <UsersIcon className="size-12 text-[#d0d7de] mx-auto mb-4" />
-                <p className="font-semibold text-[#1c2128]">No candidates match this filter</p>
-                <p className="text-sm text-[#57606a] mt-2">Try a different filter or run AI analysis first</p>
+              <div className="bg-white border-2 border-dashed border-[#e2e8f0] rounded-xl p-16 text-center">
+                <UsersIcon className="size-12 text-[#e2e8f0] mx-auto mb-4" />
+                <p className="font-semibold text-[#0f172a]">No candidates match this filter</p>
+                <p className="text-sm text-[#64748b] mt-2">Try a different filter or run AI analysis first</p>
               </div>
             ) : (
               sorted.map((app, idx) => {
@@ -304,19 +304,19 @@ function CompanyAIMatchingPage() {
                     key={app._id}
                     whileHover={{ y: -1 }}
                     transition={{ duration: 0.1 }}
-                    className="bg-white border border-[#d0d7de] rounded-xl p-5 mb-3 hover:border-[#0969da] hover:shadow-sm transition-all"
+                    className="bg-white border border-[#e2e8f0] rounded-xl p-5 mb-3 hover:border-[#0a66c2] hover:shadow-sm transition-all"
                   >
                     <div className="flex items-start gap-5">
                       {/* Rank + Score */}
                       <div className="flex items-center gap-3 flex-shrink-0">
-                        <span className={`text-lg font-black w-8 text-center ${rank <= 3 ? "text-[#0969da]" : "text-[#d0d7de]"}`}>
+                        <span className={`text-lg font-black w-8 text-center ${rank <= 3 ? "text-[#0a66c2]" : "text-[#e2e8f0]"}`}>
                           #{rank}
                         </span>
                         {hasScore ? (
                           <MatchScoreRing score={app.matchScore} size={56} />
                         ) : (
-                          <div className="w-14 h-14 rounded-full bg-[#f6f8fa] border-2 border-dashed border-[#d0d7de] flex items-center justify-center">
-                            <span className="text-[10px] text-[#8c959f] text-center leading-tight">Not<br />analyzed</span>
+                          <div className="w-14 h-14 rounded-full bg-[#f8fafc] border-2 border-dashed border-[#e2e8f0] flex items-center justify-center">
+                            <span className="text-[10px] text-[#94a3b8] text-center leading-tight">Not<br />analyzed</span>
                           </div>
                         )}
                       </div>
@@ -325,8 +325,8 @@ function CompanyAIMatchingPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-3">
                           <div>
-                            <p className="font-semibold text-[#1c2128]">{candidate?.name || "Unknown"}</p>
-                            <p className="text-sm text-[#57606a] mt-0.5">{candidate?.email || ""}</p>
+                            <p className="font-semibold text-[#0f172a]">{candidate?.name || "Unknown"}</p>
+                            <p className="text-sm text-[#64748b] mt-0.5">{candidate?.email || ""}</p>
                           </div>
                           <span className={`text-[10px] px-2 py-0.5 rounded-full border font-medium flex-shrink-0 ${STATUS_BADGE[app.status] || STATUS_BADGE.applied}`}>
                             {app.status?.replace(/_/g, " ")}
@@ -337,10 +337,10 @@ function CompanyAIMatchingPage() {
                         {candidate?.techStack?.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 mt-2">
                             {candidate.techStack.slice(0, 6).map((s) => (
-                              <span key={s} className="bg-[#f6f8fa] text-[#57606a] border border-[#d0d7de] text-xs px-2 py-0.5 rounded-md">{s}</span>
+                              <span key={s} className="bg-[#f8fafc] text-[#64748b] border border-[#e2e8f0] text-xs px-2 py-0.5 rounded-md">{s}</span>
                             ))}
                             {candidate.techStack.length > 6 && (
-                              <span className="text-xs text-[#8c959f]">+{candidate.techStack.length - 6} more</span>
+                              <span className="text-xs text-[#94a3b8]">+{candidate.techStack.length - 6} more</span>
                             )}
                           </div>
                         )}
@@ -349,29 +349,29 @@ function CompanyAIMatchingPage() {
                         {hasScore && (
                           <>
                             {app.aiSummary && (
-                              <p className="text-sm text-[#57606a] leading-relaxed mt-2 italic">{app.aiSummary}</p>
+                              <p className="text-sm text-[#64748b] leading-relaxed mt-2 italic">{app.aiSummary}</p>
                             )}
                             <div className="flex gap-6 mt-3">
                               {app.matchedSkills?.length > 0 && (
                                 <div>
-                                  <p className="text-xs font-semibold text-[#1a7f37] mb-1.5 flex items-center gap-1">
+                                  <p className="text-xs font-semibold text-[#16a34a] mb-1.5 flex items-center gap-1">
                                     <CheckCircleIcon className="size-3" /> Matched
                                   </p>
                                   <div className="flex flex-wrap gap-1">
                                     {app.matchedSkills.map((s) => (
-                                      <span key={s} className="bg-[#dafbe1] text-[#1a7f37] border border-[#56d364] text-[10px] px-2 py-0.5 rounded-full">{s}</span>
+                                      <span key={s} className="bg-[#dcfce7] text-[#16a34a] border border-[#86efac] text-[10px] px-2 py-0.5 rounded-full">{s}</span>
                                     ))}
                                   </div>
                                 </div>
                               )}
                               {app.missingSkills?.length > 0 && (
                                 <div>
-                                  <p className="text-xs font-semibold text-[#cf222e] mb-1.5 flex items-center gap-1">
+                                  <p className="text-xs font-semibold text-[#dc2626] mb-1.5 flex items-center gap-1">
                                     <XCircleIcon className="size-3" /> Missing
                                   </p>
                                   <div className="flex flex-wrap gap-1">
                                     {app.missingSkills.map((s) => (
-                                      <span key={s} className="bg-[#ffebe9] text-[#cf222e] border border-[#ff8182] text-[10px] px-2 py-0.5 rounded-full">{s}</span>
+                                      <span key={s} className="bg-[#fee2e2] text-[#dc2626] border border-[#ff8182] text-[10px] px-2 py-0.5 rounded-full">{s}</span>
                                     ))}
                                   </div>
                                 </div>
@@ -387,7 +387,7 @@ function CompanyAIMatchingPage() {
                           <button
                             onClick={() => runAIMatch(app._id)}
                             disabled={aiPending || bulkRunning}
-                            className="flex items-center gap-1.5 bg-[#8250df] hover:bg-[#6e40c9] text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50"
+                            className="flex items-center gap-1.5 bg-[#7c3aed] hover:bg-[#6e40c9] text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50"
                           >
                             {aiPending ? <Loader2Icon className="size-3 animate-spin" /> : <SparklesIcon className="size-3" />}
                             Run AI
@@ -396,12 +396,12 @@ function CompanyAIMatchingPage() {
                           <button
                             onClick={() => runAIMatch(app._id)}
                             disabled={aiPending || bulkRunning}
-                            className="text-xs text-[#8c959f] hover:text-[#8250df] disabled:opacity-50"
+                            className="text-xs text-[#94a3b8] hover:text-[#7c3aed] disabled:opacity-50"
                           >
                             Re-analyze
                           </button>
                         )}
-                        <Link to="/company/candidates" className="text-[#0969da] text-xs hover:underline font-medium">
+                        <Link to="/company/candidates" className="text-[#0a66c2] text-xs hover:underline font-medium">
                           View Candidate →
                         </Link>
                       </div>

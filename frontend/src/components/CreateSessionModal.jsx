@@ -123,10 +123,10 @@ function CreateSessionModal({
               </AnimatePresence>
 
               {/* ROOM SUMMARY */}
-              <div className="bg-[#2cbe4e10] border border-[#2cbe4e30] rounded-xl p-4 flex gap-3 text-sm">
-                <Code2Icon className="size-5 text-[#2cbe4e] shrink-0 mt-0.5" />
+              <div className="bg-[#ffffff10] border border-[#ffffff30] rounded-xl p-4 flex gap-3 text-sm">
+                <Code2Icon className="size-5 text-[#ffffff] shrink-0 mt-0.5" />
                 <div className="text-[#e6edf3] space-y-1">
-                  <p className="font-semibold text-[#2cbe4e]">Room Summary</p>
+                  <p className="font-semibold text-[#ffffff]">Room Summary</p>
                   <p className="text-[#7d8590]">Problem: <span className="text-[#e6edf3]">Select inside the room</span></p>
                   <p className="text-[#7d8590]">Capacity: <span className="text-[#e6edf3]">2 (1-on-1 session)</span></p>
                   {showSchedule && scheduleConfig.date && (

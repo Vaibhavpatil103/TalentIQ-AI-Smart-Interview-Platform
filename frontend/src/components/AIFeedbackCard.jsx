@@ -32,7 +32,7 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
             label: "Code Quality",
             score: feedback.codeQuality,
             icon: CodeIcon,
-            color: "#2cbe4e",
+            color: "#ffffff",
             desc: "Readability, maintainability, and best practices",
           },
           {
@@ -76,7 +76,7 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
             label: "Confidence",
             score: feedback.confidence,
             icon: TrophyIcon,
-            color: "#2cbe4e",
+            color: "#ffffff",
             desc: "Delivery and assurance",
           },
         ];
@@ -103,7 +103,7 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
             fill="transparent"
           />
           <motion.circle
-            className="text-[#2cbe4e] stroke-current drop-shadow-[0_0_8px_rgba(44,190,78,0.5)]"
+            className="text-[#ffffff] stroke-current drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
             strokeWidth="6"
             strokeLinecap="round"
             cx="40"
@@ -121,7 +121,7 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
             {score}
             <span className="text-base text-[#7d8590]">/10</span>
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#2cbe4e]">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[#ffffff]">
             Score
           </span>
         </div>
@@ -137,7 +137,7 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
     };
 
     const req = thresholds[company].score;
-    if (overallScore >= req) return { text: "Ready", color: "text-[#2cbe4e]", bg: "bg-[#2cbe4e20]", border: "border-[#2cbe4e40]", progress: "bg-[#2cbe4e]", emoji: "🟢" };
+    if (overallScore >= req) return { text: "Ready", color: "text-[#ffffff]", bg: "bg-[#ffffff20]", border: "border-[#ffffff40]", progress: "bg-[#ffffff]", emoji: "🟢" };
     if (overallScore >= req - 1) return { text: "Almost", color: "text-[#d29922]", bg: "bg-[#d2992220]", border: "border-[#d2992240]", progress: "bg-[#d29922]", emoji: "🟡" };
     return { text: "Needs Work", color: "text-[#f85149]", bg: "bg-[#f8514920]", border: "border-[#f8514940]", progress: "bg-[#f85149]", emoji: "🔴" };
   };
@@ -146,7 +146,7 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
     <div className="bg-[#1c2128] border border-[#30363d] rounded-2xl overflow-hidden shadow-2xl">
       {/* HEADER SECTION */}
       <div className="bg-[#161b22] border-b border-[#30363d] p-6 lg:p-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#2cbe4e] opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#ffffff] opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
           <div className="shrink-0">
@@ -156,7 +156,7 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
           <div className="flex-1 text-center md:text-left space-y-4">
             <div>
               <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-                <SparklesIcon className="size-5 text-[#2cbe4e]" />
+                <SparklesIcon className="size-5 text-[#ffffff]" />
                 <h2 className="text-2xl font-bold text-[#e6edf3]">Interview Feedback</h2>
               </div>
               
@@ -189,19 +189,19 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
           {/* Radar Chart */}
           <div className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 h-[320px] shadow-sm flex flex-col items-center justify-center relative">
             <h3 className="text-sm font-bold text-[#e6edf3] uppercase tracking-wider absolute top-6 left-6 flex items-center gap-2">
-              <TargetIcon className="size-4 text-[#2cbe4e]" /> Skills Radar
+              <TargetIcon className="size-4 text-[#ffffff]" /> Skills Radar
             </h3>
             <div className="w-full h-full mt-4">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
                   <PolarGrid stroke="#30363d" />
                   <PolarAngleAxis dataKey="subject" tick={{ fill: "#7d8590", fontSize: 11 }} />
-                  <PolarRadiusAxis angle={30} domain={[0, 10]} tick={{ fill: "#484f58" }} tickCount={6} />
+                  <PolarRadiusAxis angle={30} domain={[0, 10]} tick={{ fill: "var(--dark-text-tertiary)" }} tickCount={6} />
                   <Radar
                     name="Score"
                     dataKey="A"
-                    stroke="#2cbe4e"
-                    fill="#2cbe4e"
+                    stroke="#ffffff"
+                    fill="#ffffff"
                     fillOpacity={0.2}
                     isAnimationActive={true}
                   />
@@ -213,7 +213,7 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
           {/* Score Bars */}
           <div className="space-y-5">
             <h3 className="text-sm font-bold text-[#e6edf3] uppercase tracking-wider mb-2 flex items-center gap-2">
-              <TrendingUpIcon className="size-4 text-[#2cbe4e]" /> Score Breakdown
+              <TrendingUpIcon className="size-4 text-[#ffffff]" /> Score Breakdown
             </h3>
             {features.map((feature, index) => {
               const Icon = feature.icon;
@@ -249,13 +249,13 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
         {variant !== "code-review" && (
           <div className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 shadow-sm">
             <h3 className="text-sm font-bold text-[#e6edf3] uppercase tracking-wider mb-6 flex items-center gap-2">
-              <BuildingIcon className="size-4 text-[#2cbe4e]" /> Target Company Readiness
+              <BuildingIcon className="size-4 text-[#ffffff]" /> Target Company Readiness
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {["Google", "Amazon", "Startup"].map((company) => {
                 const status = getReadinessLevel(company, feedback.overallScore);
                 return (
-                  <div key={company} className="bg-[#0d1117] border border-[#30363d] rounded-xl p-4 flex flex-col items-center text-center gap-2 relative overflow-hidden group hover:border-[#484f58] transition-colors">
+                  <div key={company} className="bg-[var(--dark-bg)] border border-[var(--dark-border)] rounded-xl p-4 flex flex-col items-center text-center gap-2 relative overflow-hidden group hover:border-[var(--dark-text-tertiary)] transition-colors">
                     <div className="text-2xl mb-1">{status.emoji}</div>
                     <p className="font-bold text-[#e6edf3]">{company}</p>
                     <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 flex items-center gap-1 rounded-full border ${status.bg} ${status.color} ${status.border}`}>
@@ -265,7 +265,7 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
                 );
               })}
             </div>
-            <p className="text-center text-xs text-[#484f58] mt-4 uppercase tracking-widest font-semibold">
+            <p className="text-center text-xs text-[var(--dark-text-tertiary)] mt-4 uppercase tracking-widest font-semibold">
               *Based on AI analysis of historical interview data
             </p>
           </div>
@@ -273,9 +273,9 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
 
         {/* STRENGTHS & IMPROVEMENTS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 shadow-sm hover:border-[#2cbe4e40] transition-colors">
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 shadow-sm hover:border-[#ffffff40] transition-colors">
             <h3 className="text-sm font-bold text-[#e6edf3] uppercase tracking-wider mb-5 flex items-center gap-2">
-              <CheckCircle2Icon className="size-4 text-[#2cbe4e]" /> Key Strengths
+              <CheckCircle2Icon className="size-4 text-[#ffffff]" /> Key Strengths
             </h3>
             <ul className="space-y-4">
               {feedback.strengths?.map((strength, index) => (
@@ -286,8 +286,8 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
                   key={index} 
                   className="flex items-start gap-3"
                 >
-                  <div className="mt-1 flex-shrink-0 size-5 rounded-full bg-[#2cbe4e20] flex items-center justify-center">
-                    <div className="size-1.5 bg-[#2cbe4e] rounded-full" />
+                  <div className="mt-1 flex-shrink-0 size-5 rounded-full bg-[#ffffff20] flex items-center justify-center">
+                    <div className="size-1.5 bg-[#ffffff] rounded-full" />
                   </div>
                   <span className="text-[#e6edf3] text-sm leading-relaxed">{strength}</span>
                 </motion.li>
@@ -322,12 +322,12 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
         {feedback.questionBreakdown && feedback.questionBreakdown.length > 0 && (
           <div className="mt-10">
             <h3 className="text-lg font-bold text-[#e6edf3] mb-6 flex items-center gap-2">
-              <CodeIcon className="size-5 text-[#2cbe4e]" /> Detailed Breakdown
+              <CodeIcon className="size-5 text-[#ffffff]" /> Detailed Breakdown
             </h3>
             <div className="space-y-4">
               {feedback.questionBreakdown.map((q, idx) => (
                 <div key={idx} className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 shadow-sm relative overflow-hidden group">
-                  <div className="absolute top-0 left-0 w-1 h-full" style={{ backgroundColor: q.score >= 8 ? '#2cbe4e' : q.score >= 5 ? '#d29922' : '#f85149' }} />
+                  <div className="absolute top-0 left-0 w-1 h-full" style={{ backgroundColor: q.score >= 8 ? '#ffffff' : q.score >= 5 ? '#d29922' : '#f85149' }} />
                   
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-1 space-y-3">
@@ -341,8 +341,8 @@ function AIFeedbackCard({ feedback, variant = "code-review", sessionMeta }) {
                       </div>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                        <div className="bg-[#2cbe4e05] border border-[#2cbe4e20] rounded-xl p-4">
-                          <p className="text-[#2cbe4e] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1"><CheckCircle2Icon className="size-3" /> Ideal Approach</p>
+                        <div className="bg-[#ffffff05] border border-[#ffffff20] rounded-xl p-4">
+                          <p className="text-[#ffffff] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1"><CheckCircle2Icon className="size-3" /> Ideal Approach</p>
                           <p className="text-[#e6edf3] text-[13px] leading-relaxed">{q.idealAnswer || "Provide a structured answer starting with core concepts."}</p>
                         </div>
                         <div className="bg-[#f8514905] border border-[#f8514920] rounded-xl p-4">

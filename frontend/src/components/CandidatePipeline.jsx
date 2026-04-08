@@ -43,8 +43,8 @@ function CandidateCard({ candidate }) {
       style={style}
       {...attributes}
       {...listeners}
-      className={`bg-[#1c2128] border border-[#30363d] rounded-xl p-4 mb-3 cursor-grab active:cursor-grabbing hover:border-[#2cbe4e40] hover:-translate-y-1 hover:shadow-lg transition-all duration-200 ${
-        isDragging ? "shadow-2xl ring-2 ring-[#2cbe4e] scale-105" : "shadow-sm"
+      className={`bg-[#1c2128] border border-[#30363d] rounded-xl p-4 mb-3 cursor-grab active:cursor-grabbing hover:border-[#00000040] hover:-translate-y-1 hover:shadow-lg transition-all duration-200 ${
+        isDragging ? "shadow-2xl ring-2 ring-[#000000] scale-105" : "shadow-sm"
       }`}
     >
       <div className="flex items-center gap-3 mb-3">

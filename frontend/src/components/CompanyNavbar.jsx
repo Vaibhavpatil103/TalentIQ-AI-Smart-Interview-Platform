@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { UserButton, useUser } from "@clerk/clerk-react";
+import TalentIQLogo, { TalentIQIcon, TalentIQWordmark } from "./TalentIQLogo";
+import { UserButton, useUser, useClerk } from "@clerk/clerk-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboardIcon,
@@ -20,6 +21,7 @@ import {
   MenuIcon,
   XIcon,
   SettingsIcon,
+  LogOutIcon,
 } from "lucide-react";
 import { axiosInstance } from "../lib/axios";
 
@@ -95,12 +97,12 @@ const NavItem = ({ to, icon: Icon, label, active, badge }) => (
     <motion.div
       className="relative flex items-center gap-[6px] px-3 py-[7px] rounded-lg text-[13px] font-medium select-none cursor-pointer"
       style={{
-        color: active ? "#51555aff" : "#57606a",
-        backgroundColor: active ? "rgba(9, 105, 218, 0.08)" : "transparent",
+        color: active ? "#0a66c2" : "#57606a",
+        backgroundColor: active ? "rgba(10,102,194, 0.08)" : "transparent",
       }}
       whileHover={{
-        backgroundColor: active ? "rgba(9, 105, 218, 0.12)" : "rgba(0, 0, 0, 0.04)",
-        color: active ? "#63686eff" : "#1c2128",
+        backgroundColor: active ? "rgba(10,102,194, 0.12)" : "rgba(0, 0, 0, 0.04)",
+        color: active ? "#0a66c2" : "#1c2128",
         scale: 1.02,
       }}
       whileTap={{ scale: 0.96 }}
@@ -115,7 +117,7 @@ const NavItem = ({ to, icon: Icon, label, active, badge }) => (
           className="absolute left-2 right-2 h-[2px] rounded-full"
           style={{
             bottom: -9,
-            background: "linear-gradient(90deg, #0969da, #54aeff)",
+            background: "linear-gradient(90deg, #0a66c2, #1e40af)",
           }}
           layoutId="activeNavIndicator"
           transition={{ type: "spring", stiffness: 380, damping: 30 }}
@@ -157,11 +159,11 @@ function MoreDropdown({ links, isActive, unreadCount }) {
       <motion.button
         className="flex items-center gap-[5px] px-3 py-[7px] rounded-lg text-[13px] font-medium select-none cursor-pointer"
         style={{
-          color: anySecondaryActive ? "#0969da" : "#57606a",
+          color: anySecondaryActive ? "#0a66c2" : "#57606a",
           backgroundColor: open
-            ? "rgba(0,0,0,0.06)"
+            ? "rgba(10,102,194,0.06)"
             : anySecondaryActive
-              ? "rgba(9,105,218,0.08)"
+              ? "rgba(10,102,194,0.08)"
               : "transparent",
         }}
         whileHover={{
@@ -209,8 +211,8 @@ function MoreDropdown({ links, isActive, unreadCount }) {
                     onClick={() => setOpen(false)}
                     className="flex items-center gap-2.5 px-3.5 py-2 text-[13px] font-medium transition-colors duration-100 relative"
                     style={{
-                      color: active ? "#0969da" : "#3d444d",
-                      backgroundColor: active ? "rgba(9,105,218,0.06)" : "transparent",
+                      color: active ? "#0a66c2" : "#3d444d",
+                      backgroundColor: active ? "rgba(10,102,194,0.06)" : "transparent",
                     }}
                     onMouseEnter={(e) => {
                       if (!active) e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.03)";
@@ -222,7 +224,7 @@ function MoreDropdown({ links, isActive, unreadCount }) {
                     {active && (
                       <span
                         className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-full"
-                        style={{ background: "#0969da" }}
+                        style={{ background: "#0a66c2" }}
                       />
                     )}
                     <Icon style={{ width: 15, height: 15, opacity: active ? 1 : 0.6 }} />
@@ -259,11 +261,11 @@ function CreateDropdown() {
       <motion.button
         className="flex items-center gap-1.5 px-3 py-[7px] rounded-lg text-[13px] font-semibold select-none cursor-pointer"
         style={{
-          background: "linear-gradient(135deg, #0969da, #0550ae)",
+          background: "linear-gradient(135deg, #0a66c2, #1e40af)",
           color: "#fff",
-          boxShadow: "0 1px 4px rgba(9,105,218,0.3)",
+          boxShadow: "0 1px 4px rgba(10,102,194,0.3)",
         }}
-        whileHover={{ scale: 1.04, boxShadow: "0 2px 10px rgba(9,105,218,0.35)" }}
+        whileHover={{ scale: 1.04, boxShadow: "0 2px 10px rgba(10,102,194,0.35)" }}
         whileTap={{ scale: 0.96 }}
         transition={{ duration: 0.12 }}
         onClick={() => setOpen((p) => !p)}
@@ -296,8 +298,8 @@ function CreateDropdown() {
                     onClick={() => setOpen(false)}
                     className="flex items-center gap-2.5 px-3.5 py-2.5 text-[13px] font-medium text-[#3d444d] transition-colors duration-100"
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "rgba(9,105,218,0.06)";
-                      e.currentTarget.style.color = "#0969da";
+                      e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.06)";
+                      e.currentTarget.style.color = "#000000";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor = "transparent";
@@ -306,9 +308,9 @@ function CreateDropdown() {
                   >
                     <div
                       className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                      style={{ background: "rgba(9,105,218,0.08)" }}
+                      style={{ background: "rgba(10,102,194,0.08)" }}
                     >
-                      <Icon style={{ width: 14, height: 14, color: "#0969da" }} />
+                      <Icon style={{ width: 14, height: 14, color: "#000000" }} />
                     </div>
                     {action.label}
                   </Link>
@@ -366,6 +368,7 @@ function NotificationBell({ count }) {
 // ProfileDropdown — avatar + name + dropdown
 // ═══════════════════════════════════════════════════════════════
 function ProfileDropdown({ user }) {
+  const { openUserProfile, signOut } = useClerk();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   useClickOutside(ref, () => setOpen(false));
@@ -390,8 +393,8 @@ function ProfileDropdown({ user }) {
         <div
           className="w-[30px] h-[30px] rounded-full flex items-center justify-center text-[11px] font-bold text-white flex-shrink-0"
           style={{
-            background: "linear-gradient(135deg, #0969da, #0550ae)",
-            boxShadow: "0 1px 3px rgba(9,105,218,0.3)",
+            background: "linear-gradient(135deg, #0a66c2, #1e40af)",
+            boxShadow: "0 1px 3px rgba(10,102,194,0.3)",
           }}
         >
           {initials}
@@ -458,20 +461,28 @@ function ProfileDropdown({ user }) {
                 );
               })}
             </div>
-            {/* Clerk UserButton for sign-out is still available via the avatar */}
+            {/* Account actions */}
             <div className="border-t px-3.5 py-2" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-              <div className="flex items-center gap-2">
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-6 h-6 rounded-full",
-                      userButtonTrigger: "focus:shadow-none",
-                    },
-                    variables: { colorPrimary: "#0969da" },
-                  }}
-                />
-                <span className="text-[12px] text-[#7d8590]">Manage account</span>
-              </div>
+              <button
+                className="flex items-center gap-2 w-full text-left rounded-lg px-1 py-1 transition-colors duration-100 cursor-pointer"
+                style={{ color: "#3d444d" }}
+                onClick={() => { setOpen(false); openUserProfile(); }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.03)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
+              >
+                <SettingsIcon style={{ width: 15, height: 15, opacity: 0.6 }} />
+                <span className="text-[12px] font-medium">Manage account</span>
+              </button>
+              <button
+                className="flex items-center gap-2 w-full text-left rounded-lg px-1 py-1 transition-colors duration-100 cursor-pointer"
+                style={{ color: "#cf222e" }}
+                onClick={() => { setOpen(false); signOut(); }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(207,34,46,0.06)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
+              >
+                <LogOutIcon style={{ width: 15, height: 15, opacity: 0.7 }} />
+                <span className="text-[12px] font-medium">Sign out</span>
+              </button>
             </div>
           </motion.div>
         )}
@@ -574,8 +585,8 @@ function CommandPalette({ isOpen, onClose }) {
                       className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-[13px] font-medium text-[#3d444d] transition-colors duration-100"
                       onClick={() => handleSelect(item.to)}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "rgba(9,105,218,0.06)";
-                        e.currentTarget.style.color = "#0969da";
+                        e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.06)";
+                        e.currentTarget.style.color = "#000000";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.backgroundColor = "transparent";
@@ -584,9 +595,9 @@ function CommandPalette({ isOpen, onClose }) {
                     >
                       <div
                         className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                        style={{ background: "rgba(9,105,218,0.06)" }}
+                        style={{ background: "rgba(10,102,194,0.06)" }}
                       >
-                        <Icon style={{ width: 14, height: 14, color: "#0969da" }} />
+                        <Icon style={{ width: 14, height: 14, color: "#0a66c2" }} />
                       </div>
                       {item.label}
                     </button>
@@ -652,13 +663,8 @@ function MobileMenu({ isOpen, onClose, links, isActive, unreadCount }) {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-4 border-b" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
               <div className="flex items-center gap-2">
-                <div
-                  className="w-8 h-8 rounded-[8px] flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg, #0969da, #0550ae)" }}
-                >
-                  <SparklesIcon className="size-4 text-white" />
-                </div>
-                <span className="font-extrabold text-[15px] text-[#0d1117]">TalentIQ</span>
+                <TalentIQIcon size={32} />
+                <TalentIQWordmark variant="light" />
               </div>
               <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.04)] text-[#7d8590]">
                 <XIcon className="size-5" />
@@ -678,8 +684,8 @@ function MobileMenu({ isOpen, onClose, links, isActive, unreadCount }) {
                     onClick={onClose}
                     className="flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-[14px] font-medium mb-0.5 transition-colors duration-100"
                     style={{
-                      color: active ? "#0969da" : "#3d444d",
-                      backgroundColor: active ? "rgba(9,105,218,0.08)" : "transparent",
+                      color: active ? "#000000" : "#3d444d",
+                      backgroundColor: active ? "rgba(0,0,0,0.08)" : "transparent",
                     }}
                   >
                     <Icon style={{ width: 17, height: 17, opacity: active ? 1 : 0.6 }} />
@@ -709,8 +715,8 @@ function MobileMenu({ isOpen, onClose, links, isActive, unreadCount }) {
                     onClick={onClose}
                     className="flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-[14px] font-medium text-[#3d444d] mb-0.5 hover:bg-[rgba(0,0,0,0.03)]"
                   >
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(9,105,218,0.08)" }}>
-                      <Icon style={{ width: 14, height: 14, color: "#0969da" }} />
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(0,0,0,0.08)" }}>
+                      <Icon style={{ width: 14, height: 14, color: "#000000" }} />
                     </div>
                     {action.label}
                   </Link>
@@ -808,26 +814,8 @@ function CompanyNavbar() {
               to="/company/dashboard"
               className="group flex items-center gap-2 transition-all duration-200"
             >
-              <motion.div
-                className="w-8 h-8 rounded-[9px] flex items-center justify-center relative overflow-hidden"
-                style={{
-                  background: "linear-gradient(135deg, #0969da 0%, #0550ae 50%, #033d8b 100%)",
-                  boxShadow: "0 2px 8px rgba(9,105,218,0.25)",
-                }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 22 }}
-              >
-                <div
-                  className="absolute inset-0 opacity-25"
-                  style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%)" }}
-                />
-                <SparklesIcon className="size-[15px] text-white relative z-10" />
-              </motion.div>
-
-              <span className="font-extrabold text-[15px] tracking-[-0.02em] text-[#0d1117] group-hover:text-[#0969da] transition-colors duration-200 hidden sm:inline">
-                TalentIQ
-              </span>
+              <TalentIQIcon size={32} />
+              <TalentIQWordmark variant="light" className="hidden sm:inline" />
             </Link>
 
             {/* Divider */}
@@ -852,9 +840,9 @@ function CompanyNavbar() {
               className="ml-3 flex items-center gap-1.5 px-2.5 py-[5px] rounded-lg border text-[12px] text-[#9ba4af] cursor-pointer"
               style={{ borderColor: "#d8dee4", backgroundColor: "rgba(0,0,0,0.015)" }}
               whileHover={{
-                borderColor: "#0969da",
-                color: "#0969da",
-                backgroundColor: "rgba(9,105,218,0.04)",
+                borderColor: "#0a66c2",
+                color: "#0a66c2",
+                backgroundColor: "rgba(10,102,194,0.04)",
                 scale: 1.02,
               }}
               whileTap={{ scale: 0.97 }}

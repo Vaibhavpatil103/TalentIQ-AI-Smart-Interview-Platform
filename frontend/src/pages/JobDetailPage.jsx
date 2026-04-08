@@ -75,11 +75,11 @@ function JobDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#0d1117]">
+      <div className="min-h-screen bg-[var(--dark-bg)]">
         <Navbar />
         <div className="max-w-5xl mx-auto px-6 py-12 space-y-6">
-          <div className="bg-[#161b22] border border-[#30363d] rounded-xl h-60 animate-pulse" />
-          <div className="bg-[#161b22] border border-[#30363d] rounded-xl h-40 animate-pulse" />
+          <div className="bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-xl h-60 animate-pulse" />
+          <div className="bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-xl h-40 animate-pulse" />
         </div>
       </div>
     );
@@ -87,12 +87,12 @@ function JobDetailPage() {
 
   if (!job) {
     return (
-      <div className="min-h-screen bg-[#0d1117]">
+      <div className="min-h-screen bg-[var(--dark-bg)]">
         <Navbar />
         <div className="max-w-5xl mx-auto px-6 py-20 text-center">
-          <BriefcaseIcon className="size-12 text-[#30363d] mx-auto mb-4" />
-          <p className="text-[#e6edf3] font-semibold">Job not found</p>
-          <Link to="/jobs" className="text-[#2cbe4e] text-sm hover:underline mt-3 inline-block">← Back to Jobs</Link>
+          <BriefcaseIcon className="size-12 text-[var(--dark-border)] mx-auto mb-4" />
+          <p className="text-[var(--dark-text)] font-semibold">Job not found</p>
+          <Link to="/jobs" className="text-[var(--dark-accent)] text-sm hover:underline mt-3 inline-block">← Back to Jobs</Link>
         </div>
       </div>
     );
@@ -106,18 +106,18 @@ function JobDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1117]">
+    <div className="min-h-screen bg-[var(--dark-bg)]">
       <Navbar />
 
       {/* ── HEADER ───────────────────────────────────────────── */}
-      <div className="bg-[#161b22] border-b border-[#30363d] py-5 px-6">
+      <div className="bg-[var(--dark-card)] border-b border-[var(--dark-border)] py-5 px-6">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <Link to="/jobs" className="flex items-center gap-2 text-[#7d8590] hover:text-[#e6edf3] transition-colors text-sm">
+          <Link to="/jobs" className="flex items-center gap-2 text-[var(--dark-text-secondary)] hover:text-[var(--dark-text)] transition-colors text-sm">
             <ArrowLeftIcon className="size-4" />
             Back to Jobs
           </Link>
-          <span className="text-sm text-[#7d8590]">
-            Jobs / <span className="text-[#e6edf3]">{job.company}</span>
+          <span className="text-sm text-[var(--dark-text-secondary)]">
+            Jobs / <span className="text-[var(--dark-text)]">{job.company}</span>
           </span>
         </div>
       </div>
@@ -129,22 +129,22 @@ function JobDetailPage() {
       >
         {/* ── HERO CARD ────────────────────────────────────────── */}
         <div className="max-w-5xl mx-auto px-6 py-6">
-          <div className="bg-[#161b22] border border-[#30363d] rounded-xl p-6">
+          <div className="bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-xl p-6">
             <div className="flex justify-between items-start gap-4">
               <div className="flex-1 min-w-0">
                 {/* Company avatar */}
-                <div className="w-14 h-14 rounded-xl bg-[#1c2128] border border-[#30363d] flex items-center justify-center text-xl font-black text-[#2cbe4e]">
+                <div className="w-14 h-14 rounded-xl bg-[var(--dark-elevated)] border border-[var(--dark-border)] flex items-center justify-center text-xl font-black text-[var(--dark-accent)]">
                   {(job.company || "?")[0].toUpperCase()}
                 </div>
-                <h1 className="text-2xl font-bold text-[#e6edf3] mt-4">{job.title}</h1>
+                <h1 className="text-2xl font-bold text-[var(--dark-text)] mt-4">{job.title}</h1>
                 {/* Meta */}
                 <div className="flex flex-wrap gap-4 mt-2">
-                  <span className="flex items-center gap-1.5 text-sm text-[#7d8590]"><BuildingIcon className="size-3" />{job.company}</span>
-                  {job.location && <span className="flex items-center gap-1.5 text-sm text-[#7d8590]"><MapPinIcon className="size-3" />{job.location}</span>}
-                  {job.jobType && <span className="flex items-center gap-1.5 text-sm text-[#7d8590] capitalize"><BriefcaseIcon className="size-3" />{job.jobType}</span>}
-                  {job.experienceLevel && <span className="flex items-center gap-1.5 text-sm text-[#7d8590] capitalize"><TrendingUpIcon className="size-3" />{job.experienceLevel}</span>}
+                  <span className="flex items-center gap-1.5 text-sm text-[var(--dark-text-secondary)]"><BuildingIcon className="size-3" />{job.company}</span>
+                  {job.location && <span className="flex items-center gap-1.5 text-sm text-[var(--dark-text-secondary)]"><MapPinIcon className="size-3" />{job.location}</span>}
+                  {job.jobType && <span className="flex items-center gap-1.5 text-sm text-[var(--dark-text-secondary)] capitalize"><BriefcaseIcon className="size-3" />{job.jobType}</span>}
+                  {job.experienceLevel && <span className="flex items-center gap-1.5 text-sm text-[var(--dark-text-secondary)] capitalize"><TrendingUpIcon className="size-3" />{job.experienceLevel}</span>}
                   {job.salaryMin && job.salaryMax && (
-                    <span className="flex items-center gap-1.5 text-sm text-[#7d8590]">
+                    <span className="flex items-center gap-1.5 text-sm text-[var(--dark-text-secondary)]">
                       <DollarSignIcon className="size-3" />
                       {job.salaryMin.toLocaleString()}–{job.salaryMax.toLocaleString()} {job.currency || "USD"}
                     </span>
@@ -156,7 +156,7 @@ function JobDetailPage() {
                 {alreadyApplied ? (
                   <div
                     className="px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"
-                    style={{ background: "rgba(44,190,78,0.1)", color: "#2cbe4e", border: "1px solid rgba(44,190,78,0.2)" }}
+                    style={{ background: "var(--color-success-bg)", color: "var(--color-success)", border: "1px solid var(--color-success-border)" }}
                   >
                     <CheckCircleIcon className="size-4" />
                     Application Submitted
@@ -165,14 +165,14 @@ function JobDetailPage() {
                   <motion.button
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setShowApplyModal(true)}
-                    className="bg-[#2cbe4e] hover:bg-[#1a7f37] text-black font-bold rounded-lg px-6 py-2.5 text-sm transition-colors flex items-center gap-2"
+                    className="bg-[var(--dark-accent)] hover:bg-[var(--dark-accent-hover)] text-white font-bold rounded-lg px-6 py-2.5 text-sm transition-colors flex items-center gap-2"
                   >
                     <SendIcon className="size-4" />
                     Apply Now
                   </motion.button>
                 )}
                 {job.deadline && (
-                  <span className="text-xs text-[#7d8590] flex items-center gap-1">
+                  <span className="text-xs text-[var(--dark-text-secondary)] flex items-center gap-1">
                     <CalendarIcon className="size-3" />
                     Closes {new Date(job.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </span>
@@ -183,11 +183,11 @@ function JobDetailPage() {
             {/* Skills */}
             {job.skills?.length > 0 && (
               <>
-                <div className="border-t border-[#30363d] my-5" />
-                <p className="text-xs text-[#7d8590] uppercase tracking-wider mb-3 font-semibold">Required Skills</p>
+                <div className="border-t border-[var(--dark-border)] my-5" />
+                <p className="text-xs text-[var(--dark-text-secondary)] uppercase tracking-wider mb-3 font-semibold">Required Skills</p>
                 <div className="flex flex-wrap gap-2">
                   {job.skills.map((s) => (
-                    <span key={s} className="bg-[#1c2128] text-[#e6edf3] border border-[#30363d] text-xs px-3 py-1 rounded-full">{s}</span>
+                    <span key={s} className="bg-[var(--dark-elevated)] text-[var(--dark-text)] border border-[var(--dark-border)] text-xs px-3 py-1 rounded-full">{s}</span>
                   ))}
                 </div>
               </>
@@ -202,27 +202,27 @@ function JobDetailPage() {
             <div className="lg:col-span-2 space-y-6">
               {/* Description */}
               {job.description && (
-                <div className="bg-[#161b22] border border-[#30363d] rounded-xl p-6">
-                  <p className="text-xs uppercase tracking-wider text-[#7d8590] font-semibold mb-4 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2cbe4e]" />
+                <div className="bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-xl p-6">
+                  <p className="text-xs uppercase tracking-wider text-[var(--dark-text-secondary)] font-semibold mb-4 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--dark-accent)]" />
                     Job Description
                   </p>
-                  <div className="text-sm text-[#7d8590] leading-relaxed whitespace-pre-wrap">{job.description}</div>
+                  <div className="text-sm text-[var(--dark-text-secondary)] leading-relaxed whitespace-pre-wrap">{job.description}</div>
                 </div>
               )}
 
               {/* Requirements */}
               {job.requirements?.length > 0 && (
-                <div className="bg-[#161b22] border border-[#30363d] rounded-xl p-6">
-                  <p className="text-xs uppercase tracking-wider text-[#7d8590] font-semibold mb-4 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2cbe4e]" />
+                <div className="bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-xl p-6">
+                  <p className="text-xs uppercase tracking-wider text-[var(--dark-text-secondary)] font-semibold mb-4 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--dark-accent)]" />
                     Requirements
                   </p>
                   <ul className="space-y-3">
                     {job.requirements.map((r, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <CheckCircleIcon className="size-4 text-[#2cbe4e] flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-[#7d8590]">{r}</span>
+                        <CheckCircleIcon className="size-4 text-[var(--dark-accent)] flex-shrink-0 mt-0.5" />
+                        <span className="text-sm text-[var(--dark-text-secondary)]">{r}</span>
                       </li>
                     ))}
                   </ul>
@@ -233,8 +233,8 @@ function JobDetailPage() {
             {/* Right */}
             <div className="space-y-5">
               {/* Job summary */}
-              <div className="bg-[#161b22] border border-[#30363d] rounded-xl p-5">
-                <p className="text-xs uppercase tracking-wider text-[#7d8590] font-semibold mb-4">Job Details</p>
+              <div className="bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-xl p-5">
+                <p className="text-xs uppercase tracking-wider text-[var(--dark-text-secondary)] font-semibold mb-4">Job Details</p>
                 {[
                   { label: "Company", value: job.company },
                   { label: "Location", value: job.location || "Remote" },
@@ -242,36 +242,36 @@ function JobDetailPage() {
                   { label: "Experience", value: job.experienceLevel, capitalize: true },
                   { label: "Posted", value: new Date(job.createdAt).toLocaleDateString() },
                 ].map(({ label, value, capitalize }) => (
-                  <div key={label} className="flex justify-between py-2.5 border-b border-[#1c2128] last:border-0">
-                    <span className="text-sm text-[#7d8590]">{label}</span>
-                    <span className={`text-sm font-medium text-[#e6edf3] ${capitalize ? "capitalize" : ""}`}>{value || "—"}</span>
+                  <div key={label} className="flex justify-between py-2.5 border-b border-[var(--dark-elevated)] last:border-0">
+                    <span className="text-sm text-[var(--dark-text-secondary)]">{label}</span>
+                    <span className={`text-sm font-medium text-[var(--dark-text)] ${capitalize ? "capitalize" : ""}`}>{value || "—"}</span>
                   </div>
                 ))}
                 <div className="flex justify-between py-2.5">
-                  <span className="text-sm text-[#7d8590]">Applicants</span>
-                  <span className="text-sm font-semibold text-[#2cbe4e]">{job.applicantCount || 0} applied</span>
+                  <span className="text-sm text-[var(--dark-text-secondary)]">Applicants</span>
+                  <span className="text-sm font-semibold text-[var(--dark-accent)]">{job.applicantCount || 0} applied</span>
                 </div>
               </div>
 
               {/* Apply card */}
-              <div className="bg-[#161b22] border border-[#30363d] rounded-xl p-5 text-center">
+              <div className="bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-xl p-5 text-center">
                 {alreadyApplied ? (
                   <>
-                    <CheckCircleIcon className="size-8 text-[#2cbe4e] mx-auto mb-3" />
-                    <p className="font-bold text-[#e6edf3]">You've Applied!</p>
-                    <p className="text-xs text-[#7d8590] mt-2">Track your application status in My Applications</p>
-                    <Link to="/my-applications" className="text-[#2cbe4e] text-sm hover:underline mt-3 block">
+                    <CheckCircleIcon className="size-8 text-[var(--dark-accent)] mx-auto mb-3" />
+                    <p className="font-bold text-[var(--dark-text)]">You've Applied!</p>
+                    <p className="text-xs text-[var(--dark-text-secondary)] mt-2">Track your application status in My Applications</p>
+                    <Link to="/my-applications" className="text-[var(--dark-accent)] text-sm hover:underline mt-3 block">
                       View Application →
                     </Link>
                   </>
                 ) : (
                   <>
-                    <p className="font-semibold text-[#e6edf3]">Ready to apply?</p>
-                    <p className="text-xs text-[#7d8590] mt-1 mb-4">Submit your application and let the recruiter know you're interested</p>
+                    <p className="font-semibold text-[var(--dark-text)]">Ready to apply?</p>
+                    <p className="text-xs text-[var(--dark-text-secondary)] mt-1 mb-4">Submit your application and let the recruiter know you're interested</p>
                     <motion.button
                       whileTap={{ scale: 0.97 }}
                       onClick={() => setShowApplyModal(true)}
-                      className="w-full bg-[#2cbe4e] hover:bg-[#1a7f37] text-black font-bold rounded-lg py-2.5 text-sm transition-colors flex items-center justify-center gap-2"
+                      className="w-full bg-[var(--dark-accent)] hover:bg-[var(--dark-accent-hover)] text-white font-bold rounded-lg py-2.5 text-sm transition-colors flex items-center justify-center gap-2"
                     >
                       <SendIcon className="size-4" />
                       Apply Now
@@ -300,37 +300,37 @@ function JobDetailPage() {
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.95, y: 12, opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="bg-[#161b22] border border-[#30363d] rounded-2xl p-6 max-w-md w-full shadow-2xl mx-4 z-10"
+              className="bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-2xl p-6 max-w-md w-full shadow-2xl mx-4 z-10"
             >
               <div className="flex items-center justify-between mb-1">
-                <h3 className="font-bold text-[#e6edf3] text-lg">Apply for {job.title}</h3>
-                <button onClick={() => setShowApplyModal(false)} className="text-[#7d8590] hover:text-[#e6edf3]">
+                <h3 className="font-bold text-[var(--dark-text)] text-lg">Apply for {job.title}</h3>
+                <button onClick={() => setShowApplyModal(false)} className="text-[var(--dark-text-secondary)] hover:text-[var(--dark-text)]">
                   <XIcon className="size-5" />
                 </button>
               </div>
-              <p className="text-sm text-[#7d8590] mb-4">{job.company}</p>
+              <p className="text-sm text-[var(--dark-text-secondary)] mb-4">{job.company}</p>
 
               {/* Your profile */}
-              <div className="bg-[#0d1117] border border-[#30363d] rounded-xl p-4">
-                <p className="text-xs text-[#7d8590] uppercase tracking-wider mb-2">Your Profile</p>
+              <div className="bg-[var(--dark-bg)] border border-[var(--dark-border)] rounded-xl p-4">
+                <p className="text-xs text-[var(--dark-text-secondary)] uppercase tracking-wider mb-2">Your Profile</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-[#2cbe4e] text-black font-bold text-sm flex items-center justify-center flex-shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-[var(--dark-accent)] text-white font-bold text-sm flex items-center justify-center flex-shrink-0">
                     {(user?.firstName || "?")[0].toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-[#e6edf3]">{user?.firstName} {user?.lastName}</p>
-                    <p className="text-xs text-[#7d8590]">{user?.primaryEmailAddress?.emailAddress}</p>
+                    <p className="text-sm font-medium text-[var(--dark-text)]">{user?.firstName} {user?.lastName}</p>
+                    <p className="text-xs text-[var(--dark-text-secondary)]">{user?.primaryEmailAddress?.emailAddress}</p>
                   </div>
                 </div>
               </div>
 
               {/* Cover letter */}
               <div className="mt-5">
-                <label className="block text-xs font-semibold text-[#7d8590] uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--dark-text-secondary)] uppercase tracking-wider mb-1.5">
                   Cover Letter (optional)
                 </label>
                 <textarea
-                  className="bg-[#0d1117] border border-[#30363d] text-[#e6edf3] rounded-lg px-3 py-2.5 text-sm w-full outline-none placeholder-[#484f58] focus:border-[#2cbe4e] focus:ring-1 focus:ring-[rgba(44,190,78,0.12)] transition-colors min-h-[100px] resize-none"
+                  className="input-dark w-full min-h-[100px] resize-none"
                   placeholder="Tell the recruiter why you're a great fit for this role..."
                   value={coverLetter}
                   onChange={(e) => setCoverLetter(e.target.value)}
@@ -340,7 +340,7 @@ function JobDetailPage() {
               <button
                 onClick={handleApply}
                 disabled={isPending}
-                className="w-full bg-[#2cbe4e] hover:bg-[#1a7f37] text-black font-bold rounded-lg py-3 text-sm transition-colors mt-5 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full bg-[var(--dark-accent)] hover:bg-[var(--dark-accent-hover)] text-white font-bold rounded-lg py-3 text-sm transition-colors mt-5 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isPending ? <Loader2Icon className="size-4 animate-spin" /> : <SendIcon className="size-4" />}
                 Submit Application
@@ -348,7 +348,7 @@ function JobDetailPage() {
 
               <button
                 onClick={() => setShowApplyModal(false)}
-                className="text-[#7d8590] text-sm hover:text-[#e6edf3] text-center mt-3 block w-full"
+                className="text-[var(--dark-text-secondary)] text-sm hover:text-[var(--dark-text)] text-center mt-3 block w-full"
               >
                 Cancel
               </button>

@@ -13,16 +13,16 @@ import CompanyNavbar from "../../components/CompanyNavbar";
 import { axiosInstance } from "../../lib/axios";
 import { useUser } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
-import { io } from "socket.io-client";
+import { getSocket } from "../../lib/socket";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ── Type config — white+blue palette ───────────────────────────
 const TYPE_CONFIG = {
-  feedback:     { label: "Feedback",     color: "bg-[#ddf4ff] text-[#0969da] border-[#54aeff]" },
-  offer_letter: { label: "Offer Letter", color: "bg-[#dafbe1] text-[#1a7f37] border-[#56d364]" },
-  appointment:  { label: "Appointment",  color: "bg-[#fff8c5] text-[#9a6700] border-[#e3b341]" },
-  rejection:    { label: "Rejection",    color: "bg-[#ffebe9] text-[#cf222e] border-[#ff8182]" },
-  general:      { label: "General",      color: "bg-[#f6f8fa] text-[#57606a] border-[#d0d7de]" },
+  feedback:     { label: "Feedback",     color: "bg-[#e8f0fe] text-[#0a66c2] border-[#8bb9fe]" },
+  offer_letter: { label: "Offer Letter", color: "bg-[#dcfce7] text-[#16a34a] border-[#86efac]" },
+  appointment:  { label: "Appointment",  color: "bg-[#fef9c3] text-[#ca8a04] border-[#facc15]" },
+  rejection:    { label: "Rejection",    color: "bg-[#fee2e2] text-[#dc2626] border-[#fca5a5]" },
+  general:      { label: "General",      color: "bg-[#f8fafc] text-[#64748b] border-[#e2e8f0]" },
 };
 
 const FILTER_TABS = [
@@ -33,9 +33,7 @@ const FILTER_TABS = [
   { key: "general",      label: "General" },
 ];
 
-const inputCls = `bg-white border border-[#d0d7de] text-[#1c2128] rounded-lg px-3 py-2.5
-  text-sm w-full outline-none focus:border-[#0969da] focus:ring-2
-  focus:ring-[#0969da20] transition-colors`;
+const inputCls = "input-light w-full transition-all duration-200";
 
 function CompanyInboxPage() {
   const { user } = useUser();
@@ -70,9 +68,7 @@ function CompanyInboxPage() {
   // ── Socket.IO real-time ─────────────────────────────────────
   useEffect(() => {
     if (!user?.id) return;
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
-    const serverUrl = apiUrl.replace(/\/api\/?$/, "");
-    const socket = io(serverUrl, { withCredentials: true });
+    const socket = getSocket();
     socketRef.current = socket;
 
     socket.on("connect", () => socket.emit("join:inbox", user.id));
@@ -102,7 +98,12 @@ function CompanyInboxPage() {
       );
     });
 
-    return () => { socket.disconnect(); socketRef.current = null; };
+    return () => {
+      socket.off("connect");
+      socket.off("inbox:new-message");
+      socket.off("inbox:new-reply");
+      socketRef.current = null;
+    };
   }, [user?.id]);
 
   const fetchMessages = async () => {
@@ -173,20 +174,20 @@ function CompanyInboxPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#f6f8fa] overflow-hidden">
+    <div className="flex flex-col h-screen bg-[#f8fafc] overflow-hidden">
       <CompanyNavbar />
 
       <div className="flex flex-1 overflow-hidden">
 
         {/* ══ LEFT SIDEBAR ══════════════════════════════════════ */}
-        <div className={`w-72 bg-white border-r border-[#d0d7de] flex flex-col flex-shrink-0
+        <div className={`w-72 bg-white border-r border-[#e2e8f0] flex flex-col flex-shrink-0
           ${selectedMessage ? "hidden lg:flex" : "flex"}`}>
 
           {/* Compose button */}
-          <div className="p-4 border-b border-[#d0d7de]">
+          <div className="p-4 border-b border-[#e2e8f0]">
             <button
               onClick={() => setShowCompose(true)}
-              className="flex items-center justify-center gap-2 bg-[#0969da] hover:bg-[#0550ae]
+              className="flex items-center justify-center gap-2 bg-[#0a66c2] hover:bg-[#004182]
                 text-white w-full rounded-lg py-2.5 text-sm font-semibold transition-colors"
             >
               <PencilIcon className="size-4" />
@@ -195,16 +196,18 @@ function CompanyInboxPage() {
           </div>
 
           {/* Filter tabs */}
-          <div className="px-2 py-3 border-b border-[#d0d7de] flex flex-col gap-0.5">
+          <div className="px-2 py-3 border-b border-[#e2e8f0] flex flex-col gap-0.5">
             {FILTER_TABS.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => { setFilter(tab.key); setPage(1); setSelectedMessage(null); }}
+                aria-label={`Filter by ${tab.label}`}
+                aria-pressed={filter === tab.key}
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-sm
                   cursor-pointer transition-colors text-left ${
                   filter === tab.key
-                    ? "bg-[#ddf4ff] text-[#0969da] font-medium"
-                    : "text-[#57606a] hover:bg-[#f6f8fa]"
+                    ? "bg-[#e8f0fe] text-[#0a66c2] font-medium"
+                    : "text-[#64748b] hover:bg-[#f8fafc]"
                 }`}
               >
                 {tab.label}
@@ -217,14 +220,14 @@ function CompanyInboxPage() {
             {loading ? (
               <div className="p-3 space-y-2">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-16 bg-[#f6f8fa] rounded-xl animate-pulse" />
+                  <div key={i} className="h-16 skeleton-light" />
                 ))}
               </div>
             ) : messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-8 h-full text-center">
-                <ArchiveIcon className="size-8 text-[#d0d7de] mb-3" />
-                <p className="font-medium text-[#1c2128] text-sm">No messages</p>
-                <p className="text-xs text-[#8c959f] mt-1">Your inbox is empty</p>
+                <ArchiveIcon className="size-8 text-[#e2e8f0] mb-3" />
+                <p className="font-medium text-[#0f172a] text-sm">No messages</p>
+                <p className="text-xs text-[#94a3b8] mt-1">Your inbox is empty</p>
               </div>
             ) : (
               <div>
@@ -239,28 +242,28 @@ function CompanyInboxPage() {
                       className={`w-full text-left px-4 py-3 border-b border-[#f6f8fa]
                         cursor-pointer transition-colors block ${
                         isSelected
-                          ? "bg-[#ddf4ff] border-l-2 border-l-[#0969da]"
+                          ? "bg-[#e8f0fe] border-l-2 border-l-[#0a66c2]"
                           : isUnread
-                          ? "bg-[#fafbfc] border-l-2 border-l-[#0969da] font-semibold hover:bg-[#f6f8fa]"
-                          : "hover:bg-[#f6f8fa]"
+                          ? "bg-[#fafbfc] border-l-2 border-l-[#0a66c2] font-semibold hover:bg-[#f8fafc]"
+                          : "hover:bg-[#f8fafc]"
                       }`}
                     >
                       <div className="flex items-start gap-3">
                         {/* Avatar */}
-                        <div className="w-8 h-8 rounded-full bg-[#0969da] text-white text-xs
+                        <div className="w-8 h-8 rounded-full bg-[#0a66c2] text-white text-xs
                           flex items-center justify-center font-bold uppercase flex-shrink-0">
                           {(msg.senderName || "?")[0]}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
-                            <span className={`text-sm truncate ${isUnread ? "font-semibold text-[#1c2128]" : "text-[#57606a]"}`}>
+                            <span className={`text-sm truncate ${isUnread ? "font-semibold text-[#0f172a]" : "text-[#64748b]"}`}>
                               {msg.isSentByMe ? "Me" : msg.senderName}
                             </span>
-                            <span className="text-[10px] text-[#8c959f] flex-shrink-0 ml-2">
+                            <span className="text-[10px] text-[#94a3b8] flex-shrink-0 ml-2">
                               {formatDate(msg.lastActivity || msg.createdAt)}
                             </span>
                           </div>
-                          <p className={`text-sm truncate mt-0.5 ${isUnread ? "font-medium text-[#1c2128]" : "text-[#57606a]"}`}>
+                          <p className={`text-sm truncate mt-0.5 ${isUnread ? "font-medium text-[#0f172a]" : "text-[#64748b]"}`}>
                             {msg.subject}
                           </p>
                           <div className="flex items-center gap-2 mt-1">
@@ -268,7 +271,7 @@ function CompanyInboxPage() {
                               {typeCfg.label}
                             </span>
                             {msg.replyCount > 0 && (
-                              <span className="text-[10px] text-[#8c959f] flex items-center gap-0.5 ml-auto">
+                              <span className="text-[10px] text-[#94a3b8] flex items-center gap-0.5 ml-auto">
                                 <MessageSquareIcon className="size-3" />
                                 {msg.replyCount}
                               </span>
@@ -285,19 +288,19 @@ function CompanyInboxPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="p-3 border-t border-[#d0d7de] flex items-center justify-between">
+            <div className="p-3 border-t border-[#e2e8f0] flex items-center justify-between">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="text-xs text-[#57606a] hover:text-[#1c2128] disabled:opacity-40 px-2 py-1"
+                className="text-xs text-[#64748b] hover:text-[#0f172a] disabled:opacity-40 px-2 py-1"
               >
                 Prev
               </button>
-              <span className="text-xs text-[#8c959f]">{page} / {totalPages}</span>
+              <span className="text-xs text-[#94a3b8]">{page} / {totalPages}</span>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page >= totalPages}
-                className="text-xs text-[#57606a] hover:text-[#1c2128] disabled:opacity-40 px-2 py-1"
+                className="text-xs text-[#64748b] hover:text-[#0f172a] disabled:opacity-40 px-2 py-1"
               >
                 Next
               </button>
@@ -311,15 +314,15 @@ function CompanyInboxPage() {
           {selectedMessage ? (
             <div className="flex flex-col h-full bg-white">
               {/* Message header */}
-              <div className="px-8 py-6 border-b border-[#d0d7de] flex-shrink-0">
-                <h2 className="text-xl font-bold text-[#1c2128]">{selectedMessage.subject}</h2>
+              <div className="px-8 py-6 border-b border-[#e2e8f0] flex-shrink-0">
+                <h2 className="text-xl font-bold text-[#0f172a]">{selectedMessage.subject}</h2>
                 <div className="flex items-center gap-3 mt-2">
-                  <div className="w-7 h-7 rounded-full bg-[#0969da] text-white text-xs
+                  <div className="w-7 h-7 rounded-full bg-[#0a66c2] text-white text-xs
                     flex items-center justify-center font-bold flex-shrink-0">
                     {(selectedMessage.senderName || "?")[0].toUpperCase()}
                   </div>
-                  <span className="text-sm text-[#57606a]">{selectedMessage.senderName}</span>
-                  <span className="text-sm text-[#8c959f]">
+                  <span className="text-sm text-[#64748b]">{selectedMessage.senderName}</span>
+                  <span className="text-sm text-[#94a3b8]">
                     {new Date(selectedMessage.createdAt).toLocaleString()}
                   </span>
                   <span className={`text-[10px] px-2 py-0.5 rounded-full border ml-auto flex-shrink-0
@@ -331,13 +334,13 @@ function CompanyInboxPage() {
 
               {/* Body + replies */}
               <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
-                <p className="text-[#1c2128] leading-relaxed text-sm whitespace-pre-wrap">
+                <p className="text-[#0f172a] leading-relaxed text-sm whitespace-pre-wrap">
                   {selectedMessage.body}
                 </p>
 
                 {replies.length > 0 && (
-                  <div className="pt-6 border-t border-[#d0d7de] space-y-4">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-[#57606a]">
+                  <div className="pt-6 border-t border-[#e2e8f0] space-y-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-[#64748b]">
                       Thread ({replies.length})
                     </h3>
                     {replies.map((reply) => {
@@ -346,15 +349,15 @@ function CompanyInboxPage() {
                         <div key={reply._id} className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
                           <div className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm
                             border ${isMine
-                              ? "bg-[#ddf4ff] border-[#54aeff] text-[#1c2128] rounded-tr-sm"
-                              : "bg-[#f6f8fa] border-[#d0d7de] text-[#1c2128] rounded-tl-sm"
+                              ? "bg-[#e8f0fe] border-[#8bb9fe] text-[#0f172a] rounded-tr-sm"
+                              : "bg-[#f8fafc] border-[#e2e8f0] text-[#0f172a] rounded-tl-sm"
                             }`}>
                             <div className="flex items-center justify-between gap-4 mb-1.5 pb-1.5
-                              border-b border-[#d0d7de]/40">
-                              <span className="text-xs font-semibold text-[#57606a]">
+                              border-b border-[#e2e8f0]/40">
+                              <span className="text-xs font-semibold text-[#64748b]">
                                 {isMine ? "You" : reply.senderName}
                               </span>
-                              <span className="text-[10px] text-[#8c959f]">
+                              <span className="text-[10px] text-[#94a3b8]">
                                 {formatDate(reply.createdAt)}
                               </span>
                             </div>
@@ -368,8 +371,8 @@ function CompanyInboxPage() {
               </div>
 
               {/* Reply section */}
-              <div className="px-8 py-4 border-t border-[#d0d7de] bg-[#f6f8fa] flex-shrink-0">
-                <p className="text-xs font-semibold uppercase tracking-wider text-[#57606a] mb-3">Reply</p>
+              <div className="px-8 py-4 border-t border-[#e2e8f0] bg-[#f8fafc] flex-shrink-0">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#64748b] mb-3">Reply</p>
                 <textarea
                   className={`${inputCls} min-h-[80px] resize-none`}
                   placeholder="Type your reply..."
@@ -383,7 +386,7 @@ function CompanyInboxPage() {
                   <button
                     onClick={handleSendReply}
                     disabled={sendingReply || !replyText.trim()}
-                    className="flex items-center gap-2 bg-[#0969da] hover:bg-[#0550ae]
+                    className="flex items-center gap-2 bg-[#0a66c2] hover:bg-[#004182]
                       disabled:opacity-50 text-white rounded-lg px-4 py-2 text-sm
                       font-semibold transition-colors"
                   >
@@ -397,8 +400,8 @@ function CompanyInboxPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-center p-8">
-              <InboxIcon className="size-12 text-[#d0d7de] mb-4" />
-              <p className="text-[#8c959f] text-sm">Select a message to read</p>
+              <InboxIcon className="size-12 text-[#e2e8f0] mb-4" />
+              <p className="text-[#94a3b8] text-sm">Select a message to read</p>
             </div>
           )}
         </div>
@@ -420,12 +423,12 @@ function CompanyInboxPage() {
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.95, y: 12, opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="bg-white border border-[#d0d7de] rounded-2xl w-full max-w-lg mx-4
+              className="bg-white border border-[#e2e8f0] rounded-2xl w-full max-w-lg mx-4
                 shadow-xl z-10 flex flex-col max-h-[90vh] overflow-hidden"
             >
-              <div className="flex items-center justify-between px-6 py-4 border-b border-[#d0d7de]">
-                <h3 className="font-bold text-[#1c2128]">Compose Message</h3>
-                <button onClick={() => setShowCompose(false)} className="text-[#57606a] hover:text-[#1c2128]">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-[#e2e8f0]">
+                <h3 className="font-bold text-[#0f172a]">Compose Message</h3>
+                <button onClick={() => setShowCompose(false)} className="text-[#64748b] hover:text-[#0f172a]">
                   <XIcon className="size-5" />
                 </button>
               </div>
@@ -436,7 +439,7 @@ function CompanyInboxPage() {
                   { label: "Subject", key: "subject", type: "text", placeholder: "Message subject" },
                 ].map(({ label, key, type, placeholder }) => (
                   <div key={key}>
-                    <label className="block text-xs font-semibold text-[#57606a] uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-semibold text-[#64748b] uppercase tracking-wider mb-1.5">
                       {label}
                     </label>
                     <input
@@ -450,7 +453,7 @@ function CompanyInboxPage() {
                 ))}
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#57606a] uppercase tracking-wider mb-1.5">Type</label>
+                  <label className="block text-xs font-semibold text-[#64748b] uppercase tracking-wider mb-1.5">Type</label>
                   <select
                     className={inputCls}
                     value={composeData.type}
@@ -464,7 +467,7 @@ function CompanyInboxPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#57606a] uppercase tracking-wider mb-1.5">Body</label>
+                  <label className="block text-xs font-semibold text-[#64748b] uppercase tracking-wider mb-1.5">Body</label>
                   <textarea
                     className={`${inputCls} min-h-[140px] resize-y`}
                     placeholder="Write your message..."
@@ -474,18 +477,18 @@ function CompanyInboxPage() {
                 </div>
               </div>
 
-              <div className="px-6 py-4 border-t border-[#d0d7de] flex justify-end gap-3">
+              <div className="px-6 py-4 border-t border-[#e2e8f0] flex justify-end gap-3">
                 <button
                   onClick={() => setShowCompose(false)}
-                  className="px-4 py-2 rounded-lg border border-[#d0d7de] text-sm text-[#57606a]
-                    hover:bg-[#f6f8fa] transition-colors"
+                  className="px-4 py-2 rounded-lg border border-[#e2e8f0] text-sm text-[#64748b]
+                    hover:bg-[#f8fafc] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleCompose}
                   disabled={sendingCompose}
-                  className="flex items-center gap-2 bg-[#0969da] hover:bg-[#0550ae]
+                  className="flex items-center gap-2 bg-[#0a66c2] hover:bg-[#004182]
                     disabled:opacity-50 text-white rounded-lg px-5 py-2 text-sm font-semibold"
                 >
                   {sendingCompose

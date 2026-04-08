@@ -105,7 +105,7 @@ function OutputPanel({ output, isRunning }) {
             >
               <TerminalIcon className="size-6" style={{ color: "#30363D" }} />
             </div>
-            <p className="text-sm text-center" style={{ color: "#484F58" }}>
+            <p className="text-sm text-center text-[var(--dark-text-tertiary)]">
               Click <strong style={{ color: "#8B949E" }}>Run Code</strong> to see the output
             </p>
           </div>

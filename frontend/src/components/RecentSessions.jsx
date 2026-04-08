@@ -32,7 +32,7 @@ function RecentSessions({ sessions, isLoading }) {
 
       <div className="w-full">
         {/* Header Row */}
-        <div className="grid grid-cols-4 md:grid-cols-[2fr_1fr_1fr_1fr] text-xs uppercase tracking-wider text-[#484f58] border-b border-[#30363d] pb-3 mb-2 px-4">
+        <div className="grid grid-cols-4 md:grid-cols-[2fr_1fr_1fr_1fr] text-xs uppercase tracking-wider text-[var(--dark-text-tertiary)] border-b border-[var(--dark-border)] pb-3 mb-2 px-4">
           <div>Problem</div>
           <div>Difficulty</div>
           <div>Date</div>
@@ -43,7 +43,7 @@ function RecentSessions({ sessions, isLoading }) {
         {isLoading ? (
           <div className="space-y-4 pt-4">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="skeleton-line h-12 w-full" />
+              <div key={i} className="skeleton-dark h-12 w-full" />
             ))}
           </div>
         ) : sessions.length > 0 ? (
@@ -52,9 +52,9 @@ function RecentSessions({ sessions, isLoading }) {
               <motion.div
                 variants={item}
                 key={session._id}
-                className="grid grid-cols-4 md:grid-cols-[2fr_1fr_1fr_1fr] items-center hover:bg-[#161b22] transition-colors py-4 px-4 border-b border-[#30363d] last:border-0"
+                className="grid grid-cols-4 md:grid-cols-[2fr_1fr_1fr_1fr] items-center hover:bg-[var(--dark-elevated)] transition-colors py-4 px-4 border-b border-[var(--dark-border)] last:border-0"
               >
-                <div className="font-medium text-[#e6edf3] truncate pr-4">
+                <div className="font-medium text-[var(--dark-text)] truncate pr-4">
                   {session.problem}
                 </div>
                 <div>
@@ -62,11 +62,11 @@ function RecentSessions({ sessions, isLoading }) {
                     {session.difficulty}
                   </span>
                 </div>
-                <div className="text-sm text-[#7d8590]">
+                <div className="text-sm text-[var(--dark-text-secondary)]">
                   {formatDistanceToNow(new Date(session.createdAt), { addSuffix: true })}
                 </div>
-                <div className="flex items-center justify-end gap-2 text-sm text-[#2cbe4e]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#2cbe4e]" />
+                <div className="flex items-center justify-end gap-2 text-sm text-[var(--dark-accent)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--dark-accent)]" />
                   Completed
                 </div>
               </motion.div>
@@ -74,8 +74,8 @@ function RecentSessions({ sessions, isLoading }) {
           </motion.div>
         ) : (
           <div className="py-16 text-center flex flex-col items-center justify-center">
-            <InboxIcon className="size-8 text-[#484f58] mb-3" />
-            <p className="text-[#7d8590]">No sessions yet</p>
+            <InboxIcon className="size-8 text-[var(--dark-text-tertiary)] mb-3" />
+            <p className="text-[var(--dark-text-secondary)]">No sessions yet</p>
           </div>
         )}
       </div>

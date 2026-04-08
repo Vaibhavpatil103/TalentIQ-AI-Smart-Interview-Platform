@@ -10,7 +10,7 @@ function SessionHistoryCard({ session, onClick }) {
     );
 
   const difficultyColor = {
-    Easy: "border-[#2cbe4e40] text-[#2cbe4e] bg-[#2cbe4e10]",
+    Easy: "border-[#ffffff40] text-[#ffffff] bg-[#ffffff10]",
     Medium: "border-[#d2992240] text-[#d29922] bg-[#d2992210]",
     Hard: "border-[#f8514940] text-[#f85149] bg-[#f8514910]",
   };
@@ -32,7 +32,7 @@ function SessionHistoryCard({ session, onClick }) {
   const overallScore = session.feedback?.overallScore ?? "—";
   const scoreColor =
     overallScore >= 7
-      ? "text-[#2cbe4e]"
+      ? "text-[#ffffff]"
       : overallScore >= 4
       ? "text-[#d29922]"
       : "text-[#f85149]";
@@ -73,7 +73,7 @@ function SessionHistoryCard({ session, onClick }) {
             <MessageSquareIcon className="size-4" />
             <span>{session.questionCount || 0} questions</span>
           </div>
-          <div className="text-sm text-[#484f58] ml-2">
+          <div className="text-sm text-[var(--dark-text-tertiary)] ml-2">
             {formatDate(session.createdAt)}
           </div>
         </div>

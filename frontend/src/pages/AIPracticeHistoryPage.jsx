@@ -109,7 +109,7 @@ function AIPracticeHistoryPage() {
   if (id && currentSession) {
     const session = currentSession;
     return (
-      <div className="min-h-screen bg-[#0d1117]">
+      <div className="min-h-screen bg-[var(--dark-bg)]">
         <Navbar />
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -118,7 +118,7 @@ function AIPracticeHistoryPage() {
         >
           <div className="flex items-center gap-4 mb-8">
             <button
-              className="btn-ghost-dark text-xs gap-1 px-3 py-1.5 border border-[#30363d]"
+              className="btn-ghost-dark text-xs gap-1 px-3 py-1.5 border border-[var(--dark-border)]"
               onClick={() => navigate("/ai-practice/history")}
             >
               <ArrowLeftIcon className="size-3" />
@@ -141,7 +141,7 @@ function AIPracticeHistoryPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 mb-4">
-            <h1 className="text-3xl font-black text-[#e6edf3]">
+            <h1 className="text-3xl font-black text-[var(--dark-text)]">
               {session.mode === "topic"
                 ? session.topic || "Topic Interview"
                 : "Resume Interview"}
@@ -149,8 +149,8 @@ function AIPracticeHistoryPage() {
             <span
               className={`text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full border ${
                 session.mode === "topic" 
-                  ? "border-[#58a6ff40] text-[#58a6ff] bg-[#58a6ff10]" 
-                  : "border-[#a371f740] text-[#a371f7] bg-[#a371f710]"
+                  ? "border-[var(--color-info-border)] text-[var(--color-info)] bg-[var(--color-info-bg)]" 
+                  : "border-[var(--color-purple-border)] text-[var(--color-purple)] bg-[var(--color-purple-bg)]"
               }`}
             >
               {session.mode === "topic" ? "Topic" : "Resume"}
@@ -159,10 +159,10 @@ function AIPracticeHistoryPage() {
               <span
                 className={`text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full border ${
                   session.difficulty === "Easy"
-                    ? "border-[#2cbe4e40] text-[#2cbe4e] bg-[#2cbe4e10]"
+                    ? "border-[var(--color-success-border)] text-[var(--color-success)] bg-[var(--color-success-bg)]"
                     : session.difficulty === "Medium"
-                    ? "border-[#d2992240] text-[#d29922] bg-[#d2992210]"
-                    : "border-[#f8514940] text-[#f85149] bg-[#f8514910]"
+                    ? "border-[var(--color-warning-border)] text-[var(--color-warning)] bg-[var(--color-warning-bg)]"
+                    : "border-[var(--color-danger-border)] text-[var(--color-danger)] bg-[var(--color-danger-bg)]"
                 }`}
               >
                 {session.difficulty}
@@ -170,17 +170,17 @@ function AIPracticeHistoryPage() {
             )}
           </div>
 
-          <div className="flex flex-wrap gap-4 text-sm text-[#7d8590] mb-10 bg-[#161b22] px-4 py-3 rounded-xl border border-[#30363d] w-fit">
+          <div className="flex flex-wrap gap-4 text-sm text-[var(--dark-text-secondary)] mb-10 bg-[var(--dark-card)] px-4 py-3 rounded-xl border border-[var(--dark-border)] w-fit">
             <div className="flex items-center gap-2">
-              <ClockIcon className="size-4 text-[#484f58]" />
+              <ClockIcon className="size-4 text-[var(--dark-text-tertiary)]" />
               {formatDuration(session.totalDuration)}
             </div>
-            <div className="w-px h-4 bg-[#30363d]"></div>
+            <div className="w-px h-4 bg-[var(--dark-border)]"></div>
             <div className="flex items-center gap-2">
-              <MessageSquareIcon className="size-4 text-[#484f58]" />
+              <MessageSquareIcon className="size-4 text-[var(--dark-text-tertiary)]" />
               {session.questionCount || 0} questions
             </div>
-            <div className="w-px h-4 bg-[#30363d]"></div>
+            <div className="w-px h-4 bg-[var(--dark-border)]"></div>
             <div>{formatDate(session.createdAt)}</div>
           </div>
 
@@ -201,8 +201,8 @@ function AIPracticeHistoryPage() {
           )}
 
           <div className="card-dark p-6 md:p-8">
-            <h2 className="font-bold text-lg mb-6 flex items-center gap-2 text-[#e6edf3] border-b border-[#30363d] pb-4">
-              <MessageSquareIcon className="size-5 text-[#2cbe4e]" />
+            <h2 className="font-bold text-lg mb-6 flex items-center gap-2 text-[var(--dark-text)] border-b border-[var(--dark-border)] pb-4">
+              <MessageSquareIcon className="size-5 text-[var(--dark-accent)]" />
               Conversation Transcript
             </h2>
             <div className="space-y-6">
@@ -221,33 +221,33 @@ function AIPracticeHistoryPage() {
                     <div
                       className={`flex-shrink-0 size-8 rounded-full flex items-center justify-center border ${
                         msg.role === "ai"
-                          ? "bg-[#1c2128] border-[#30363d]"
-                          : "bg-[#2cbe4e20] border-[#2cbe4e40]"
+                          ? "bg-[var(--dark-elevated)] border-[var(--dark-border)]"
+                          : "bg-[var(--dark-accent-bg)] border-[var(--dark-accent-border)]"
                       }`}
                     >
                       {msg.role === "ai" ? (
-                        <SparklesIcon className="size-4 text-[#2cbe4e]" />
+                        <SparklesIcon className="size-4 text-[var(--dark-accent)]" />
                       ) : (
-                        <span className="text-[10px] font-bold text-[#2cbe4e] uppercase">
+                        <span className="text-[10px] font-bold text-[var(--dark-accent)] uppercase">
                           You
                         </span>
                       )}
                     </div>
                     <div>
-                      <div className={`text-[10px] font-bold mb-1 uppercase tracking-wider ${msg.role === "ai" ? "text-[#7d8590]" : "text-[#7d8590] text-right"}`}>
+                      <div className={`text-[10px] font-bold mb-1 uppercase tracking-wider ${msg.role === "ai" ? "text-[var(--dark-text-secondary)]" : "text-[var(--dark-text-secondary)] text-right"}`}>
                         {msg.role === "ai" ? "Interviewer" : "You"}
                       </div>
                       <div
                         className={`rounded-2xl px-5 py-4 text-sm leading-relaxed border ${
                           msg.role === "ai"
-                            ? "bg-[#161b22] text-[#e6edf3] border-[#30363d] rounded-tl-sm"
-                            : "bg-[#2cbe4e] text-black border-[#2cbe4e] rounded-tr-sm font-medium"
+                            ? "bg-[var(--dark-card)] text-[var(--dark-text)] border-[var(--dark-border)] rounded-tl-sm"
+                            : "bg-[var(--dark-accent)] text-white border-[var(--dark-accent)] rounded-tr-sm font-medium"
                         }`}
                       >
                         {msg.content}
                       </div>
                       {msg.timeTaken > 0 && (
-                        <div className={`text-[10px] text-[#484f58] mt-1.5 font-semibold ${msg.role === "ai" ? "" : "text-right"}`}>
+                        <div className={`text-[10px] text-[var(--dark-text-tertiary)] mt-1.5 font-semibold ${msg.role === "ai" ? "" : "text-right"}`}>
                           Answered in {msg.timeTaken}s
                         </div>
                       )}
@@ -276,7 +276,7 @@ function AIPracticeHistoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1117]">
+    <div className="min-h-screen bg-[var(--dark-bg)]">
       <Navbar />
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -284,21 +284,21 @@ function AIPracticeHistoryPage() {
         className="max-w-5xl mx-auto px-6 py-12"
       >
         <div className="flex items-center gap-4 mb-10">
-          <div className="size-12 rounded-xl bg-[#1c2128] border border-[#30363d] flex items-center justify-center shadow-lg">
-            <HistoryIcon className="size-6 text-[#2cbe4e]" />
+          <div className="size-12 rounded-xl bg-[var(--dark-elevated)] border border-[var(--dark-border)] flex items-center justify-center shadow-lg">
+            <HistoryIcon className="size-6 text-[var(--dark-accent)]" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-[#e6edf3]">Practice History</h1>
-            <p className="text-sm text-[#7d8590] mt-1">
+            <h1 className="text-2xl font-bold text-[var(--dark-text)]">Practice History</h1>
+            <p className="text-sm text-[var(--dark-text-secondary)] mt-1">
               Review your past AI practice interview sessions
             </p>
           </div>
         </div>
 
         {!loading && history.length >= 2 && (
-          <div className="card-dark p-6 mb-8 border border-[#30363d]">
-            <h2 className="font-bold text-xs uppercase tracking-wider text-[#7d8590] mb-6 flex items-center gap-2">
-              <SparklesIcon className="size-4 text-[#2cbe4e]" /> Score Trend
+          <div className="card-dark p-6 mb-8 border border-[var(--dark-border)]">
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[var(--dark-text-secondary)] mb-6 flex items-center gap-2">
+              <SparklesIcon className="size-4 text-[var(--dark-accent)]" /> Score Trend
             </h2>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart
@@ -309,24 +309,24 @@ function AIPracticeHistoryPage() {
                 }))}
                 margin={{ left: -20, bottom: 5, top: 10, right: 10 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#30363d" vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#7d8590" }} axisLine={false} tickLine={false} dy={10} />
-                <YAxis domain={[0, 10]} tick={{ fontSize: 11, fill: "#7d8590" }} axisLine={false} tickLine={false} tickCount={6} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#64748b" }} axisLine={false} tickLine={false} dy={10} />
+                <YAxis domain={[0, 10]} tick={{ fontSize: 11, fill: "#64748b" }} axisLine={false} tickLine={false} tickCount={6} />
                 <Tooltip
                   formatter={(val) => [`${val}/10`, "Score"]}
                   labelFormatter={(label, payload) =>
                     payload?.[0]?.payload?.topic || label
                   }
-                  contentStyle={{ backgroundColor: "#161b22", borderColor: "#30363d", borderRadius: "8px", color: "#e6edf3", fontSize: "12px" }}
-                  itemStyle={{ color: "#2cbe4e", fontWeight: "bold" }}
+                  contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e2e8f0", borderRadius: "8px", color: "#0f172a", fontSize: "12px" }}
+                  itemStyle={{ color: "#0a66c2", fontWeight: "bold" }}
                 />
                 <Line
                   type="monotone"
                   dataKey="score"
-                  stroke="#2cbe4e"
+                  stroke="#0a66c2"
                   strokeWidth={3}
-                  dot={{ fill: "#161b22", stroke: "#2cbe4e", strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6, fill: "#2cbe4e", stroke: "#0d1117", strokeWidth: 2 }}
+                  dot={{ fill: "#ffffff", stroke: "#0a66c2", strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6, fill: "#0a66c2", stroke: "#ffffff", strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -346,27 +346,27 @@ function AIPracticeHistoryPage() {
             .sort((a, b) => b.avg - a.avg);
 
           return (
-            <div className="card-dark p-6 mb-10 border border-[#30363d]">
-              <h2 className="font-bold text-xs uppercase tracking-wider text-[#7d8590] mb-6 flex items-center gap-2">
-                <SparklesIcon className="size-4 text-[#2cbe4e]" /> Performance by Topic
+            <div className="card-dark p-6 mb-10 border border-[var(--dark-border)]">
+              <h2 className="font-bold text-xs uppercase tracking-wider text-[var(--dark-text-secondary)] mb-6 flex items-center gap-2">
+                <SparklesIcon className="size-4 text-[var(--dark-accent)]" /> Performance by Topic
               </h2>
               <div className="space-y-4">
                 {topicArray.map((t) => (
                   <div key={t.topic} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                    <span className="text-sm w-full sm:w-40 truncate font-semibold text-[#e6edf3]">{t.topic}</span>
-                    <div className="w-full h-2 bg-[#0d1117] rounded-full overflow-hidden flex-1 border border-[#30363d]">
+                    <span className="text-sm w-full sm:w-40 truncate font-semibold text-[var(--dark-text)]">{t.topic}</span>
+                    <div className="w-full h-2 bg-[var(--dark-bg)] rounded-full overflow-hidden flex-1 border border-[var(--dark-border)]">
                       <motion.div
-                        className={`h-full rounded-full ${t.avg >= 7 ? "bg-[#2cbe4e]" : t.avg >= 4 ? "bg-[#d29922]" : "bg-[#f85149]"}`}
+                        className={`h-full rounded-full ${t.avg >= 7 ? "bg-[var(--color-success)]" : t.avg >= 4 ? "bg-[var(--color-warning)]" : "bg-[var(--color-danger)]"}`}
                         initial={{ width: 0 }}
                         animate={{ width: `${(t.avg / 10) * 100}%` }}
                         transition={{ duration: 1 }}
                       />
                     </div>
                     <div className="flex items-center gap-3 w-20 justify-between shrink-0">
-                      <span className="text-sm font-mono font-bold text-[#e6edf3]">
-                        {t.avg}<span className="text-[#7d8590] text-xs font-normal">/10</span>
+                      <span className="text-sm font-mono font-bold text-[var(--dark-text)]">
+                        {t.avg}<span className="text-[var(--dark-text-secondary)] text-xs font-normal">/10</span>
                       </span>
-                      <span className="text-xs text-[#484f58] font-bold">
+                      <span className="text-xs text-[var(--dark-text-tertiary)] font-bold">
                         {t.count}x
                       </span>
                     </div>
@@ -380,21 +380,21 @@ function AIPracticeHistoryPage() {
         {loading ? (
           <div className="space-y-4">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="card-dark p-6 border border-[#30363d] animate-pulse flex items-center justify-between">
-                <div className="w-2/3 h-5 bg-[#30363d] rounded"></div>
-                <div className="w-16 h-8 bg-[#30363d] rounded"></div>
+              <div key={i} className="card-dark p-6 border border-[var(--dark-border)] animate-pulse flex items-center justify-between">
+                <div className="w-2/3 h-5 bg-[var(--dark-border)] rounded"></div>
+                <div className="w-16 h-8 bg-[var(--dark-border)] rounded"></div>
               </div>
             ))}
           </div>
         ) : history.length === 0 ? (
-          <div className="text-center py-24 bg-[#161b22] border border-[#30363d] rounded-2xl">
-            <div className="size-20 rounded-full bg-[#1c2128] border border-[#30363d] flex items-center justify-center mx-auto mb-6 shadow-inner">
-              <SparklesIcon className="size-10 text-[#484f58]" />
+          <div className="text-center py-24 bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-2xl">
+            <div className="size-20 rounded-full bg-[var(--dark-elevated)] border border-[var(--dark-border)] flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <SparklesIcon className="size-10 text-[var(--dark-text-tertiary)]" />
             </div>
-            <h2 className="text-xl font-bold text-[#e6edf3] mb-2">
+            <h2 className="text-xl font-bold text-[var(--dark-text)] mb-2">
               No practice sessions yet
             </h2>
-            <p className="text-[#7d8590] mb-8 max-w-sm mx-auto">
+            <p className="text-[var(--dark-text-secondary)] mb-8 max-w-sm mx-auto">
               Start your first AI-powered practice interview and receive comprehensive feedback!
             </p>
             <button
@@ -429,8 +429,8 @@ function AIPracticeHistoryPage() {
                     key={i}
                     className={`size-8 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center border ${
                       historyMeta.page === i + 1 
-                        ? "bg-[#2cbe4e20] text-[#2cbe4e] border-[#2cbe4e40]" 
-                        : "bg-[#161b22] text-[#7d8590] border-[#30363d] hover:text-[#e6edf3] hover:border-[#484f58]"
+                        ? "bg-[var(--dark-accent-bg)] text-[var(--dark-accent)] border-[var(--dark-accent-border)]" 
+                        : "bg-[var(--dark-card)] text-[var(--dark-text-secondary)] border-[var(--dark-border)] hover:text-[var(--dark-text)] hover:border-[var(--dark-text-tertiary)]"
                     }`}
                     onClick={() => loadHistory(i + 1)}
                   >

@@ -86,7 +86,7 @@ function FeedbackPage() {
           <div>
             <h2 className="uppercase tracking-wider text-xs text-[#7d8590] font-semibold mb-4">Interviewer Feedback</h2>
             {feedback.length === 0 ? (
-              <div className="text-[#484f58] text-sm text-center py-8 card-dark">
+              <div className="text-[var(--dark-text-tertiary)] text-sm text-center py-8 card-dark">
                 No feedback submitted yet.
               </div>
             ) : (
@@ -111,7 +111,7 @@ function FeedbackPage() {
                               <circle cx="32" cy="32" r="24" stroke="#1c2128" strokeWidth="6" fill="transparent" />
                               <motion.circle
                                 cx="32" cy="32" r="24"
-                                stroke="#2cbe4e" strokeWidth="6" fill="transparent" strokeLinecap="round"
+                                stroke="#ffffff" strokeWidth="6" fill="transparent" strokeLinecap="round"
                                 strokeDasharray={circumference}
                                 initial={{ strokeDashoffset: circumference }}
                                 animate={{ strokeDashoffset }}
@@ -144,7 +144,7 @@ function FeedbackPage() {
                                   initial={{ width: 0 }}
                                   animate={{ width: `${(item.val / 5) * 100}%` }}
                                   transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                                  className="absolute left-0 top-0 h-full bg-[#2cbe4e] rounded-full"
+                                  className="absolute left-0 top-0 h-full bg-[#ffffff] rounded-full"
                                 />
                               </div>
                             </div>

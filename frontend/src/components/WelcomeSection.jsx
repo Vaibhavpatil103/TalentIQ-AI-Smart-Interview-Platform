@@ -8,17 +8,17 @@ function WelcomeSection({ onCreateSession, onJoinSession }) {
   const firstName = user?.firstName || "there";
 
   return (
-    <section className="bg-[#0d1117] py-12 px-6 max-w-7xl mx-auto">
+    <section className="bg-gradient-to-r from-[#0a66c2] to-[#004182] py-12 px-6 max-w-7xl mx-auto rounded-2xl mt-6 shadow-xl">
       <motion.h1
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className="text-3xl font-bold text-[#e6edf3]"
+        className="text-3xl font-bold text-white"
       >
         Good {timeOfDay}, {firstName}
       </motion.h1>
       
-      <p className="text-[#7d8590] mt-2 text-base">
+      <p className="text-blue-100/80 mt-2 text-base">
         Ready for your next interview?
       </p>
 
@@ -31,14 +31,14 @@ function WelcomeSection({ onCreateSession, onJoinSession }) {
         <motion.button
           onClick={onCreateSession}
           whileTap={{ scale: 0.97 }}
-          className="btn-green"
+          className="bg-white text-[#0a66c2] font-semibold px-5 py-2.5 rounded-lg text-sm hover:bg-blue-50 transition-colors shadow-md"
         >
           Start Interview
         </motion.button>
         <motion.button
           onClick={onJoinSession}
           whileTap={{ scale: 0.97 }}
-          className="btn-outline-dark px-4 py-2.5 rounded-lg font-medium"
+          className="border border-white/30 text-white px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-white/10 transition-colors"
         >
           Join Session
         </motion.button>

@@ -3,6 +3,8 @@ import { useUser } from "@clerk/clerk-react";
 import { Navigate, Route, Routes, useNavigate } from "react-router";
 import { Toaster } from "react-hot-toast";
 import { axiosInstance } from "./lib/axios";
+import { MotionConfig } from "framer-motion";
+import { useUserProfile } from "./hooks/useUserProfile";
 
 import HomePage from "./pages/HomePage";
 import DashboardPage from "./pages/DashboardPage";
@@ -17,8 +19,6 @@ import PipelinePage from "./pages/PipelinePage";
 import JoinPage from "./pages/JoinPage";
 import AIPracticePage from "./pages/AIPracticePage";
 import AIPracticeHistoryPage from "./pages/AIPracticeHistoryPage";
-import DailyChallengePage from "./pages/DailyChallengePage";
-import CompanyTracksPage from "./pages/CompanyTracksPage";
 import InboxPage from "./pages/InboxPage";
 import RoleSelectPage from "./pages/RoleSelectPage";
 import CompanyDashboardPage from "./pages/CompanyDashboardPage";
@@ -39,67 +39,41 @@ import MyApplicationsPage from "./pages/MyApplicationsPage";
 // Used on "/" for signed-in users: fetches DB role, sends to
 // correct dashboard.
 function RoleBasedRedirect() {
-  const [destination, setDestination] = useState(null);
-  const { isSignedIn } = useUser();
+  const { data: userProfile, isLoading, isError } = useUserProfile();
 
-  useEffect(() => {
-    const check = async () => {
-      try {
-        const res = await axiosInstance.get("/users/profile");
-        const role = res.data.user?.role;
-        if (role === "interviewer" || role === "recruiter") {
-          setDestination("/company/dashboard");
-        } else {
-          setDestination("/dashboard");
-        }
-      } catch {
-        setDestination("/dashboard");
-      }
-    };
-    if (isSignedIn) check();
-  }, [isSignedIn]);
-
-  if (!destination)
+  if (isLoading)
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-[#0969da] border-t-transparent rounded-full animate-spin" />
       </div>
     );
 
-  return <Navigate to={destination} replace />;
+  if (isError || !userProfile) return <Navigate to="/dashboard" replace />;
+
+  if (userProfile.role === "interviewer" || userProfile.role === "recruiter") {
+    return <Navigate to="/company/dashboard" replace />;
+  } else {
+    return <Navigate to="/dashboard" replace />;
+  }
 }
 
 // ── DeveloperOnlyRoute ────────────────────────────────────────
 // Wraps candidate pages. Company users are bounced to
 // /company/dashboard.
 function DeveloperOnlyRoute({ children }) {
-  const [allowed, setAllowed] = useState(null);
+  const { data: userProfile, isLoading, isError } = useUserProfile();
 
-  useEffect(() => {
-    const check = async () => {
-      try {
-        const res = await axiosInstance.get("/users/profile");
-        const role = res.data.user?.role;
-        if (role === "interviewer" || role === "recruiter") {
-          setAllowed(false);
-        } else {
-          setAllowed(true);
-        }
-      } catch {
-        setAllowed(true);
-      }
-    };
-    check();
-  }, []);
-
-  if (allowed === null)
+  if (isLoading)
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-[#0969da] border-t-transparent rounded-full animate-spin" />
       </div>
     );
 
-  if (!allowed) return <Navigate to="/company/dashboard" replace />;
+  if (!isError && userProfile && (userProfile.role === "interviewer" || userProfile.role === "recruiter")) {
+    return <Navigate to="/company/dashboard" replace />;
+  }
+  
   return children;
 }
 
@@ -107,33 +81,19 @@ function DeveloperOnlyRoute({ children }) {
 // Wraps company pages. Candidate/admin users are bounced to
 // /dashboard.
 function CompanyOnlyRoute({ children }) {
-  const [allowed, setAllowed] = useState(null);
+  const { data: userProfile, isLoading, isError } = useUserProfile();
 
-  useEffect(() => {
-    const check = async () => {
-      try {
-        const res = await axiosInstance.get("/users/profile");
-        const role = res.data.user?.role;
-        if (role === "interviewer" || role === "recruiter") {
-          setAllowed(true);
-        } else {
-          setAllowed(false);
-        }
-      } catch {
-        setAllowed(false);
-      }
-    };
-    check();
-  }, []);
-
-  if (allowed === null)
+  if (isLoading)
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-[#0969da] border-t-transparent rounded-full animate-spin" />
       </div>
     );
 
-  if (!allowed) return <Navigate to="/dashboard" replace />;
+  if (isError || !userProfile || (userProfile.role !== "interviewer" && userProfile.role !== "recruiter")) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return children;
 }
 
@@ -187,7 +147,13 @@ function App() {
   if (!isLoaded) return null;
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[9999] bg-[var(--dark-accent)] text-white px-4 py-2 rounded-md font-bold shadow-xl"
+      >
+        Skip to main content
+      </a>
       <Routes>
         {/* ── Public routes ─────────────────────────────── */}
         <Route
@@ -353,14 +319,6 @@ function App() {
           element={isSignedIn ? <AIPracticeHistoryPage /> : <Navigate to="/" />}
         />
         <Route
-          path="/daily-challenge"
-          element={isSignedIn ? <DailyChallengePage /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/company-tracks"
-          element={isSignedIn ? <CompanyTracksPage /> : <Navigate to="/" />}
-        />
-        <Route
           path="/inbox"
           element={isSignedIn ? <InboxPage /> : <Navigate to="/" />}
         />
@@ -415,8 +373,16 @@ function App() {
         />
       </Routes>
 
-      <Toaster toastOptions={{ duration: 3000 }} />
-    </>
+      <Toaster toastOptions={{ 
+        duration: 3000,
+        style: {
+          background: '#ffffff',
+          color: '#0f172a',
+          border: '1px solid #e2e8f0',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+        }
+      }} />
+    </MotionConfig>
   );
 }
 

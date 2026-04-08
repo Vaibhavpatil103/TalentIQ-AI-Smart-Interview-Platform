@@ -23,12 +23,12 @@ function FeedbackModal({ isOpen, onClose, sessionId, candidateId }) {
         ...feedback,
       });
       toast.success("Feedback submitted successfully!", { 
-        style: { background: '#1c2128', color: '#e6edf3', border: '1px solid #30363d' }
+        style: { background: '#ffffff', color: '#0f172a', border: '1px solid #e2e8f0' }
       });
       onClose();
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to submit feedback", {
-        style: { background: '#1c2128', color: '#e6edf3', border: '1px solid #30363d' }
+        style: { background: '#ffffff', color: '#0f172a', border: '1px solid #e2e8f0' }
       });
     } finally {
       setIsSubmitting(false);
@@ -48,7 +48,7 @@ function FeedbackModal({ isOpen, onClose, sessionId, candidateId }) {
             >
               <StarIcon
                 className={`size-5 ${
-                  star <= value ? "fill-[#2cbe4e] text-[#2cbe4e]" : "text-[#484f58]"
+                  star <= value ? "fill-[var(--dark-accent)] text-[var(--dark-accent)]" : "text-[var(--dark-text-tertiary)]"
                 }`}
               />
             </button>
@@ -61,7 +61,7 @@ function FeedbackModal({ isOpen, onClose, sessionId, candidateId }) {
         max="5"
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value))}
-        className="w-full h-2 bg-[#0d1117] rounded-lg appearance-none cursor-pointer accent-[#2cbe4e]"
+        className="w-full h-2 bg-[var(--dark-elevated)] rounded-lg appearance-none cursor-pointer accent-[var(--dark-accent)]"
       />
     </div>
   );
@@ -116,7 +116,7 @@ function FeedbackModal({ isOpen, onClose, sessionId, candidateId }) {
                 <span className="font-medium text-sm text-[#e6edf3]">Decision</span>
                 <div className="flex gap-2">
                   {[
-                    { value: "hire", label: "✅ Hire", activeBg: "bg-[#2cbe4e20] text-[#2cbe4e] border-[#2cbe4e]" },
+                    { value: "hire", label: "✅ Hire", activeBg: "bg-[#ffffff20] text-[#ffffff] border-[#ffffff]" },
                     { value: "maybe", label: "🤔 Maybe", activeBg: "bg-[#d2992220] text-[#d29922] border-[#d29922]" },
                     { value: "no-hire", label: "❌ No Hire", activeBg: "bg-[#f8514920] text-[#f85149] border-[#f85149]" },
                   ].map((opt) => {

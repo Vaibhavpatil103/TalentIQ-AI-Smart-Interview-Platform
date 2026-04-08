@@ -59,12 +59,12 @@ function AdminPage() {
 
   const getRoleColor = (role) => {
     const styles = {
-      admin: "border-[#f8514940] text-[#f85149] bg-[#f8514910]",
-      recruiter: "border-[#58a6ff40] text-[#58a6ff] bg-[#58a6ff10]",
-      interviewer: "border-[#d2992240] text-[#d29922] bg-[#d2992210]",
-      candidate: "border-[#2cbe4e40] text-[#2cbe4e] bg-[#2cbe4e10]",
+      admin: "border-[#f8514940] text-[#dc2626] bg-[#fef2f2]",
+      recruiter: "border-[#0a66c240] text-[#0a66c2] bg-[#eff6ff]",
+      interviewer: "border-[#d2992240] text-[#b45309] bg-[#fffbeb]",
+      candidate: "border-[#e2e8f0] text-[#475569] bg-[#f1f5f9]",
     };
-    return styles[role] || "border-[#30363d] text-[#7d8590] bg-[#1c2128]";
+    return styles[role] || "border-[var(--dark-border)] text-[var(--dark-text-secondary)] bg-[var(--dark-elevated)]";
   };
 
   const handleImport = async () => {
@@ -109,7 +109,7 @@ function AdminPage() {
       >
         <div className="flex items-center gap-4 mb-10">
           <div className="size-12 rounded-xl bg-[#1c2128] border border-[#30363d] flex items-center justify-center shadow-lg">
-            <ShieldIcon className="size-6 text-[#2cbe4e]" />
+            <ShieldIcon className="size-6 text-[#ffffff]" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-[#e6edf3]">Admin Panel</h1>
@@ -121,7 +121,7 @@ function AdminPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full">
           <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 shadow-sm">
             <div className="flex items-center gap-3 mb-2">
-              <UsersIcon className="size-5 text-[#2cbe4e]" />
+              <UsersIcon className="size-5 text-[#ffffff]" />
               <span className="text-[#7d8590] text-xs font-bold uppercase tracking-wider">Total Users</span>
             </div>
             <div className="text-3xl font-black text-[#e6edf3]">{users.length}</div>
@@ -134,7 +134,7 @@ function AdminPage() {
           </div>
           <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 shadow-sm">
             <div className="text-[#7d8590] text-xs font-bold uppercase tracking-wider mb-2">Candidates</div>
-            <div className="text-3xl font-black text-[#2cbe4e]">
+            <div className="text-3xl font-black text-[#ffffff]">
               {users.filter((u) => u.role === "candidate").length}
             </div>
           </div>
@@ -149,8 +149,8 @@ function AdminPage() {
         {/* Import Problems from Excel */}
         <div className="card-dark p-6 mb-8 border border-[#30363d]">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-[#2cbe4e10] rounded-lg">
-              <FileSpreadsheetIcon className="size-5 text-[#2cbe4e]" />
+            <div className="p-2 bg-[#ffffff10] rounded-lg">
+              <FileSpreadsheetIcon className="size-5 text-[#ffffff]" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-[#e6edf3]">Import Problems</h2>
@@ -169,7 +169,7 @@ function AdminPage() {
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-lg file:border-0
                 file:text-sm file:font-semibold
-                file:bg-[#2cbe4e] file:text-black
+                file:bg-[#ffffff] file:text-black
                 hover:file:bg-[#1a7f37] cursor-pointer"
               onChange={(e) => {
                 setImportFile(e.target.files[0] || null);
@@ -197,10 +197,10 @@ function AdminPage() {
           </div>
 
           {importResult && (
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3 bg-[#2cbe4e10] border border-[#2cbe4e40] p-4 rounded-xl mt-6">
-              <CheckCircle2Icon className="size-5 text-[#2cbe4e]" />
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3 bg-[#ffffff10] border border-[#ffffff40] p-4 rounded-xl mt-6">
+              <CheckCircle2Icon className="size-5 text-[#ffffff]" />
               <span className="text-sm text-[#e6edf3]">
-                <strong className="text-[#2cbe4e]">Success!</strong> Imported {importResult.imported} problems, skipped{" "}
+                <strong className="text-[#ffffff]">Success!</strong> Imported {importResult.imported} problems, skipped{" "}
                 {importResult.skipped} duplicates.
               </span>
             </motion.div>
@@ -218,7 +218,7 @@ function AdminPage() {
 
         {/* Search */}
         <div className="relative mb-6">
-          <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-[#484f58]" />
+          <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-[var(--dark-text-tertiary)]" />
           <input
             type="text"
             placeholder="Search users by name or email..."
@@ -228,11 +228,10 @@ function AdminPage() {
           />
         </div>
 
-        {/* Users Table */}
         {loading ? (
-          <div className="bg-[#161b22] border border-[#30363d] rounded-2xl p-6 space-y-4">
+          <div className="bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-2xl p-6 space-y-4 shadow-xl">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-16 bg-[#1c2128] rounded-xl animate-pulse" />
+              <div key={i} className="h-16 skeleton-dark" />
             ))}
           </div>
         ) : (
