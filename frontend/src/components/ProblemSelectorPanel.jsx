@@ -13,8 +13,25 @@ import {
 /**
  * ProblemSelectorPanel — interviewer-only panel to search, filter,
  * and push/change problems to the candidate in real-time.
+ *
+ * @param {string}  sessionId       — the current session's _id
+ * @param {string}  activeProblemId  — the currently-assigned problem _id
+ * @param {boolean} isHost           — whether the current user is the session host
  */
-function ProblemSelectorPanel({ sessionId, activeProblemId }) {
+function ProblemSelectorPanel({ sessionId, activeProblemId, isHost }) {
+  // ─── Defense-in-depth: never render push UI for non-hosts ──────
+  if (!isHost) {
+    return (
+      <div
+        className="rounded-xl p-4 border text-center"
+        style={{ backgroundColor: "#111827", borderColor: "#1F2937" }}
+      >
+        <p className="text-sm" style={{ color: "#6B7280" }}>
+          Only the interviewer can push problems.
+        </p>
+      </div>
+    );
+  }
   const { data, isLoading } = useProblems();
   const problems = data?.problems || [];
 

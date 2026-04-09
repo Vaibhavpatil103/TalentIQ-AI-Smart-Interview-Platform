@@ -1,31 +1,34 @@
 import nodemailer from "nodemailer";
 
-const createTransporter = () => {
+let transporter = null;
+
+const getTransporter = () => {
+  if (transporter) return transporter; // serve cached module
   if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
     console.warn("Gmail credentials not configured — emails disabled");
     return null;
   }
-  return nodemailer.createTransport({
+  transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: process.env.GMAIL_USER,
       pass: process.env.GMAIL_APP_PASSWORD,
     },
   });
+  return transporter;
 };
-
-const transporter = createTransporter();
 
 const fromAddress = () => `"Talent IQ" <${process.env.GMAIL_USER}>`;
 
 // ─── Shared email wrapper ────────────────────────────────────────
 const sendMail = async ({ to, subject, html }) => {
-  if (!transporter) {
+  const mailTransporter = getTransporter();
+  if (!mailTransporter) {
     console.warn("Email transporter not configured — skipping email to:", to);
     return;
   }
   try {
-    await transporter.sendMail({ from: fromAddress(), to, subject, html });
+    await mailTransporter.sendMail({ from: fromAddress(), to, subject, html });
     console.log("Email sent to:", to);
   } catch (error) {
     console.error("Failed to send email:", error);

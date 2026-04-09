@@ -170,12 +170,6 @@ export async function getSessionById(req, res) {
       (p) => p.user?._id?.toString() === requestingUserId
     );
 
-    if (!isHost && !isParticipant && !isPending) {
-      return res.status(403).json({
-        message: "Access denied. You are not a participant of this session.",
-      });
-    }
-
     const now = new Date();
 
     // Auto-transition: scheduled → active when scheduledAt has arrived
@@ -200,6 +194,28 @@ export async function getSessionById(req, res) {
     if (session.status === "scheduled" && session.scheduledAt) {
       const msUntilStart = new Date(session.scheduledAt) - now;
       canJoin = msUntilStart <= 2 * 60 * 1000; // 2-minute early buffer
+    }
+
+    if (!isHost && !isParticipant && !isPending) {
+      // Production-ready: Return a strictly sanitized payload for the Access Gate
+      // Do NOT expose joinCode, sensitive emails, or clerkIds to unauthorized users.
+      const sanitizedSession = {
+        _id: session._id,
+        status: session.status,
+        scheduledAt: session.scheduledAt,
+        problem: session.problem,
+        difficulty: session.difficulty,
+        host: {
+          name: session.host?.name,
+          profileImage: session.host?.profileImage,
+        },
+      };
+
+      return res.status(200).json({ 
+        session: sanitizedSession, 
+        canJoin,
+        isGuest: true
+      });
     }
 
     res.status(200).json({ session, canJoin });

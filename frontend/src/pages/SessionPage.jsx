@@ -682,6 +682,7 @@ function SessionPage() {
                       <ProblemSelectorPanel
                         sessionId={id}
                         activeProblemId={problemData?._id}
+                        isHost={isHost}
                       />
                     </div>
                   )}

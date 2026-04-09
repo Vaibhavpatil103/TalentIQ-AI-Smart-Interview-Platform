@@ -12,10 +12,12 @@ import {
   ChevronRightIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useQueryClient } from "@tanstack/react-query";
 import CompanyNavbar from "../components/CompanyNavbar";
-import { useActiveSessions } from "../hooks/useSessions";
+import { useActiveSessions, useCreateSession } from "../hooks/useSessions";
 import { useScheduledSessions } from "../hooks/useSchedule";
 import CreateSessionModal from "../components/CreateSessionModal";
+import JoinCodeModal from "../components/JoinCodeModal";
 import { formatDistanceToNow } from "date-fns";
 import {
   PageHeader,
@@ -48,7 +50,16 @@ const PIPELINE_STAGES = [
 function CompanyDashboardPage() {
   const { user } = useUser();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
+
+  // Join code modal state
+  const [showJoinCodeModal, setShowJoinCodeModal] = useState(false);
+  const [createdJoinCode, setCreatedJoinCode] = useState("");
+  const [createdJoinLink, setCreatedJoinLink] = useState("");
+  const [createdSessionId, setCreatedSessionId] = useState(null);
+
+  const createSessionMutation = useCreateSession();
 
   // ── Existing hooks — untouched ───────────────
   const { data: activeData } = useActiveSessions();
@@ -60,6 +71,24 @@ function CompanyDashboardPage() {
   const firstName =
     user?.firstName || user?.fullName?.split(" ")[0] || "there";
   const greeting = getGreeting();
+
+  const handleCreateRoom = (extra = {}) => {
+    createSessionMutation.mutate(
+      { ...extra },
+      {
+        onSuccess: (data) => {
+          setCreateOpen(false);
+          setCreatedJoinCode(data.joinCode);
+          setCreatedJoinLink(data.joinLink);
+          setCreatedSessionId(data.session._id);
+          setShowJoinCodeModal(true);
+          // Refresh session lists
+          queryClient.invalidateQueries({ queryKey: ["activeSessions"] });
+          queryClient.invalidateQueries({ queryKey: ["scheduled-sessions"] });
+        },
+      }
+    );
+  };
 
   // stat variants for stagger
   const containerVariants = {
@@ -413,10 +442,23 @@ function CompanyDashboardPage() {
         </motion.div>
       </main>
 
-      {/* Create Session Modal — unchanged */}
       <CreateSessionModal
         isOpen={createOpen}
         onClose={() => setCreateOpen(false)}
+        onCreateRoom={handleCreateRoom}
+        isCreating={createSessionMutation.isPending}
+      />
+
+      <JoinCodeModal
+        isOpen={showJoinCodeModal}
+        onClose={() => {
+          setShowJoinCodeModal(false);
+          if (createdSessionId) {
+            navigate(`/session/${createdSessionId}`);
+          }
+        }}
+        joinCode={createdJoinCode}
+        joinLink={createdJoinLink}
       />
     </div>
   );

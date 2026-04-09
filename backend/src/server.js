@@ -180,9 +180,39 @@ app.set("io", io);
 io.on("connection", (socket) => {
   console.log(`[Socket.io] Authenticated client connected: ${socket.id} (${socket.clerkId})`);
 
-  socket.on("join:session", (sessionId) => {
-    socket.join(sessionId);
-    console.log(`[Socket.io] ${socket.id} joined room: ${sessionId}`);
+  socket.on("join:session", async (sessionId) => {
+    try {
+      // Validate session membership before allowing room join
+      const session = await Session.findById(sessionId)
+        .populate("host", "clerkId")
+        .populate("participant", "clerkId")
+        .populate("pendingParticipants.user", "clerkId");
+
+      if (!session) {
+        socket.emit("session:error", { message: "Session not found" });
+        return;
+      }
+
+      const clerkId = socket.clerkId;
+      const isHost = session.host?.clerkId === clerkId;
+      const isParticipant = session.participant?.clerkId === clerkId;
+      const isPending = session.pendingParticipants?.some(
+        (p) => p.user?.clerkId === clerkId
+      );
+
+      if (!isHost && !isParticipant && !isPending) {
+        socket.emit("session:error", { message: "Access denied" });
+        return;
+      }
+
+      socket.join(sessionId);
+      // Attach role to socket for downstream event authorization
+      socket.sessionRole = isHost ? "host" : "participant";
+      console.log(`[Socket.io] ${socket.id} joined room: ${sessionId} (role: ${socket.sessionRole})`);
+    } catch (err) {
+      console.error("[Socket.io] Error joining session:", err.message);
+      socket.emit("session:error", { message: "Failed to join session" });
+    }
   });
 
   // Inbox: user joins their own personal room only
