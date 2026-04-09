@@ -43,19 +43,19 @@ function JoinCodeModal({ isOpen, onClose, joinCode, joinLink }) {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.95, y: 12, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl relative z-10 flex flex-col items-center"
+            className="bg-[var(--dark-elevated)] border border-[var(--dark-border)] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl relative z-10 flex flex-col items-center"
           >
-            <button onClick={onClose} className="absolute top-4 right-4 text-[#7d8590] hover:text-[#e6edf3] transition-colors">
+            <button onClick={onClose} className="absolute top-4 right-4 text-[var(--dark-text-secondary)] hover:text-[var(--dark-text)] transition-colors">
               <XIcon className="size-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-[#e6edf3] mb-1">Session Created!</h3>
-            <p className="text-[#7d8590] text-sm mb-6 text-center">Share this code with your candidate to join</p>
+            <h3 className="text-lg font-bold text-[var(--dark-text)] mb-1">Session Created!</h3>
+            <p className="text-[var(--dark-text-secondary)] text-sm mb-6 text-center">Share this code with your candidate to join</p>
 
             {/* Join Code Display */}
-            <div className="bg-[#0d1117] border border-[#30363d] rounded-xl p-6 text-center w-full mb-6">
-              <p className="text-xs uppercase tracking-widest text-[#7d8590] mb-2 font-semibold">Join Code</p>
-              <p className="font-mono text-3xl font-black text-[#ffffff] tracking-[0.4em]">
+            <div className="bg-[var(--dark-bg)] border border-[var(--dark-border)] rounded-xl p-6 text-center w-full mb-6">
+              <p className="text-xs uppercase tracking-widest text-[var(--dark-text-secondary)] mb-2 font-semibold">Join Code</p>
+              <p className="font-mono text-3xl font-black text-[var(--dark-accent)] tracking-[0.4em]">
                 {joinCode}
               </p>
             </div>
@@ -73,7 +73,7 @@ function JoinCodeModal({ isOpen, onClose, joinCode, joinLink }) {
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0, opacity: 0 }}
-                      className="flex items-center gap-2 text-[#ffffff]"
+                      className="flex items-center gap-2 text-[var(--dark-accent)]"
                     >
                       <CheckIcon className="size-4" /> Copied!
                     </motion.div>
@@ -102,7 +102,7 @@ function JoinCodeModal({ isOpen, onClose, joinCode, joinLink }) {
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0, opacity: 0 }}
-                      className="flex items-center gap-2 text-[#ffffff]"
+                      className="flex items-center gap-2 text-[var(--dark-accent)]"
                     >
                       <CheckIcon className="size-4" /> Copied!
                     </motion.div>

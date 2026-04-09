@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import { axiosInstance } from "../lib/axios";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 import { getSocket } from "../lib/socket";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,6 +29,7 @@ const FILTER_TABS = [
 
 function InboxPage() {
   const { user } = useUser();
+  const { getToken } = useAuth();
   const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [replies, setReplies] = useState([]);
@@ -65,7 +66,7 @@ function InboxPage() {
   useEffect(() => {
     if (!user?.id) return;
 
-    const socket = getSocket();
+    const socket = getSocket(getToken);
     socketRef.current = socket;
 
     socket.on("connect", () => {
@@ -143,7 +144,7 @@ function InboxPage() {
         prev.map((m) => (m._id === msg._id ? { ...m, isRead: true } : m))
       );
     } catch {
-      toast.error("Failed to load message", { style: { background: '#ffffff', color: '#0f172a' } });
+      toast.error("Failed to load message");
     }
   };
 
@@ -163,9 +164,9 @@ function InboxPage() {
         )
       );
       setReplyText("");
-      toast.success("Reply sent!", { style: { background: '#ffffff', color: '#0f172a' } });
+      toast.success("Reply sent!");
     } catch {
-      toast.error("Failed to send reply", { style: { background: '#ffffff', color: '#0f172a' } });
+      toast.error("Failed to send reply");
     } finally {
       setSendingReply(false);
     }
@@ -173,7 +174,7 @@ function InboxPage() {
 
   const handleCompose = async () => {
     if (!composeData.recipientEmail || !composeData.subject || !composeData.body) {
-      toast.error("Please fill all fields", { style: { background: '#ffffff', color: '#0f172a' } });
+      toast.error("Please fill all fields");
       return;
     }
     setSendingCompose(true);
@@ -184,12 +185,12 @@ function InboxPage() {
         subject: composeData.subject,
         body: composeData.body,
       });
-      toast.success("Message sent!", { style: { background: '#ffffff', color: '#0f172a' } });
+      toast.success("Message sent!");
       setShowCompose(false);
       setComposeData({ recipientEmail: "", type: "general", subject: "", body: "" });
       fetchMessages();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to send", { style: { background: '#ffffff', color: '#0f172a' } });
+      toast.error(err.response?.data?.message || "Failed to send");
     } finally {
       setSendingCompose(false);
     }

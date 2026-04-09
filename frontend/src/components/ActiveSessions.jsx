@@ -24,9 +24,9 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
     <div className="lg:col-span-2 flex flex-col h-full">
       {/* HEADER */}
       <div className="flex items-center gap-2 mb-4">
-        <h2 className="text-sm uppercase tracking-wider text-[#7d8590] font-semibold flex items-center gap-2">
+        <h2 className="text-sm uppercase tracking-wider text-[var(--dark-text-secondary)] font-semibold flex items-center gap-2">
           Live Sessions
-          <span className="w-2 h-2 rounded-full bg-[#ffffff] animate-pulse inline-block" />
+          <span className="w-2 h-2 rounded-full bg-[var(--dark-accent)] animate-pulse inline-block" />
         </h2>
       </div>
 
@@ -44,16 +44,16 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                 className="card-dark-hover p-4 flex items-center justify-between"
               >
                 <div className="flex flex-col gap-1 items-start min-w-0">
-                  <span className="font-semibold text-[#e6edf3] truncate max-w-full">
+                  <span className="font-semibold text-[var(--dark-text)] truncate max-w-full">
                     {session.problem || "No problem selected"}
                   </span>
                   
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1.5 text-sm text-[#7d8590]">
+                    <div className="flex items-center gap-1.5 text-sm text-[var(--dark-text-secondary)]">
                       <CrownIcon className="size-3.5" />
                       <span>{session.host?.name}</span>
                     </div>
-                    <div className="bg-[#1c2128] text-[#7d8590] text-xs px-2 py-0.5 rounded-full">
+                    <div className="bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)] text-xs px-2 py-0.5 rounded-full">
                       {session.participant ? "2/2" : "1/2"}
                     </div>
                   </div>
@@ -79,7 +79,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
         ) : (
           <div className="py-16 text-center flex flex-col items-center justify-center h-full">
             <ZapIcon className="size-8 text-[var(--dark-text-tertiary)] mb-3" />
-            <p className="text-[#7d8590]">No active sessions</p>
+            <p className="text-[var(--dark-text-secondary)]">No active sessions</p>
           </div>
         )}
       </div>

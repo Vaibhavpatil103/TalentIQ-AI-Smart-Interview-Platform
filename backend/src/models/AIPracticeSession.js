@@ -94,5 +94,9 @@ const aiPracticeSessionSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// ─── Compound Index ──────────────────────────────────────────────
+// Query: getSessions (paginated history for a user)
+aiPracticeSessionSchema.index({ userId: 1, status: 1, createdAt: -1 });
+
 const AIPracticeSession = mongoose.model("AIPracticeSession", aiPracticeSessionSchema);
 export default AIPracticeSession;

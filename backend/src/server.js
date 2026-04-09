@@ -2,12 +2,15 @@ import express from "express";
 import http from "http";
 import path from "path";
 import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import { serve } from "inngest/express";
-import { clerkMiddleware } from "@clerk/express";
+import { clerkMiddleware, clerkClient, verifyToken } from "@clerk/express";
 import { WebSocketServer } from "ws";
 import * as Y from "yjs";
 import { Server as SocketIOServer } from "socket.io";
 import Session from "./models/Session.js";
+import User from "./models/User.js";
 
 import { ENV } from "./lib/env.js";
 import { connectDB } from "./lib/db.js";
@@ -31,10 +34,25 @@ const server = http.createServer(app);
 
 const __dirname = path.resolve();
 
-// middleware
-app.use(express.json());
+// ─── Security Middleware ─────────────────────────────────────────
+app.use(helmet({
+  contentSecurityPolicy: false, // Disabled for SPA — CSP handled by frontend
+  crossOriginEmbedderPolicy: false, // Required for Stream.io video embeds
+}));
+app.use(express.json({ limit: "1mb" }));
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use(clerkMiddleware());
+
+// ─── Global Rate Limiter: 100 requests/min per IP ───────────────
+const globalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many requests, please try again later" },
+  skip: (req) => req.path === "/health" || req.path.startsWith("/api/inngest"),
+});
+app.use(globalLimiter);
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
@@ -131,19 +149,49 @@ const io = new SocketIOServer(server, {
   },
 });
 
+// ─── Socket.io Authentication Middleware ─────────────────────────
+io.use(async (socket, next) => {
+  try {
+    const token = socket.handshake.auth?.token;
+    if (!token) {
+      return next(new Error("Authentication required"));
+    }
+
+    // Verify the Clerk session token
+    const { sub: clerkId } = await verifyToken(token, {
+      secretKey: ENV.CLERK_SECRET_KEY,
+    });
+    if (!clerkId) {
+      return next(new Error("Invalid token"));
+    }
+
+    // Attach user info to socket for later use
+    socket.clerkId = clerkId;
+    next();
+  } catch (err) {
+    console.error("[Socket.io] Auth failed:", err.message);
+    next(new Error("Authentication failed"));
+  }
+});
+
 // Store io on Express app so controllers can broadcast events
 app.set("io", io);
 
 io.on("connection", (socket) => {
-  console.log(`[Socket.io] Client connected: ${socket.id}`);
+  console.log(`[Socket.io] Authenticated client connected: ${socket.id} (${socket.clerkId})`);
 
   socket.on("join:session", (sessionId) => {
     socket.join(sessionId);
     console.log(`[Socket.io] ${socket.id} joined room: ${sessionId}`);
   });
 
-  // Inbox: user joins their personal room for real-time messages
+  // Inbox: user joins their own personal room only
   socket.on("join:inbox", (userId) => {
+    // Security: only allow joining your own inbox
+    if (userId !== socket.clerkId) {
+      console.warn(`[Socket.io] ${socket.id} tried to join someone else's inbox: ${userId}`);
+      return;
+    }
     socket.join(`inbox:${userId}`);
     console.log(`[Socket.io] ${socket.id} joined inbox room: inbox:${userId}`);
   });

@@ -81,7 +81,7 @@ function AIChatInterface({
     if (isLoading || isComplete || isListening) return;
     
     if (!SpeechRecognition) {
-      toast.error("Your browser doesn't support speech recognition.", { style: { background: '#1c2128', color: '#e6edf3' }});
+      toast.error("Your browser doesn't support speech recognition.");
       return;
     }
 
@@ -156,24 +156,24 @@ function AIChatInterface({
   const isTimeLow = remainingTime < 60;
 
   return (
-    <div className="flex flex-col h-[85vh] bg-[#1c2128] border border-[#30363d] rounded-2xl overflow-hidden shadow-2xl relative">
+    <div className="flex flex-col h-[85vh] bg-[var(--dark-elevated)] border border-[var(--dark-border)] rounded-2xl overflow-hidden shadow-2xl relative">
       {/* HEADER */}
-      <div className="bg-[#161b22] border-b border-[#30363d] p-4 flex items-center justify-between shrink-0 z-10">
+      <div className="bg-[var(--dark-card)] border-b border-[var(--dark-border)] p-4 flex items-center justify-between shrink-0 z-10">
         <div className="flex items-center gap-3">
-          <div className="size-10 rounded-full bg-gradient-to-br from-[#ffffff] to-[#1a7f37] flex items-center justify-center shadow-lg relative">
+          <div className="size-10 rounded-full bg-gradient-to-br from-[var(--dark-accent)] to-[var(--dark-accent-hover)] flex items-center justify-center shadow-lg relative">
             <BotIcon className="size-5 text-white" />
-            <div className="absolute -bottom-0.5 -right-0.5 size-3.5 bg-[#161b22] rounded-full flex items-center justify-center">
-              <div className="size-2 bg-[#ffffff] rounded-full animate-pulse" />
+            <div className="absolute -bottom-0.5 -right-0.5 size-3.5 bg-[var(--dark-card)] rounded-full flex items-center justify-center">
+              <div className="size-2 bg-[var(--dark-accent)] rounded-full animate-pulse" />
             </div>
           </div>
           <div>
-            <h3 className="font-bold text-[#e6edf3] flex items-center gap-2">
+            <h3 className="font-bold text-[var(--dark-text)] flex items-center gap-2">
               AI Interviewer
-              <span className="text-xs bg-[#30363d] text-[#e6edf3] px-2 py-0.5 rounded-full capitalize font-semibold shadow-inner">
+              <span className="text-xs bg-[var(--dark-border)] text-[var(--dark-text)] px-2 py-0.5 rounded-full capitalize font-semibold shadow-inner">
                 {persona} Persona
               </span>
             </h3>
-            <p className="text-xs text-[#7d8590] mt-0.5">
+            <p className="text-xs text-[var(--dark-text-secondary)] mt-0.5">
               Question {Math.min(questionCount + 1, questionLimit)} of {questionLimit}
             </p>
           </div>
@@ -183,10 +183,10 @@ function AIChatInterface({
           <div className="flex flex-col items-end">
             <div className="relative size-12 flex items-center justify-center">
               <svg className="size-full -rotate-90">
-                <circle cx="24" cy="24" r="20" stroke="#30363d" strokeWidth="3" fill="transparent" />
+                <circle cx="24" cy="24" r="20" stroke="var(--dark-border)" strokeWidth="3" fill="transparent" />
                 <motion.circle
                   cx="24" cy="24" r="20"
-                  stroke={isTimeLow ? "#f85149" : "#ffffff"}
+                  stroke={isTimeLow ? "var(--color-danger)" : "var(--dark-accent)"}
                   strokeWidth="3"
                   fill="transparent"
                   strokeLinecap="round"
@@ -197,7 +197,7 @@ function AIChatInterface({
                 />
               </svg>
               <div className="absolute flex items-center justify-center">
-                <span className={`font-mono text-xs font-bold ${isTimeLow ? "text-[#f85149] animate-pulse" : "text-[#e6edf3]"}`}>
+                <span className={`font-mono text-xs font-bold ${isTimeLow ? "text-[var(--color-danger)] animate-pulse" : "text-[var(--dark-text)]"}`}>
                   {formatTime(remainingTime)}
                 </span>
               </div>
@@ -214,9 +214,9 @@ function AIChatInterface({
       </div>
 
       {/* PROGRESS BAR (Questions) */}
-      <div className="h-1 bg-[#0d1117] w-full shrink-0">
+      <div className="h-1 bg-[var(--dark-bg)] w-full shrink-0">
         <motion.div
-          className="h-full bg-gradient-to-r from-[#ffffff] to-[#1a7f37]"
+          className="h-full bg-gradient-to-r from-[var(--dark-accent)] to-[var(--dark-accent-hover)]"
           initial={{ width: 0 }}
           animate={{ width: `${(questionCount / questionLimit) * 100}%` }}
           transition={{ duration: 0.5 }}
@@ -224,15 +224,15 @@ function AIChatInterface({
       </div>
 
       {/* MESSAGES AREA */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 scroll-smooth bg-[#0d1117] relative">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 scroll-smooth bg-[var(--dark-bg)] relative">
         {messages.length === 0 && (
           <div className="flex h-full items-center justify-center text-center">
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-md">
-              <div className="size-16 bg-[#1c2128] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[#30363d] shadow-xl">
-                <SparklesIcon className="size-8 text-[#ffffff]" />
+              <div className="size-16 bg-[var(--dark-elevated)] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[var(--dark-border)] shadow-xl">
+                <SparklesIcon className="size-8 text-[var(--dark-accent)]" />
               </div>
-              <p className="text-[#e6edf3] font-semibold text-lg mb-2">Ready when you are!</p>
-              <p className="text-[#7d8590] text-sm leading-relaxed">
+              <p className="text-[var(--dark-text)] font-semibold text-lg mb-2">Ready when you are!</p>
+              <p className="text-[var(--dark-text-secondary)] text-sm leading-relaxed">
                 The AI interviewer will ask you questions based on your selected topic and difficulty. Take your time to answer thoughtfully.
               </p>
             </motion.div>
@@ -250,14 +250,14 @@ function AIChatInterface({
               <div
                 className={`max-w-[85%] md:max-w-[75%] rounded-2xl p-4 shadow-sm ${
                   msg.role === "user"
-                    ? "bg-[#ffffff15] text-[#e6edf3] border border-[#ffffff40] rounded-br-sm"
-                    : "bg-[#161b22] text-[#e6edf3] border border-[#30363d] rounded-bl-sm"
+                    ? "bg-[var(--dark-accent-bg)] text-[var(--dark-text)] border border-[var(--dark-accent-border)] rounded-br-sm"
+                    : "bg-[var(--dark-card)] text-[var(--dark-text)] border border-[var(--dark-border)] rounded-bl-sm"
                 }`}
               >
                 {msg.role === "ai" && (
-                  <div className="flex items-center gap-2 mb-2 pb-2 border-b border-[#30363d]/50">
-                    <SparklesIcon className="size-3.5 text-[#ffffff]" />
-                    <span className="text-xs font-bold text-[#7d8590] uppercase tracking-wider">AI Interviewer</span>
+                  <div className="flex items-center gap-2 mb-2 pb-2 border-b border-[var(--dark-border)]/50">
+                    <SparklesIcon className="size-3.5 text-[var(--dark-accent)]" />
+                    <span className="text-xs font-bold text-[var(--dark-text-secondary)] uppercase tracking-wider">AI Interviewer</span>
                   </div>
                 )}
                 <div className="whitespace-pre-wrap leading-relaxed text-[15px]">
@@ -270,8 +270,8 @@ function AIChatInterface({
 
         {isLoading && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-            <div className="bg-[#1c2128] text-[#e6edf3] border border-[#30363d] rounded-2xl rounded-bl-sm p-4 shadow-sm flex items-center gap-3">
-              <Loader2Icon className="size-4 animate-spin text-[#ffffff]" />
+            <div className="bg-[var(--dark-elevated)] text-[var(--dark-text)] border border-[var(--dark-border)] rounded-2xl rounded-bl-sm p-4 shadow-sm flex items-center gap-3">
+              <Loader2Icon className="size-4 animate-spin text-[var(--dark-accent)]" />
               <span className="text-sm font-medium">Thinking of next question...</span>
             </div>
           </motion.div>
@@ -280,7 +280,7 @@ function AIChatInterface({
       </div>
 
       {/* INPUT AREA */}
-      <div className="p-4 bg-[#161b22] border-t border-[#30363d] shrink-0 z-10 pb-6 md:pb-4">
+      <div className="p-4 bg-[var(--dark-card)] border-t border-[var(--dark-border)] shrink-0 z-10 pb-6 md:pb-4">
         {isListening && (
           <div className="text-center mb-2 animate-pulse flex items-center justify-center gap-2">
             <div className="size-2 bg-[#f85149] rounded-full" />
@@ -318,7 +318,7 @@ function AIChatInterface({
               className={`absolute right-14 top-2.5 p-2 rounded-lg transition-all ${
                 isListening
                   ? "bg-[#f8514920] text-[#f85149] hover:bg-[#f85149] hover:text-black shadow-[0_0_12px_rgba(248,81,73,0.3)] animate-pulse"
-                  : "bg-[#ffffff20] text-[#ffffff] hover:bg-[#ffffff] hover:text-black"
+                  : "bg-[var(--dark-accent-bg)] text-[var(--dark-accent)] hover:bg-[var(--dark-accent)] hover:text-white"
                }`}
                onClick={isListening ? stopListening : startListening}
                disabled={isLoading || isComplete || !SpeechRecognition}
@@ -332,7 +332,7 @@ function AIChatInterface({
             type="submit"
             className={`absolute right-3 top-2.5 p-2 rounded-lg transition-all ${
               input.trim() && !isLoading && !isListening
-                ? "bg-[#ffffff] text-black hover:bg-[#1a7f37] hover:scale-105"
+                ? "bg-[var(--dark-accent)] text-white hover:bg-[var(--dark-accent-hover)] hover:scale-105"
                 : "bg-transparent text-[var(--dark-text-tertiary)] cursor-not-allowed"
             }`}
              disabled={!input.trim() || isLoading || isComplete || isListening}
@@ -342,7 +342,7 @@ function AIChatInterface({
         </form>
         <div className="text-center mt-3">
           <p className="text-[11px] text-[var(--dark-text-tertiary)]">
-            Format code with markdown: <code className="bg-[#0d1117] px-1 py-0.5 rounded text-[#7d8590]">```javascript code ```</code>
+            Format code with markdown: <code className="bg-[var(--dark-bg)] px-1 py-0.5 rounded text-[var(--dark-text-secondary)]">```javascript code ```</code>
           </p>
         </div>
       </div>

@@ -14,7 +14,7 @@ const MOCK_CANDIDATES = [
 
 function PipelinePage() {
   return (
-    <div className="min-h-screen bg-[#0d1117] flex flex-col">
+    <div className="min-h-screen bg-[var(--dark-bg)] flex flex-col">
       <Navbar />
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -22,12 +22,12 @@ function PipelinePage() {
         className="max-w-full mx-auto px-6 py-12 flex-1 flex flex-col w-full"
       >
         <div className="flex items-center gap-4 mb-10 shrink-0">
-          <div className="size-12 rounded-xl bg-[#1c2128] border border-[#30363d] flex items-center justify-center shadow-lg">
+          <div className="size-12 rounded-xl bg-[var(--dark-elevated)] border border-[var(--dark-border)] flex items-center justify-center shadow-lg">
             <KanbanIcon className="size-6 text-[#000000]" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-[#e6edf3]">Candidate Pipeline</h1>
-            <p className="text-[#7d8590] text-sm mt-1">
+            <h1 className="text-2xl font-bold text-[var(--dark-text)]">Candidate Pipeline</h1>
+            <p className="text-[var(--dark-text-secondary)] text-sm mt-1">
               Drag candidates between stages to track their progress
             </p>
           </div>

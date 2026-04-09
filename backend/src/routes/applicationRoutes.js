@@ -1,5 +1,6 @@
 import express from "express";
 import { protectRoute, requireRole } from "../middleware/protectRoute.js";
+import { validate, applyToJobSchema } from "../middleware/validateRequest.js";
 import {
   applyToJob,
   getApplicationsForJob,
@@ -15,7 +16,7 @@ import {
 const router = express.Router();
 
 // ── Candidate routes ──────────────────────────────────────────
-router.post("/", protectRoute, requireRole("candidate"), applyToJob);
+router.post("/", protectRoute, requireRole("candidate"), validate(applyToJobSchema), applyToJob);
 router.get("/my", protectRoute, requireRole("candidate"), getMyApplications);
 router.patch(
   "/:id/offer-response",

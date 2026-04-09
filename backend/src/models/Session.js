@@ -102,6 +102,12 @@ const sessionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// ─── Compound Indexes ────────────────────────────────────────────
+// Queries: getActiveSessions, getMyRecentSessions, getScheduledSessions
+sessionSchema.index({ host: 1, status: 1, createdAt: -1 });
+sessionSchema.index({ participant: 1, status: 1, createdAt: -1 });
+// Note: joinCode index is already defined via schema field options (unique + sparse)
+
 const Session = mongoose.model("Session", sessionSchema);
 
 export default Session;

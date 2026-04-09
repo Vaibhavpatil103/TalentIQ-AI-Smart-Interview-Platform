@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { useEndSession, useJoinSession, useSessionById, useApproveParticipant, useRejectParticipant } from "../hooks/useSessions";
@@ -42,6 +42,7 @@ function SessionPage() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const { user } = useUser();
+  const { getToken } = useAuth();
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -136,7 +137,7 @@ function SessionPage() {
   useEffect(() => {
     if (!id) return;
 
-    const socket = getSocket();
+    const socket = getSocket(getToken);
     socketRef.current = socket;
 
     socket.on("connect", () => {

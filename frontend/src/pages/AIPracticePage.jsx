@@ -104,7 +104,7 @@ function AIPracticePage() {
     setSelectedTopics((prev) => {
       if (prev.includes(t)) return prev.filter((x) => x !== t);
       if (prev.length >= 5) {
-        toast.error("Max 5 topics allowed", { style: { background: '#ffffff', color: '#0f172a' } });
+        toast.error("Max 5 topics allowed");
         return prev;
       }
       return [...prev, t];
@@ -188,11 +188,11 @@ function AIPracticePage() {
         return;
       }
       if (selectedMode === "resume" && !resumeFile) {
-        toast.error("Please upload your resume", { style: { background: '#ffffff', color: '#0f172a' } });
+        toast.error("Please upload your resume");
         return;
       }
       if (!selectedMode) {
-        toast.error("Please select a mode", { style: { background: '#ffffff', color: '#0f172a' } });
+        toast.error("Please select a mode");
         return;
       }
 
@@ -224,7 +224,7 @@ function AIPracticePage() {
 
       setScreen("interview");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to start session", { style: { background: '#ffffff', color: '#0f172a' } });
+      toast.error(error.response?.data?.message || "Failed to start session");
     }
   };
 
@@ -237,7 +237,7 @@ function AIPracticePage() {
       }
       return result;
     } catch (error) {
-      toast.error("Failed to send answer", { style: { background: '#ffffff', color: '#0f172a' } });
+      toast.error("Failed to send answer");
     }
   };
 
@@ -249,24 +249,24 @@ function AIPracticePage() {
       );
       const result = await endSession({ totalDuration });
       if (result?.xpResult?.xpEarned) {
-        toast.success(`+${result.xpResult.xpEarned} XP earned! 🎉`, { duration: 4000, style: { background: '#ffffff', color: '#0f172a' } });
+        toast.success(`+${result.xpResult.xpEarned} XP earned! 🎉`, { duration: 4000 });
       }
       if (result?.xpResult?.leveledUp) {
         toast.success(
           `🚀 Level Up! You are now ${result.xpResult.newLevelTitle}!`,
-          { duration: 6000, style: { background: '#ffffff', color: '#0f172a' } }
+          { duration: 6000 }
         );
       }
       if (result?.xpResult?.newBadges?.length > 0) {
         const badge = BADGE_DEFINITIONS_MAP[result.xpResult.newBadges[0]];
         toast.success(
           `${badge?.emoji || "🏅"} New badge: ${badge?.label || result.xpResult.newBadges[0]}`,
-          { duration: 5000, style: { background: '#ffffff', color: '#0f172a' } }
+          { duration: 5000 }
         );
       }
       setScreen("feedback");
     } catch (error) {
-      toast.error("Failed to get feedback", { style: { background: '#ffffff', color: '#0f172a' } });
+      toast.error("Failed to get feedback");
       setScreen("interview");
     }
   };
@@ -676,7 +676,7 @@ function AIPracticePage() {
                           setResumeFile(file);
                           setDetectedSkills(extractSkillsFromFilename(file.name));
                         } else {
-                          toast.error("Only PDF files are accepted", { style: { background: '#ffffff', color: '#0f172a' } });
+                          toast.error("Only PDF files are accepted");
                         }
                       }}
                     >

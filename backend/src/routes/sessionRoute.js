@@ -1,6 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { protectRoute } from "../middleware/protectRoute.js";
+import { validate, createSessionSchema } from "../middleware/validateRequest.js";
 import {
   createSession,
   endSession,
@@ -29,7 +30,7 @@ const joinLimiter = rateLimit({
 // Public route (no auth required) — join by code
 router.post("/join", protectRoute, joinLimiter, joinSessionByCode);
 
-router.post("/", protectRoute, createSession);
+router.post("/", protectRoute, validate(createSessionSchema), createSession);
 router.get("/active", protectRoute, getActiveSessions);
 router.get("/my-recent", protectRoute, getMyRecentSessions);
 router.get("/scheduled", protectRoute, getScheduledSessions);

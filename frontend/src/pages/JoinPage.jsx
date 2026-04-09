@@ -47,7 +47,7 @@ function JoinPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1117] flex flex-col px-4">
+    <div className="min-h-screen bg-[var(--dark-bg)] flex flex-col px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -58,10 +58,10 @@ function JoinPage() {
           <LockIcon className="text-[#000000] size-12 mb-6" />
         </div>
 
-        <h1 className="font-bold text-xl text-[#e6edf3] text-center mb-1">
+        <h1 className="font-bold text-xl text-[var(--dark-text)] text-center mb-1">
           Join Interview Session
         </h1>
-        <p className="text-[#7d8590] text-sm text-center mb-6">
+        <p className="text-[var(--dark-text-secondary)] text-sm text-center mb-6">
           Enter the 6-character code provided by your interviewer
         </p>
 
@@ -108,7 +108,7 @@ function JoinPage() {
           </button>
         </form>
 
-        <Link to="/" className="text-[#7d8590] hover:text-[#e6edf3] text-sm text-center mt-6 transition-colors">
+        <Link to="/" className="text-[var(--dark-text-secondary)] hover:text-[var(--dark-text)] text-sm text-center mt-6 transition-colors">
           Back to Dashboard
         </Link>
       </motion.div>

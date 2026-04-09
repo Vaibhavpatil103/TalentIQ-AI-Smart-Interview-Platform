@@ -124,8 +124,8 @@ function JobBoardPage() {
                 onClick={() => setExperienceLevel(l)}
                 className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${
                   experienceLevel === l
-                    ? "bg-[#0a66c2] text-white border-[#0a66c2] font-semibold"
-                    : "bg-transparent text-[#64748b] border-[#e2e8f0] hover:text-[#0f172a] hover:border-[#e6edf3]"
+                    ? "bg-[var(--light-accent)] text-white border-[var(--light-accent)] font-semibold"
+                    : "bg-transparent text-[var(--light-text-secondary)] border-[var(--light-border)] hover:text-[var(--light-text)] hover:border-[var(--light-border-subtle)]"
                 }`}
               >
                 {l === "all" ? "All Levels" : l}

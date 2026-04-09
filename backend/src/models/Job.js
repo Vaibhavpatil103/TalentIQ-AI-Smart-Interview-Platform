@@ -39,4 +39,9 @@ const jobSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// ─── Compound Indexes ────────────────────────────────────────────
+// Queries: getAllPublishedJobs, getMyJobs, getJobStats
+jobSchema.index({ status: 1, createdAt: -1 });
+jobSchema.index({ companyId: 1, createdAt: -1 });
+
 export default mongoose.model("Job", jobSchema);

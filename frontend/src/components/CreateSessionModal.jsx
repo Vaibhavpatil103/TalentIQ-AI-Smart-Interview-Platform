@@ -43,11 +43,11 @@ function CreateSessionModal({
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.95, y: 12, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl relative z-10 flex flex-col"
+            className="bg-[var(--dark-elevated)] border border-[var(--dark-border)] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl relative z-10 flex flex-col"
           >
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-bold text-[#e6edf3]">Create New Session</h3>
-              <button onClick={onClose} className="text-[#7d8590] hover:text-[#e6edf3] transition-colors">
+              <h3 className="text-lg font-bold text-[var(--dark-text)]">Create New Session</h3>
+              <button onClick={onClose} className="text-[var(--dark-text-secondary)] hover:text-[var(--dark-text)] transition-colors">
                 <XIcon className="size-5" />
               </button>
             </div>
@@ -61,8 +61,8 @@ function CreateSessionModal({
                   checked={showSchedule}
                   onChange={(e) => setShowSchedule(e.target.checked)}
                 />
-                <span className="flex items-center gap-2 text-sm text-[#e6edf3]">
-                  <CalendarIcon className="size-4 text-[#7d8590]" />
+                <span className="flex items-center gap-2 text-sm text-[var(--dark-text)]">
+                  <CalendarIcon className="size-4 text-[var(--dark-text-secondary)]" />
                   Schedule for later
                 </span>
               </div>
@@ -79,7 +79,7 @@ function CreateSessionModal({
                     <div className="grid grid-cols-2 gap-3">
                       <div className="form-control">
                         <label className="label py-1">
-                          <span className="label-text text-sm text-[#7d8590]">Date</span>
+                          <span className="label-text text-sm text-[var(--dark-text-secondary)]">Date</span>
                         </label>
                         <input
                           type="date"
@@ -92,7 +92,7 @@ function CreateSessionModal({
                       </div>
                       <div className="form-control">
                         <label className="label py-1">
-                          <span className="label-text text-sm text-[#7d8590]">Time</span>
+                          <span className="label-text text-sm text-[var(--dark-text-secondary)]">Time</span>
                         </label>
                         <input
                           type="time"
@@ -106,7 +106,7 @@ function CreateSessionModal({
                     </div>
                     <div className="form-control">
                       <label className="label py-1">
-                        <span className="label-text text-sm text-[#7d8590]">Candidate Email (optional)</span>
+                        <span className="label-text text-sm text-[var(--dark-text-secondary)]">Candidate Email (optional)</span>
                       </label>
                       <input
                         type="email"
@@ -123,15 +123,15 @@ function CreateSessionModal({
               </AnimatePresence>
 
               {/* ROOM SUMMARY */}
-              <div className="bg-[#ffffff10] border border-[#ffffff30] rounded-xl p-4 flex gap-3 text-sm">
-                <Code2Icon className="size-5 text-[#ffffff] shrink-0 mt-0.5" />
-                <div className="text-[#e6edf3] space-y-1">
-                  <p className="font-semibold text-[#ffffff]">Room Summary</p>
-                  <p className="text-[#7d8590]">Problem: <span className="text-[#e6edf3]">Select inside the room</span></p>
-                  <p className="text-[#7d8590]">Capacity: <span className="text-[#e6edf3]">2 (1-on-1 session)</span></p>
+              <div className="bg-[var(--dark-accent-bg)] border border-[var(--dark-accent-border)] rounded-xl p-4 flex gap-3 text-sm">
+                <Code2Icon className="size-5 text-[var(--dark-accent)] shrink-0 mt-0.5" />
+                <div className="text-[var(--dark-text)] space-y-1">
+                  <p className="font-semibold text-[var(--dark-accent)]">Room Summary</p>
+                  <p className="text-[var(--dark-text-secondary)]">Problem: <span className="text-[var(--dark-text)]">Select inside the room</span></p>
+                  <p className="text-[var(--dark-text-secondary)]">Capacity: <span className="text-[var(--dark-text)]">2 (1-on-1 session)</span></p>
                   {showSchedule && scheduleConfig.date && (
-                    <p className="text-[#7d8590]">
-                      Scheduled: <span className="text-[#e6edf3]">{scheduleConfig.date} at {scheduleConfig.time}</span>
+                    <p className="text-[var(--dark-text-secondary)]">
+                      Scheduled: <span className="text-[var(--dark-text)]">{scheduleConfig.date} at {scheduleConfig.time}</span>
                     </p>
                   )}
                 </div>

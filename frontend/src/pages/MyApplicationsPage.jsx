@@ -44,19 +44,19 @@ function useRespondToOffer() {
 
 // ─── Status config ────────────────────────────────────────────
 const APP_STATUS = {
-  applied: { label: "Applied", color: "#7d8590", bg: "rgba(125,133,144,0.1)", border: "rgba(125,133,144,0.2)", icon: SendIcon },
+  applied: { label: "Applied", color: "var(--dark-text-secondary)", bg: "rgba(125,133,144,0.1)", border: "rgba(125,133,144,0.2)", icon: SendIcon },
   screening: { label: "Screening", color: "#d29922", bg: "rgba(210,153,34,0.1)", border: "rgba(210,153,34,0.2)", icon: ClockIcon },
   shortlisted: { label: "Shortlisted", color: "#388bfd", bg: "rgba(56,139,253,0.1)", border: "rgba(56,139,253,0.2)", icon: CheckCircleIcon },
   interview_scheduled: { label: "Interview Scheduled", color: "#8250df", bg: "rgba(130,80,223,0.1)", border: "rgba(130,80,223,0.2)", icon: CalendarIcon },
   interviewed: { label: "Interviewed", color: "#388bfd", bg: "rgba(56,139,253,0.1)", border: "rgba(56,139,253,0.2)", icon: CheckCircleIcon },
-  offer_sent: { label: "Offer Received!", color: "#2cbe4e", bg: "rgba(44,190,78,0.12)", border: "rgba(44,190,78,0.3)", icon: CheckCircleIcon },
-  hired: { label: "Hired! 🎉", color: "#2cbe4e", bg: "rgba(44,190,78,0.15)", border: "rgba(44,190,78,0.4)", icon: CheckCircleIcon },
+  offer_sent: { label: "Offer Received!", color: "var(--color-success)", bg: "rgba(44,190,78,0.12)", border: "rgba(44,190,78,0.3)", icon: CheckCircleIcon },
+  hired: { label: "Hired! 🎉", color: "var(--color-success)", bg: "rgba(44,190,78,0.15)", border: "rgba(44,190,78,0.4)", icon: CheckCircleIcon },
   rejected: { label: "Not Selected", color: "#f85149", bg: "rgba(248,81,73,0.1)", border: "rgba(248,81,73,0.2)", icon: XCircleIcon },
 };
 
 const LEFT_BORDER = {
-  offer_sent: "2px solid #2cbe4e",
-  hired: "2px solid #2cbe4e",
+  offer_sent: "2px solid var(--color-success)",
+  hired: "2px solid var(--color-success)",
   interview_scheduled: "2px solid #8250df",
   interviewed: "2px solid #8250df",
   rejected: "2px solid #f85149",

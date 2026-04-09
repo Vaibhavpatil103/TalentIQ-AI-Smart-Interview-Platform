@@ -43,18 +43,18 @@ function FeedbackPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0d1117] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[var(--dark-bg)] flex items-center justify-center p-6">
         <div className="animate-pulse space-y-2 w-full max-w-md">
-          <div className="h-4 bg-[#1c2128] rounded-full w-1/3" />
-          <div className="h-3 bg-[#1c2128] rounded-full w-2/3" />
-          <div className="h-3 bg-[#1c2128] rounded-full w-1/2" />
+          <div className="h-4 bg-[var(--dark-elevated)] rounded-full w-1/3" />
+          <div className="h-3 bg-[var(--dark-elevated)] rounded-full w-2/3" />
+          <div className="h-3 bg-[var(--dark-elevated)] rounded-full w-1/2" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0d1117]">
+    <div className="min-h-screen bg-[var(--dark-bg)]">
       <Navbar />
 
       <motion.div
@@ -63,14 +63,14 @@ function FeedbackPage() {
         transition={{ duration: 0.3 }}
         className="max-w-3xl mx-auto px-6 py-10"
       >
-        <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm text-[#7d8590] hover:text-[#e6edf3] mb-6 transition-colors">
+        <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm text-[var(--dark-text-secondary)] hover:text-[var(--dark-text)] mb-6 transition-colors">
           <ChevronLeftIcon className="size-4" /> Back to Dashboard
         </Link>
 
         {/* ... (Feedback headers, overall circle) ... */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-[#e6edf3] mb-1">Interview Feedback</h1>
-          <p className="text-[#7d8590] text-sm">
+          <h1 className="text-2xl font-bold text-[var(--dark-text)] mb-1">Interview Feedback</h1>
+          <p className="text-[var(--dark-text-secondary)] text-sm">
             {session?.problem || "Session"} — {session?.difficulty}
           </p>
         </div>
@@ -78,13 +78,13 @@ function FeedbackPage() {
         <div className="space-y-6">
           {/* AI Review */}
           <div className="card-dark p-6 mb-6">
-             <h2 className="uppercase tracking-wider text-xs text-[#7d8590] font-semibold mb-4">AI Review</h2>
+             <h2 className="uppercase tracking-wider text-xs text-[var(--dark-text-secondary)] font-semibold mb-4">AI Review</h2>
              <AIFeedbackCard variant="code-review" aiReview={aiReview || session?.aiReview} />
           </div>
 
           {/* Interviewer Feedback */}
           <div>
-            <h2 className="uppercase tracking-wider text-xs text-[#7d8590] font-semibold mb-4">Interviewer Feedback</h2>
+            <h2 className="uppercase tracking-wider text-xs text-[var(--dark-text-secondary)] font-semibold mb-4">Interviewer Feedback</h2>
             {feedback.length === 0 ? (
               <div className="text-[var(--dark-text-tertiary)] text-sm text-center py-8 card-dark">
                 No feedback submitted yet.
@@ -108,10 +108,10 @@ function FeedbackPage() {
                         <div className="flex flex-col items-center justify-center shrink-0">
                           <div className="relative size-16">
                             <svg className="size-16 rotate-[-90deg]">
-                              <circle cx="32" cy="32" r="24" stroke="#1c2128" strokeWidth="6" fill="transparent" />
+                              <circle cx="32" cy="32" r="24" stroke="var(--dark-elevated)" strokeWidth="6" fill="transparent" />
                               <motion.circle
                                 cx="32" cy="32" r="24"
-                                stroke="#ffffff" strokeWidth="6" fill="transparent" strokeLinecap="round"
+                                stroke="var(--dark-accent)" strokeWidth="6" fill="transparent" strokeLinecap="round"
                                 strokeDasharray={circumference}
                                 initial={{ strokeDashoffset: circumference }}
                                 animate={{ strokeDashoffset }}
@@ -119,7 +119,7 @@ function FeedbackPage() {
                               />
                             </svg>
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <span className="font-bold text-sm text-[#e6edf3]">{Math.round(totalScore)}%</span>
+                              <span className="font-bold text-sm text-[var(--dark-text)]">{Math.round(totalScore)}%</span>
                             </div>
                           </div>
                           <div className={`mt-3 ${getDecisionBadge(fb.decision)} uppercase tracking-wider`}>
@@ -136,15 +136,15 @@ function FeedbackPage() {
                           ].map((item) => (
                             <div key={item.label}>
                               <div className="flex justify-between text-xs mb-1.5">
-                                <span className="text-[#e6edf3] font-medium">{item.label}</span>
-                                <span className="text-[#7d8590]">{item.val}/5</span>
+                                <span className="text-[var(--dark-text)] font-medium">{item.label}</span>
+                                <span className="text-[var(--dark-text-secondary)]">{item.val}/5</span>
                               </div>
-                              <div className="bg-[#1c2128] rounded-full h-2 overflow-hidden w-full relative">
+                              <div className="bg-[var(--dark-elevated)] rounded-full h-2 overflow-hidden w-full relative">
                                 <motion.div
                                   initial={{ width: 0 }}
                                   animate={{ width: `${(item.val / 5) * 100}%` }}
                                   transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                                  className="absolute left-0 top-0 h-full bg-[#ffffff] rounded-full"
+                                  className="absolute left-0 top-0 h-full bg-[var(--dark-accent)] rounded-full"
                                 />
                               </div>
                             </div>
@@ -153,11 +153,11 @@ function FeedbackPage() {
                       </div>
 
                       {fb.notes && (
-                        <div className="mt-6 pt-4 border-t border-[#30363d]">
-                          <span className="uppercase tracking-wider text-[10px] text-[#7d8590] font-semibold mb-2 block">
+                        <div className="mt-6 pt-4 border-t border-[var(--dark-border)]">
+                          <span className="uppercase tracking-wider text-[10px] text-[var(--dark-text-secondary)] font-semibold mb-2 block">
                             Interviewer Notes
                           </span>
-                          <p className="text-sm text-[#e6edf3] leading-relaxed">
+                          <p className="text-sm text-[var(--dark-text)] leading-relaxed">
                             {fb.notes}
                           </p>
                         </div>

@@ -1,5 +1,6 @@
 import express from "express";
 import { protectRoute, requireRole } from "../middleware/protectRoute.js";
+import { validate, createJobSchema } from "../middleware/validateRequest.js";
 import {
   createJob,
   getMyJobs,
@@ -36,6 +37,7 @@ router.post(
   "/",
   protectRoute,
   requireRole("interviewer", "recruiter", "admin"),
+  validate(createJobSchema),
   createJob
 );
 router.put(

@@ -49,10 +49,23 @@ export async function createJob(req, res) {
 // ── getMyJobs ─────────────────────────────────────────────────
 export async function getMyJobs(req, res) {
   try {
-    const jobs = await Job.find({ companyId: req.user.clerkId }).sort({
-      createdAt: -1,
+    const page = parseInt(req.query.page) || 1;
+    const limit = Math.min(parseInt(req.query.limit) || 20, 50);
+    const skip = (page - 1) * limit;
+
+    const filter = { companyId: req.user.clerkId };
+
+    const [jobs, totalCount] = await Promise.all([
+      Job.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Job.countDocuments(filter),
+    ]);
+
+    return res.json({
+      jobs,
+      totalCount,
+      page,
+      totalPages: Math.ceil(totalCount / limit),
     });
-    return res.json({ jobs });
   } catch (error) {
     console.log("Error in getMyJobs:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -63,6 +76,9 @@ export async function getMyJobs(req, res) {
 export async function getAllPublishedJobs(req, res) {
   try {
     const { search, skills, jobType, location, experienceLevel } = req.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = Math.min(parseInt(req.query.limit) || 20, 50);
+    const skip = (page - 1) * limit;
 
     const filter = { status: "published" };
 
@@ -86,8 +102,17 @@ export async function getAllPublishedJobs(req, res) {
 
     if (experienceLevel) filter.experienceLevel = experienceLevel;
 
-    const jobs = await Job.find(filter).sort({ createdAt: -1 });
-    return res.json({ jobs });
+    const [jobs, totalCount] = await Promise.all([
+      Job.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Job.countDocuments(filter),
+    ]);
+
+    return res.json({
+      jobs,
+      totalCount,
+      page,
+      totalPages: Math.ceil(totalCount / limit),
+    });
   } catch (error) {
     console.log("Error in getAllPublishedJobs:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });

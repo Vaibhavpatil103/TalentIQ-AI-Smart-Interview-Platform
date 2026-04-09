@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import CompanyNavbar from "../../components/CompanyNavbar";
 import { axiosInstance } from "../../lib/axios";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 import { getSocket } from "../../lib/socket";
 import { motion, AnimatePresence } from "framer-motion";
@@ -37,6 +37,7 @@ const inputCls = "input-light w-full transition-all duration-200";
 
 function CompanyInboxPage() {
   const { user } = useUser();
+  const { getToken } = useAuth();
   const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [replies, setReplies] = useState([]);
@@ -68,7 +69,7 @@ function CompanyInboxPage() {
   // ── Socket.IO real-time ─────────────────────────────────────
   useEffect(() => {
     if (!user?.id) return;
-    const socket = getSocket();
+    const socket = getSocket(getToken);
     socketRef.current = socket;
 
     socket.on("connect", () => socket.emit("join:inbox", user.id));

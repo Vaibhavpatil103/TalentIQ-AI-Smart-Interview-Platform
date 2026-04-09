@@ -43,26 +43,26 @@ function CandidateCard({ candidate }) {
       style={style}
       {...attributes}
       {...listeners}
-      className={`bg-[#1c2128] border border-[#30363d] rounded-xl p-4 mb-3 cursor-grab active:cursor-grabbing hover:border-[#00000040] hover:-translate-y-1 hover:shadow-lg transition-all duration-200 ${
-        isDragging ? "shadow-2xl ring-2 ring-[#000000] scale-105" : "shadow-sm"
+      className={`bg-[var(--dark-elevated)] border border-[var(--dark-border)] rounded-xl p-4 mb-3 cursor-grab active:cursor-grabbing hover:border-[var(--dark-accent-border)] hover:-translate-y-1 hover:shadow-lg transition-all duration-200 ${
+        isDragging ? "shadow-2xl ring-2 ring-[var(--dark-accent)] scale-105" : "shadow-sm"
       }`}
     >
       <div className="flex items-center gap-3 mb-3">
-        <div className="size-8 rounded-full bg-[#161b22] border border-[#30363d] flex items-center justify-center shrink-0">
-          <UserIcon className="size-4 text-[#7d8590]" />
+        <div className="size-8 rounded-full bg-[var(--dark-bg)] border border-[var(--dark-border)] flex items-center justify-center shrink-0">
+          <UserIcon className="size-4 text-[var(--dark-text-secondary)]" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-sm text-[#e6edf3] truncate">{candidate.name}</p>
-          <p className="text-xs text-[#7d8590] truncate tracking-wide">{candidate.email}</p>
+          <p className="font-medium text-sm text-[var(--dark-text)] truncate">{candidate.name}</p>
+          <p className="text-xs text-[var(--dark-text-secondary)] truncate tracking-wide">{candidate.email}</p>
         </div>
       </div>
-      <div className="flex items-center justify-between text-[11px] font-semibold text-[#e6edf3] bg-[#0d1117] px-2 py-1.5 rounded-lg border border-[#30363d]/50">
+      <div className="flex items-center justify-between text-[11px] font-semibold text-[var(--dark-text)] bg-[var(--dark-bg)] px-2 py-1.5 rounded-lg border border-[var(--dark-border)]/50">
         <div className="flex items-center gap-1.5">
-          <StarIcon className="size-3 fill-[#d29922] text-[#d29922]" />
+          <StarIcon className="size-3 fill-[var(--color-warning)] text-[var(--color-warning)]" />
           <span>{avgScore}</span>
         </div>
         {candidate.lastInterviewDate && (
-          <div className="flex items-center gap-1.5 text-[#7d8590]">
+          <div className="flex items-center gap-1.5 text-[var(--dark-text-secondary)]">
             <CalendarIcon className="size-3 opacity-60" />
             <span>{new Date(candidate.lastInterviewDate).toLocaleDateString()}</span>
           </div>
@@ -115,11 +115,11 @@ export default function CandidatePipeline({ candidates = [] }) {
         {PIPELINE_STAGES.map((stage) => (
           <div
             key={stage.id}
-            className="flex-shrink-0 w-[300px] bg-[#161b22] border border-[#30363d] rounded-xl p-4 flex flex-col h-[70vh] min-h-[500px]"
+            className="flex-shrink-0 w-[300px] bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-xl p-4 flex flex-col h-[70vh] min-h-[500px]"
           >
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#30363d]">
-              <h3 className="text-sm font-semibold text-[#e6edf3] tracking-wide uppercase">{stage.label}</h3>
-              <span className="bg-[#1c2128] text-[#7d8590] text-xs font-bold px-2 py-0.5 rounded border border-[#30363d]">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[var(--dark-border)]">
+              <h3 className="text-sm font-semibold text-[var(--dark-text)] tracking-wide uppercase">{stage.label}</h3>
+              <span className="bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)] text-xs font-bold px-2 py-0.5 rounded border border-[var(--dark-border)]">
                 {pipelineData[stage.id]?.length || 0}
               </span>
             </div>
@@ -135,8 +135,8 @@ export default function CandidatePipeline({ candidates = [] }) {
                     <CandidateCard key={candidate.id} candidate={candidate} />
                   ))}
                   {pipelineData[stage.id]?.length === 0 && (
-                    <div className="h-full w-full border-2 border-dashed border-[#30363d] rounded-xl flex items-center justify-center opacity-50">
-                      <p className="text-[#7d8590] text-xs font-semibold uppercase tracking-wider text-center px-4">
+                    <div className="h-full w-full border-2 border-dashed border-[var(--dark-border)] rounded-xl flex items-center justify-center opacity-50">
+                      <p className="text-[var(--dark-text-secondary)] text-xs font-semibold uppercase tracking-wider text-center px-4">
                         Drop candidates here
                       </p>
                     </div>

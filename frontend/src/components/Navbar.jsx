@@ -15,7 +15,7 @@ import {
   XIcon,
   ChevronDownIcon,
 } from "lucide-react";
-import { UserButton, useUser } from "@clerk/clerk-react";
+import { UserButton, useUser, useAuth } from "@clerk/clerk-react";
 import { useState, useEffect, useRef } from "react";
 import { axiosInstance } from "../lib/axios";
 import { getSocket } from "../lib/socket";
@@ -23,6 +23,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 function Navbar() {
   const location = useLocation();
+  const { getToken } = useAuth();
   const { user } = useUser();
   const [userRole, setUserRole] = useState("candidate");
   const [unreadCount, setUnreadCount] = useState(0);
@@ -67,7 +68,7 @@ function Navbar() {
   useEffect(() => {
     if (!user?.id) return;
 
-    const socket = getSocket();
+    const socket = getSocket(getToken);
     socketRef.current = socket;
 
     socket.on("connect", () => {

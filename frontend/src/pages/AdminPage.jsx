@@ -99,7 +99,7 @@ function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1117]">
+    <div className="min-h-screen bg-[var(--dark-bg)]">
       <Navbar />
       
       <motion.div 
@@ -108,38 +108,38 @@ function AdminPage() {
         className="max-w-6xl mx-auto px-6 py-12"
       >
         <div className="flex items-center gap-4 mb-10">
-          <div className="size-12 rounded-xl bg-[#1c2128] border border-[#30363d] flex items-center justify-center shadow-lg">
-            <ShieldIcon className="size-6 text-[#ffffff]" />
+          <div className="size-12 rounded-xl bg-[var(--dark-elevated)] border border-[var(--dark-border)] flex items-center justify-center shadow-lg">
+            <ShieldIcon className="size-6 text-[var(--dark-text)]" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-[#e6edf3]">Admin Panel</h1>
-            <p className="text-[#7d8590] text-sm mt-1">Manage platform users and data</p>
+            <h1 className="text-2xl font-bold text-[var(--dark-text)]">Admin Panel</h1>
+            <p className="text-[var(--dark-text-secondary)] text-sm mt-1">Manage platform users and data</p>
           </div>
         </div>
 
         {/* Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full">
-          <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 shadow-sm">
+          <div className="bg-[var(--dark-elevated)] border border-[var(--dark-border)] rounded-xl p-5 shadow-sm">
             <div className="flex items-center gap-3 mb-2">
-              <UsersIcon className="size-5 text-[#ffffff]" />
-              <span className="text-[#7d8590] text-xs font-bold uppercase tracking-wider">Total Users</span>
+              <UsersIcon className="size-5 text-[var(--dark-text)]" />
+              <span className="text-[var(--dark-text-secondary)] text-xs font-bold uppercase tracking-wider">Total Users</span>
             </div>
-            <div className="text-3xl font-black text-[#e6edf3]">{users.length}</div>
+            <div className="text-3xl font-black text-[var(--dark-text)]">{users.length}</div>
           </div>
-          <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 shadow-sm">
-            <div className="text-[#7d8590] text-xs font-bold uppercase tracking-wider mb-2">Interviewers</div>
+          <div className="bg-[var(--dark-elevated)] border border-[var(--dark-border)] rounded-xl p-5 shadow-sm">
+            <div className="text-[var(--dark-text-secondary)] text-xs font-bold uppercase tracking-wider mb-2">Interviewers</div>
             <div className="text-3xl font-black text-[#d29922]">
               {users.filter((u) => u.role === "interviewer").length}
             </div>
           </div>
-          <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 shadow-sm">
-            <div className="text-[#7d8590] text-xs font-bold uppercase tracking-wider mb-2">Candidates</div>
-            <div className="text-3xl font-black text-[#ffffff]">
+          <div className="bg-[var(--dark-elevated)] border border-[var(--dark-border)] rounded-xl p-5 shadow-sm">
+            <div className="text-[var(--dark-text-secondary)] text-xs font-bold uppercase tracking-wider mb-2">Candidates</div>
+            <div className="text-3xl font-black text-[var(--dark-text)]">
               {users.filter((u) => u.role === "candidate").length}
             </div>
           </div>
-          <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 shadow-sm">
-            <div className="text-[#7d8590] text-xs font-bold uppercase tracking-wider mb-2">Recruiters</div>
+          <div className="bg-[var(--dark-elevated)] border border-[var(--dark-border)] rounded-xl p-5 shadow-sm">
+            <div className="text-[var(--dark-text-secondary)] text-xs font-bold uppercase tracking-wider mb-2">Recruiters</div>
             <div className="text-3xl font-black text-[#58a6ff]">
               {users.filter((u) => u.role === "recruiter").length}
             </div>
@@ -147,14 +147,14 @@ function AdminPage() {
         </div>
 
         {/* Import Problems from Excel */}
-        <div className="card-dark p-6 mb-8 border border-[#30363d]">
+        <div className="card-dark p-6 mb-8 border border-[var(--dark-border)]">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-[#ffffff10] rounded-lg">
-              <FileSpreadsheetIcon className="size-5 text-[#ffffff]" />
+            <div className="p-2 bg-[rgba(255,255,255,0.06)] rounded-lg">
+              <FileSpreadsheetIcon className="size-5 text-[var(--dark-text)]" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-[#e6edf3]">Import Problems</h2>
-              <p className="text-sm text-[#7d8590]">
+              <h2 className="text-lg font-bold text-[var(--dark-text)]">Import Problems</h2>
+              <p className="text-sm text-[var(--dark-text-secondary)]">
                 Upload a .xlsx file to bulk import coding problems into the database
               </p>
             </div>
@@ -165,12 +165,12 @@ function AdminPage() {
               ref={fileInputRef}
               type="file"
               accept=".xlsx"
-              className="block w-full max-w-sm text-sm text-[#7d8590]
+              className="block w-full max-w-sm text-sm text-[var(--dark-text-secondary)]
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-lg file:border-0
                 file:text-sm file:font-semibold
-                file:bg-[#ffffff] file:text-black
-                hover:file:bg-[#1a7f37] cursor-pointer"
+                file:bg-[var(--dark-accent)] file:text-white
+                hover:file:bg-[var(--dark-accent-hover)] cursor-pointer"
               onChange={(e) => {
                 setImportFile(e.target.files[0] || null);
                 setImportResult(null);
@@ -178,7 +178,7 @@ function AdminPage() {
               }}
             />
             <button
-              className={`btn-green gap-2 px-6 py-2 ${!importFile || importLoading ? 'opacity-50 cursor-not-allowed bg-[#1c2128] text-[#7d8590] hover:bg-[#1c2128]' : ''}`}
+              className={`btn-green gap-2 px-6 py-2 ${!importFile || importLoading ? 'opacity-50 cursor-not-allowed bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)] hover:bg-[var(--dark-elevated)]' : ''}`}
               disabled={!importFile || importLoading}
               onClick={handleImport}
             >
@@ -197,10 +197,10 @@ function AdminPage() {
           </div>
 
           {importResult && (
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3 bg-[#ffffff10] border border-[#ffffff40] p-4 rounded-xl mt-6">
-              <CheckCircle2Icon className="size-5 text-[#ffffff]" />
-              <span className="text-sm text-[#e6edf3]">
-                <strong className="text-[#ffffff]">Success!</strong> Imported {importResult.imported} problems, skipped{" "}
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3 bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.25)] p-4 rounded-xl mt-6">
+              <CheckCircle2Icon className="size-5 text-[var(--dark-accent)]" />
+              <span className="text-sm text-[var(--dark-text)]">
+                <strong className="text-[var(--dark-accent)]">Success!</strong> Imported {importResult.imported} problems, skipped{" "}
                 {importResult.skipped} duplicates.
               </span>
             </motion.div>
@@ -209,7 +209,7 @@ function AdminPage() {
           {importError && (
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3 bg-[#f8514910] border border-[#f8514940] p-4 rounded-xl mt-6">
               <XCircleIcon className="size-5 text-[#f85149]" />
-              <span className="text-sm text-[#e6edf3]">
+              <span className="text-sm text-[var(--dark-text)]">
                 <strong className="text-[#f85149]">Error:</strong> {importError}
               </span>
             </motion.div>
@@ -235,47 +235,47 @@ function AdminPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-[#161b22] border border-[#30363d] rounded-2xl overflow-hidden shadow-2xl">
+          <div className="bg-[var(--dark-card)] border border-[var(--dark-border)] rounded-2xl overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#1c2128]">
-                    <th className="px-6 py-4 text-xs uppercase font-bold text-[#7d8590] tracking-wider border-b border-[#30363d]">User</th>
-                    <th className="px-6 py-4 text-xs uppercase font-bold text-[#7d8590] tracking-wider border-b border-[#30363d]">Email</th>
-                    <th className="px-6 py-4 text-xs uppercase font-bold text-[#7d8590] tracking-wider border-b border-[#30363d]">Role</th>
-                    <th className="px-6 py-4 text-xs uppercase font-bold text-[#7d8590] tracking-wider border-b border-[#30363d]">Interviews</th>
-                    <th className="px-6 py-4 text-xs uppercase font-bold text-[#7d8590] tracking-wider border-b border-[#30363d]">Actions</th>
+                  <tr className="bg-[var(--dark-elevated)]">
+                    <th className="px-6 py-4 text-xs uppercase font-bold text-[var(--dark-text-secondary)] tracking-wider border-b border-[var(--dark-border)]">User</th>
+                    <th className="px-6 py-4 text-xs uppercase font-bold text-[var(--dark-text-secondary)] tracking-wider border-b border-[var(--dark-border)]">Email</th>
+                    <th className="px-6 py-4 text-xs uppercase font-bold text-[var(--dark-text-secondary)] tracking-wider border-b border-[var(--dark-border)]">Role</th>
+                    <th className="px-6 py-4 text-xs uppercase font-bold text-[var(--dark-text-secondary)] tracking-wider border-b border-[var(--dark-border)]">Interviews</th>
+                    <th className="px-6 py-4 text-xs uppercase font-bold text-[var(--dark-text-secondary)] tracking-wider border-b border-[var(--dark-border)]">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#30363d]">
+                <tbody className="divide-y divide-[var(--dark-border)]">
                   {filteredUsers.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="px-6 py-12 text-center text-[#7d8590]">
+                      <td colSpan="5" className="px-6 py-12 text-center text-[var(--dark-text-secondary)]">
                         No users found matching your search.
                       </td>
                     </tr>
                   ) : (
                     filteredUsers.map((user) => (
-                      <tr key={user._id} className="hover:bg-[#1c2128] transition-colors">
+                      <tr key={user._id} className="hover:bg-[var(--dark-elevated)] transition-colors">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="size-10 rounded-full border border-[#30363d] overflow-hidden bg-[#0d1117] shrink-0">
+                            <div className="size-10 rounded-full border border-[var(--dark-border)] overflow-hidden bg-[var(--dark-bg)] shrink-0">
                               <img
                                 src={user.profileImage || "/default-avatar.png"}
                                 alt={user.name}
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <span className="font-semibold text-[#e6edf3]">{user.name}</span>
+                            <span className="font-semibold text-[var(--dark-text)]">{user.name}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-[#7d8590]">{user.email}</td>
+                        <td className="px-6 py-4 text-sm text-[var(--dark-text-secondary)]">{user.email}</td>
                         <td className="px-6 py-4">
                           <span className={`text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-full border ${getRoleColor(user.role)}`}>
                             {user.role}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-[#e6edf3] font-mono text-sm pl-8">
+                        <td className="px-6 py-4 text-[var(--dark-text)] font-mono text-sm pl-8">
                           {user.interviewsCompleted || 0}
                         </td>
                         <td className="px-6 py-4">

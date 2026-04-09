@@ -4,6 +4,8 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import crypto from "crypto";
+import rateLimit from "express-rate-limit";
+import { protectRoute } from "../middleware/protectRoute.js";
 
 const router = express.Router();
 
@@ -18,18 +20,39 @@ const LANGUAGES = {
 // Execution timeout (10 seconds)
 const TIMEOUT_MS = 10000;
 
+// Max code size: 50KB
+const MAX_CODE_SIZE = 50 * 1024;
+
+// Strict rate limiter: 5 executions per minute per IP
+const executeLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  message: { success: false, error: "Too many executions, please wait before trying again" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 /**
  * POST /api/execute
  * body: { language, code }
  * Executes code locally using child_process with a timeout.
+ * SECURED: Requires authentication + rate limited to 5 req/min.
  */
-router.post("/", async (req, res) => {
+router.post("/", protectRoute, executeLimiter, async (req, res) => {
   const { language, code } = req.body;
 
   if (!language || !code) {
     return res.status(400).json({
       success: false,
       error: "Language and code are required",
+    });
+  }
+
+  // Enforce code size limit
+  if (code.length > MAX_CODE_SIZE) {
+    return res.status(400).json({
+      success: false,
+      error: `Code exceeds maximum size limit (${MAX_CODE_SIZE / 1024}KB)`,
     });
   }
 

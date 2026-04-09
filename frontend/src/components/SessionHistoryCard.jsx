@@ -10,9 +10,9 @@ function SessionHistoryCard({ session, onClick }) {
     );
 
   const difficultyColor = {
-    Easy: "border-[#ffffff40] text-[#ffffff] bg-[#ffffff10]",
-    Medium: "border-[#d2992240] text-[#d29922] bg-[#d2992210]",
-    Hard: "border-[#f8514940] text-[#f85149] bg-[#f8514910]",
+    Easy: "border-[var(--dark-accent-border)] text-[var(--dark-accent)] bg-[var(--dark-accent-bg)]",
+    Medium: "border-[var(--color-warning-border)] text-[var(--color-warning)] bg-[var(--color-warning-bg)]",
+    Hard: "border-[var(--color-danger-border)] text-[var(--color-danger)] bg-[var(--color-danger-bg)]",
   };
 
   const formatDate = (dateStr) => {
@@ -32,10 +32,10 @@ function SessionHistoryCard({ session, onClick }) {
   const overallScore = session.feedback?.overallScore ?? "—";
   const scoreColor =
     overallScore >= 7
-      ? "text-[#ffffff]"
+      ? "text-[var(--dark-accent)]"
       : overallScore >= 4
-      ? "text-[#d29922]"
-      : "text-[#f85149]";
+      ? "text-[var(--color-warning)]"
+      : "text-[var(--color-danger)]";
 
   return (
     <motion.div
@@ -45,7 +45,7 @@ function SessionHistoryCard({ session, onClick }) {
     >
       <div className="flex-1">
         <div className="flex items-center gap-3 mb-1">
-          <h3 className="font-semibold text-[#e6edf3] text-lg">
+          <h3 className="font-semibold text-[var(--dark-text)] text-lg">
             {session.mode === "topic"
               ? session.topic || "Topic Interview"
               : "Resume Interview"}
@@ -65,11 +65,11 @@ function SessionHistoryCard({ session, onClick }) {
         </div>
         
         <div className="flex items-center gap-4 mt-2">
-          <div className="flex items-center gap-1.5 text-sm text-[#7d8590]">
+          <div className="flex items-center gap-1.5 text-sm text-[var(--dark-text-secondary)]">
             <ClockIcon className="size-4" />
             <span>{formatDuration(session.totalDuration)}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-sm text-[#7d8590]">
+          <div className="flex items-center gap-1.5 text-sm text-[var(--dark-text-secondary)]">
             <MessageSquareIcon className="size-4" />
             <span>{session.questionCount || 0} questions</span>
           </div>
@@ -82,7 +82,7 @@ function SessionHistoryCard({ session, onClick }) {
       <div className="shrink-0 flex items-center justify-end">
         <div className={`font-mono text-3xl font-black ${scoreColor}`}>
           {overallScore}
-          <span className="text-sm font-bold text-[#7d8590] ml-1">/10</span>
+          <span className="text-sm font-bold text-[var(--dark-text-secondary)] ml-1">/10</span>
         </div>
       </div>
     </motion.div>

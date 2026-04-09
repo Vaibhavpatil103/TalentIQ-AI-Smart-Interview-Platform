@@ -15,14 +15,14 @@ function CompanyTrackCard({
     : 0;
 
   const colorMap = {
-    green: "text-[#ffffff] bg-[#ffffff10] border-[#ffffff40] progress-success",
-    orange: "text-[#d29922] bg-[#d2992210] border-[#d2992240] progress-warning",
-    blue: "text-[#58a6ff] bg-[#58a6ff10] border-[#58a6ff40] progress-info",
-    purple: "text-[#a371f7] bg-[#a371f710] border-[#a371f740] progress-secondary",
-    red: "text-[#f85149] bg-[#f8514910] border-[#f8514940] progress-error",
+    green: "text-[var(--dark-accent)] bg-[var(--dark-accent-bg)] border-[var(--dark-accent-border)] progress-success",
+    orange: "text-[var(--color-warning)] bg-[var(--color-warning-bg)] border-[var(--color-warning-border)] progress-warning",
+    blue: "text-[var(--color-info)] bg-[var(--color-info-bg)] border-[var(--color-info-border)] progress-info",
+    purple: "text-[var(--color-purple)] bg-[var(--color-purple-bg)] border-[var(--color-purple-border)] progress-secondary",
+    red: "text-[var(--color-danger)] bg-[var(--color-danger-bg)] border-[var(--color-danger-border)] progress-error",
   };
   
-  const theme = colorMap[color] || "text-[#ffffff] bg-[#ffffff10] border-[#ffffff40] progress-success";
+  const theme = colorMap[color] || "text-[var(--dark-accent)] bg-[var(--dark-accent-bg)] border-[var(--dark-accent-border)] progress-success";
   const bgClass = theme.split(" ")[1];
   const textClass = theme.split(" ")[0];
   const borderClass = theme.split(" ")[2];
@@ -36,27 +36,27 @@ function CompanyTrackCard({
             {emoji}
           </div>
           <div>
-            <h3 className="text-xl font-bold text-[#e6edf3]">{company}</h3>
-            <p className="text-sm text-[#7d8590] mt-0.5">
+            <h3 className="text-xl font-bold text-[var(--dark-text)]">{company}</h3>
+            <p className="text-sm text-[var(--dark-text-secondary)] mt-0.5">
               {topics.length} topics
             </p>
           </div>
         </div>
         {started && progressPct === 100 && (
-          <CheckCircle2Icon className="size-6 text-[#ffffff]" />
+          <CheckCircle2Icon className="size-6 text-[var(--dark-accent)]" />
         )}
       </div>
 
       <div className="mb-6 flex-1">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold text-[#7d8590] uppercase tracking-wider">
+          <span className="text-xs font-bold text-[var(--dark-text-secondary)] uppercase tracking-wider">
             Progress
           </span>
           <span className={`text-xs font-bold ${started ? textClass : "text-[var(--dark-text-tertiary)]"}`}>
             {progressPct}%
           </span>
         </div>
-        <div className="h-2 w-full bg-[#1c2128] rounded-full overflow-hidden border border-[#30363d]/50">
+        <div className="h-2 w-full bg-[var(--dark-elevated)] rounded-full overflow-hidden border border-[var(--dark-border)]/50">
           <progress
             className={`progress w-full h-full bg-transparent ${progressClass}`}
             value={progressPct}
@@ -73,8 +73,8 @@ function CompanyTrackCard({
               key={topic}
               className={`text-[11px] font-semibold px-2.5 py-1 rounded-md border ${
                 isCompleted
-                  ? "text-[#ffffff] border-[#ffffff40] bg-[#ffffff10]"
-                  : "border-[#30363d] bg-[#1c2128] text-[#7d8590]"
+                  ? "text-[var(--dark-accent)] border-[var(--dark-accent-border)] bg-[var(--dark-accent-bg)]"
+                  : "border-[var(--dark-border)] bg-[var(--dark-elevated)] text-[var(--dark-text-secondary)]"
               }`}
             >
               {topic}
@@ -83,15 +83,15 @@ function CompanyTrackCard({
         })}
       </div>
 
-      <div className="mt-auto pt-4 border-t border-[#30363d]">
+      <div className="mt-auto pt-4 border-t border-[var(--dark-border)]">
         {started ? (
-          <button className="btn-outline-dark w-full gap-2 py-2.5 hover:bg-[#1c2128] hover:text-[#e6edf3]">
+          <button className="btn-outline-dark w-full gap-2 py-2.5 hover:bg-[var(--dark-elevated)] hover:text-[var(--dark-text)]">
             <PlayIcon className="size-4" />
             Continue Track
           </button>
         ) : (
           <button
-            className="btn-green w-full gap-2 py-2.5 shadow-lg shadow-[#ffffff]/10"
+            className="btn-green w-full gap-2 py-2.5 shadow-lg shadow-[var(--dark-accent)]/10"
             onClick={onStart}
             disabled={isLoading}
           >

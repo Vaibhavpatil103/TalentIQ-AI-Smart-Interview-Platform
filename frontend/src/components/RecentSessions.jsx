@@ -24,8 +24,8 @@ function RecentSessions({ sessions, isLoading }) {
   return (
     <div className="mt-8">
       <div className="flex items-center gap-2 mb-4">
-        <ClockIcon className="size-4 text-[#7d8590]" />
-        <h2 className="text-xs uppercase tracking-wider text-[#7d8590] font-semibold">
+        <ClockIcon className="size-4 text-[var(--dark-text-secondary)]" />
+        <h2 className="text-xs uppercase tracking-wider text-[var(--dark-text-secondary)] font-semibold">
           Your Past Sessions
         </h2>
       </div>

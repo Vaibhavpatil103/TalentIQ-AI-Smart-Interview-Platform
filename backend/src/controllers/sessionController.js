@@ -88,18 +88,31 @@ export async function createSession(req, res) {
 export async function getActiveSessions(req, res) {
   try {
     const userId = req.user._id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = Math.min(parseInt(req.query.limit) || 20, 50);
+    const skip = (page - 1) * limit;
 
-    // Only return sessions where the user is host or participant
-    const sessions = await Session.find({
+    const filter = {
       status: "active",
       $or: [{ host: userId }, { participant: userId }],
-    })
-      .populate("host", "name profileImage email clerkId")
-      .populate("participant", "name profileImage email clerkId")
-      .sort({ createdAt: -1 })
-      .limit(20);
+    };
 
-    res.status(200).json({ sessions });
+    const [sessions, totalCount] = await Promise.all([
+      Session.find(filter)
+        .populate("host", "name profileImage email clerkId")
+        .populate("participant", "name profileImage email clerkId")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Session.countDocuments(filter),
+    ]);
+
+    res.status(200).json({
+      sessions,
+      totalCount,
+      page,
+      totalPages: Math.ceil(totalCount / limit),
+    });
   } catch (error) {
     console.log("Error in getActiveSessions controller:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
@@ -109,16 +122,29 @@ export async function getActiveSessions(req, res) {
 export async function getMyRecentSessions(req, res) {
   try {
     const userId = req.user._id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = Math.min(parseInt(req.query.limit) || 20, 50);
+    const skip = (page - 1) * limit;
 
-    // get sessions where user is either host or participant
-    const sessions = await Session.find({
+    const filter = {
       status: "completed",
       $or: [{ host: userId }, { participant: userId }],
-    })
-      .sort({ createdAt: -1 })
-      .limit(20);
+    };
 
-    res.status(200).json({ sessions });
+    const [sessions, totalCount] = await Promise.all([
+      Session.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Session.countDocuments(filter),
+    ]);
+
+    res.status(200).json({
+      sessions,
+      totalCount,
+      page,
+      totalPages: Math.ceil(totalCount / limit),
+    });
   } catch (error) {
     console.log("Error in getMyRecentSessions controller:", error.message);
     res.status(500).json({ message: "Internal Server Error" });

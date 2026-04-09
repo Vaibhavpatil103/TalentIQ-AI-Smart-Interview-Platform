@@ -37,14 +37,14 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.95, y: 12, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl relative z-10 flex flex-col"
+            className="bg-[var(--dark-elevated)] border border-[var(--dark-border)] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl relative z-10 flex flex-col"
           >
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-bold text-[#e6edf3] flex items-center gap-2">
-                <CalendarIcon className="size-5 text-[#ffffff]" />
+              <h3 className="text-lg font-bold text-[var(--dark-text)] flex items-center gap-2">
+                <CalendarIcon className="size-5 text-[var(--dark-accent)]" />
                 Schedule Interview
               </h3>
-              <button onClick={onClose} className="text-[#7d8590] hover:text-[#e6edf3] transition-colors">
+              <button onClick={onClose} className="text-[var(--dark-text-secondary)] hover:text-[var(--dark-text)] transition-colors">
                 <XIcon className="size-5" />
               </button>
             </div>
@@ -53,7 +53,7 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
               <div className="grid grid-cols-2 gap-3">
                 <div className="form-control">
                   <label className="label py-1">
-                    <span className="label-text font-medium text-sm text-[#7d8590]">Date</span>
+                    <span className="label-text font-medium text-sm text-[var(--dark-text-secondary)]">Date</span>
                   </label>
                   <input
                     type="date"
@@ -65,7 +65,7 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
 
                 <div className="form-control">
                   <label className="label py-1">
-                    <span className="label-text font-medium text-sm text-[#7d8590]">Time</span>
+                    <span className="label-text font-medium text-sm text-[var(--dark-text-secondary)]">Time</span>
                   </label>
                   <input
                     type="time"
@@ -78,7 +78,7 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
 
               <div className="form-control">
                 <label className="label py-1">
-                  <span className="label-text font-medium text-sm text-[#7d8590]">Candidate Name (optional)</span>
+                  <span className="label-text font-medium text-sm text-[var(--dark-text-secondary)]">Candidate Name (optional)</span>
                 </label>
                 <input
                   type="text"
@@ -91,7 +91,7 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
 
               <div className="form-control">
                 <label className="label py-1">
-                  <span className="label-text font-medium text-sm text-[#7d8590]">Candidate Email (optional)</span>
+                  <span className="label-text font-medium text-sm text-[var(--dark-text-secondary)]">Candidate Email (optional)</span>
                 </label>
                 <input
                   type="email"
@@ -101,7 +101,7 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
                   onChange={(e) => setConfig({ ...config, candidateEmail: e.target.value })}
                 />
                 <label className="label py-1">
-                  <span className="label-text-alt text-[#7d8590] text-xs">
+                  <span className="label-text-alt text-[var(--dark-text-secondary)] text-xs">
                     They'll receive the join code + session link by email
                   </span>
                 </label>
@@ -114,7 +114,7 @@ function ScheduleModal({ isOpen, onClose, onSchedule, isScheduling }) {
                       exit={{ opacity: 0, height: 0 }}
                       className="mt-2 overflow-hidden"
                     >
-                      <div className="bg-[#ffffff10] border border-[#ffffff30] text-[#ffffff] text-xs rounded-lg p-3">
+                      <div className="bg-[var(--dark-accent-bg)] border border-[var(--dark-accent-border)] text-[var(--dark-accent)] text-xs rounded-lg p-3">
                         📧 Invite + join code will be sent to {config.candidateEmail}
                       </div>
                     </motion.div>

@@ -22,14 +22,10 @@ function FeedbackModal({ isOpen, onClose, sessionId, candidateId }) {
         candidateId,
         ...feedback,
       });
-      toast.success("Feedback submitted successfully!", { 
-        style: { background: '#ffffff', color: '#0f172a', border: '1px solid #e2e8f0' }
-      });
+      toast.success("Feedback submitted successfully!");
       onClose();
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to submit feedback", {
-        style: { background: '#ffffff', color: '#0f172a', border: '1px solid #e2e8f0' }
-      });
+      toast.error(error.response?.data?.message || "Failed to submit feedback");
     } finally {
       setIsSubmitting(false);
     }
@@ -38,7 +34,7 @@ function FeedbackModal({ isOpen, onClose, sessionId, candidateId }) {
   const RatingSlider = ({ label, value, onChange }) => (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="font-medium text-sm text-[#e6edf3]">{label}</span>
+        <span className="font-medium text-sm text-[var(--dark-text)]">{label}</span>
         <div className="flex items-center gap-1">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
@@ -83,11 +79,11 @@ function FeedbackModal({ isOpen, onClose, sessionId, candidateId }) {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.95, y: 12, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="bg-[#1c2128] border border-[#30363d] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl relative z-10 flex flex-col"
+            className="bg-[var(--dark-elevated)] border border-[var(--dark-border)] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl relative z-10 flex flex-col"
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-bold text-lg text-[#e6edf3]">Interview Feedback</h3>
-              <button onClick={onClose} className="text-[#7d8590] hover:text-[#e6edf3] transition-colors">
+              <h3 className="font-bold text-lg text-[var(--dark-text)]">Interview Feedback</h3>
+              <button onClick={onClose} className="text-[var(--dark-text-secondary)] hover:text-[var(--dark-text)] transition-colors">
                 <XIcon className="size-5" />
               </button>
             </div>
@@ -109,16 +105,16 @@ function FeedbackModal({ isOpen, onClose, sessionId, candidateId }) {
                 onChange={(v) => setFeedback({ ...feedback, communication: v })}
               />
 
-              <div className="border-t border-[#30363d]" />
+              <div className="border-t border-[var(--dark-border)]" />
 
               {/* Decision */}
               <div className="space-y-3">
-                <span className="font-medium text-sm text-[#e6edf3]">Decision</span>
+                <span className="font-medium text-sm text-[var(--dark-text)]">Decision</span>
                 <div className="flex gap-2">
                   {[
-                    { value: "hire", label: "✅ Hire", activeBg: "bg-[#ffffff20] text-[#ffffff] border-[#ffffff]" },
-                    { value: "maybe", label: "🤔 Maybe", activeBg: "bg-[#d2992220] text-[#d29922] border-[#d29922]" },
-                    { value: "no-hire", label: "❌ No Hire", activeBg: "bg-[#f8514920] text-[#f85149] border-[#f85149]" },
+                    { value: "hire", label: "✅ Hire", activeBg: "bg-[var(--color-success-bg)] text-[var(--color-success)] border-[var(--color-success)]" },
+                    { value: "maybe", label: "🤔 Maybe", activeBg: "bg-[var(--color-warning-bg)] text-[var(--color-warning)] border-[var(--color-warning)]" },
+                    { value: "no-hire", label: "❌ No Hire", activeBg: "bg-[var(--color-danger-bg)] text-[var(--color-danger)] border-[var(--color-danger)]" },
                   ].map((opt) => {
                     const isActive = feedback.decision === opt.value;
                     return (
@@ -128,7 +124,7 @@ function FeedbackModal({ isOpen, onClose, sessionId, candidateId }) {
                         className={`flex-1 py-2 text-sm rounded-xl border transition-colors ${
                           isActive 
                             ? opt.activeBg 
-                            : "bg-transparent border-[#30363d] text-[#7d8590] hover:bg-[#30363d]"
+                            : "bg-transparent border-[var(--dark-border)] text-[var(--dark-text-secondary)] hover:bg-[var(--dark-elevated)]"
                         }`}
                       >
                         {opt.label}
@@ -140,7 +136,7 @@ function FeedbackModal({ isOpen, onClose, sessionId, candidateId }) {
 
               {/* Notes */}
               <div className="space-y-2">
-                <label className="font-medium text-sm text-[#e6edf3] block">Notes</label>
+                <label className="font-medium text-sm text-[var(--dark-text)] block">Notes</label>
                 <textarea
                   className="input-dark w-full h-24 py-3 resize-none"
                   placeholder="Additional observations, strengths, areas for improvement..."

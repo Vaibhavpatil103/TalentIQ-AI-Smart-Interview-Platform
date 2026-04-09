@@ -93,3 +93,32 @@ export const scheduleSessionSchema = z.object({
   scheduledAt: z.string().datetime().optional(),
   candidateEmail: z.string().email().optional(),
 });
+
+// ─── Session Creation ────────────────────────────────────────────
+export const createSessionSchema = z.object({
+  problem: z.string().max(500).optional(),
+  difficulty: z.enum(["easy", "medium", "hard"]).optional(),
+  scheduledAt: z.string().optional(),
+  candidateEmail: z.string().email("Invalid email format").max(254).optional(),
+});
+
+// ─── Job Creation ────────────────────────────────────────────────
+export const createJobSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200),
+  description: z.string().min(1, "Description is required").max(10000),
+  requirements: z.array(z.string().max(500)).max(50).optional().default([]),
+  responsibilities: z.array(z.string().max(500)).max(50).optional().default([]),
+  skills: z.array(z.string().max(100)).max(30).optional().default([]),
+  location: z.string().max(200).optional().default("Remote"),
+  jobType: z.enum(["full-time", "part-time", "contract", "internship"]).optional().default("full-time"),
+  salaryMin: z.number().positive().optional(),
+  salaryMax: z.number().positive().optional(),
+  experienceLevel: z.enum(["entry", "mid", "senior", "lead"]).optional().default("mid"),
+  deadline: z.string().optional(),
+});
+
+// ─── Job Application ────────────────────────────────────────────
+export const applyToJobSchema = z.object({
+  jobId: z.string().min(1, "Job ID is required"),
+  coverLetter: z.string().max(5000).optional().default(""),
+});
